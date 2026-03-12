@@ -1,0 +1,331 @@
+/* Reset y base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  color: #333;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #fffff0;
+}
+
+.logo {
+  font-size: 1rem;
+}
+
+.menu {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+}
+
+.menu a {
+  color: black;
+  text-decoration: none;
+}
+
+.btn-boutique,
+.btn-cita {
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  border: 1px solid black;
+}
+
+.social-icons {
+  display: flex;
+  gap: 1rem;
+  list-style: none;
+}
+
+.social-icons .icon {
+    color: inherit;           /* Hereda negro padre */
+    text-decoration: none;
+}
+
+.social-icons .icon:visited,
+.social-icons .icon:link,
+.social-icons .icon:active {
+    color: inherit !important; /* ← QUITA lila visited */
+}
+
+@media (max-width: 768px) {
+  .menu {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+/* Hero y secciones */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  background-image: url("assets/img/hero-bg.jpg");
+  background-size: cover;
+  color: white;
+  font-family: "Arial Black", sans-serif; /* Bold como koa */
+}
+
+.hero h1 {
+  font-size: 10rem;
+  font-weight: 900;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.hero p {
+  font-size: 1.3rem;
+  max-width: 800px;
+  margin-bottom: 3rem;
+  line-height: 1.4;
+}
+
+/* Quienes somos */
+.quienes-somos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 2rem;
+  padding: 4rem 2rem;
+}
+
+.sobre-nosotros {
+  display: flex;
+  gap: 2rem;
+}
+
+/* Stats horizontal */
+.stats-hero {
+  display: flex;
+  justify-content: center;
+  gap: 4rem;
+  flex-wrap: wrap;
+  margin: 2rem 0;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-item span {
+  font-size: 3.5rem;
+  font-weight: bold;
+  display: block;
+}
+
+.stat-item small {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Especialidades lista vertical sin bullets */
+.especialidades {
+  max-width: 600px;
+  margin: 4rem auto;
+}
+
+.especialidades h2 {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.especialidades ul {
+  list-style: none;
+  font-size: 1.2rem;
+  line-height: 2;
+}
+
+.especialidades li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+/* Equipo */
+.equipo {
+  padding: 4rem 2rem;
+  text-align: center;
+  background: #f8f9fa;
+}
+
+.equipo h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.equipo p {
+  font-size: 1.1rem;
+  max-width: 800px;
+  margin: 0 auto 3rem;
+}
+
+/* Responsive exacto */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+  .stats-hero {
+    gap: 2rem;
+  }
+  .stat-item span {
+    font-size: 2.5rem;
+  }
+}
+
+.section {
+  padding: 3rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+/* Formularios */
+form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+input,
+textarea,
+button {
+  width: 100%;
+  padding: 0.8rem;
+  margin: 0.5rem 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+/* Cards para servicios/equipo */
+.cards {
+  display: flex;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.carrousel {
+  display: flex;
+  flex-direction: row; /* ← FIX1: Horizontal explícito */
+  gap: 1.5rem;
+  overflow-x: auto; /* Scroll horizontal */
+  padding: 1rem 0;
+  scroll-snap-type: x mandatory; /* ← FIX2: Snap a items (smooth como koa) */
+  scrollbar-width: thin; /* ← FIX3: Scrollbar delgada webkit/firefox */
+  scrollbar-color: #007bff transparent;
+  scroll-behavior: smooth;
+}
+
+/* Scrollbar custom webkit (Chrome/Safari) */
+.carrousel::-webkit-scrollbar {
+  height: 8px;
+}
+.carrousel::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+.carrousel::-webkit-scrollbar-thumb {
+  background: #007bff;
+  border-radius: 10px;
+}
+.carrousel::-webkit-scrollbar-thumb:hover {
+  background: #0056b3;
+}
+
+/* Items carrusel */
+.carrousel > div {
+  flex: 0 0 280px; /* Ancho fijo, no crece */
+  scroll-snap-align: center; /* Centra item al scroll */
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.3s;
+}
+
+.carrousel img {
+  width: 100%;
+  object-fit: cover;
+}
+
+.card-doctor {
+  position: relative; /* Base para absolute */
+  width: 280px; /* Ancho carrusel */
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  margin: 0 1rem;
+  padding: 0;
+}
+
+/* Texto en parte BAJA foto */
+.doctor {
+  position: absolute;
+  bottom: 0;
+  text-align: left;
+  left: 1.5rem; /* ← FIX2: Izquierda desde borde */
+  color: white;
+}
+
+.doctor h3 {
+  font-size: 1.4rem;
+}
+.doctor p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* OSCURECER imagen con overlay */
+.card-doctor::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    transparent 0%, /* Arriba claro */
+    rgba(0, 0, 0, 0.3) 50%,/* Medio sutil */
+    rgba(0, 0, 0, 0.8) 100% /* ← Abajo OSCURO para texto */
+  );
+  z-index: 1; /* Sobre img, bajo texto */
+  pointer-events: none; /* No bloquea hover */
+}
+
+.card-doctor img {
+  position: relative;
+  z-index: 0; /* Debajo overlay */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Doctor encima todo */
+.doctor {
+  position: absolute;
+  z-index: 2; /* ← Más arriba */
+  bottom: 0;
+  left: 1.5rem;
+}
