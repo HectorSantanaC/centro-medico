@@ -11,7 +11,7 @@
 <body>
   <header>
     <nav class="navbar">
-      <div class="logo">CENTRO MÉDICO TAC7</div>
+      <h5 class="logo">CENTRO MÉDICO TAC7</h5>
 
       <div>
         <ul class="menu">

@@ -1,13 +1,14 @@
 <?php $page_title = 'Sobre nosotros'; ?>
 
 <section class="sobre-nosotros">
-  <picture>
-    <img src="./assets/img/sillon1.jpg" alt="" width="500px">
-  </picture>
 
   <div class="cards-sobre-nosotros">
+    <picture>
+      <img src="./assets/img/sillon1.jpg">
+    </picture>
+
     <div>
-      <img src="./assets/img/botox.jpg" alt="" width="400px">
+      <img src="./assets/img/botox.jpg">
       <p>Tu salud, nuestra razón de ser. Vemos la salud como un viaje continuo hacia el bienestar total. Queremos ser el lugar al que acudas cuando busques mantener y mejorar tu calidad de vida.</p>
       <a href="">Quienes somos
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-narrow-right">
@@ -21,7 +22,7 @@
 
     <div>
       <p>Somos un equipo de profesionales altamente cualificados que nos dedicamos a la atención sanitaria de calidad, basada en la empatía y el respeto.</p>
-      <img src="./assets/img/sillon2.jpg" alt="" width="400px">
+      <img src="./assets/img/sillon2.jpg">
     </div>
   </div>
 </section>
