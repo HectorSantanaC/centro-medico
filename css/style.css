@@ -5,13 +5,15 @@
 }
 
 html {
-    overflow-x: hidden; /* ← Bloquea scroll horizontal global */
+  overflow-x: hidden; /* ← Bloquea scroll horizontal global */
 }
 
 body {
-    font-family: Arial, sans-serif;
-    overflow-x: hidden; /* ← Doble protección */
-    max-width: 100%; /* ← Nunca desborda */
+  font-family: Arial, sans-serif;
+  overflow-x: hidden; /* ← Doble protección */
+  max-width: 100%; /* ← Nunca desborda */
+  padding-top: 80px; /* Ajustar según la altura real del navbar */
+  scroll-behavior: smooth; /* Scroll suave */
 }
 
 /* ===========================================
@@ -20,12 +22,23 @@ body {
 
 /* Navbar */
 .navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 1.5rem;
-  max-width: 100%;
+  width: 100%;
   background: #fffff0;
+  z-index: 1000; /* Mantiene el navbar por encima del contenido */
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
+  height: 80px;
+}
+
+main {
+  padding-top: 0;
 }
 
 .logo {
@@ -74,6 +87,52 @@ body {
     flex-direction: column;
     gap: 1rem;
   }
+}
+
+/* SUBMENÚ (puro CSS) */
+.menu li {
+  position: relative; /* Para posicionar el dropdown respecto al ítem */
+}
+
+.menu .submenu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #333; /* TEMPORAL para depurar */
+  min-width: 220px;
+  list-style: none;
+  margin: 0;
+  padding: 10px 0;
+  z-index: 9999;
+}
+
+.menu li:hover .submenu,
+.menu .submenu.mostrar {
+  display: block !important;
+}
+
+.menu .submenu li a {
+  padding: 12px 20px;
+  color: #ddd;
+  display: block;
+}
+
+.menu .submenu li a:hover {
+  color: white;
+}
+
+/* OFFSET para anclas (#id) - IMPORTANTE */
+h1[id], h2[id], h3[id], h4[id], 
+.frase-servicios[id], 
+section[id] {
+  scroll-margin-top: 90px; /* Espacio desde navbar */
+}
+
+/* Todas las secciones principales */
+.hero, .frase-servicios, 
+section {
+  scroll-margin-top: 90px;
 }
 
 /* ===========================================
@@ -456,15 +515,14 @@ body {
 }
 
 .noticias picture {
-    flex: 1; /* Ocupa mitad derecha */
+  flex: 1; /* Ocupa mitad derecha */
 }
 
 .noticias picture img {
-    width: 100%;     /* Ancho completo del contenedor */
-    height: 100%;    /* Alto completo */
-    max-height: 400px; /* Altura máxima */
-    object-fit: cover; /* Cubre sin deformar */
-    border-radius: 12px;
+  width: 100%; /* Ancho completo del contenedor */
+  height: 100%; /* Alto completo */
+  max-height: 400px; /* Altura máxima */
+  object-fit: cover; /* Cubre sin deformar */
 }
 
 .publicaciones {
@@ -476,16 +534,15 @@ body {
 
 /* Títulos */
 .publicaciones h2 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    color: #666;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #666;
 }
 
 .publicaciones h3 {
-    font-size: 2rem;
-    
-    margin-bottom: 2rem;
-    line-height: 1.6;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  line-height: 1.6;
 }
 
 .publicaciones a {
@@ -500,18 +557,16 @@ body {
 
 /* Responsive */
 @media (max-width: 768px) {
-    .noticias {
-        flex-direction: column;
-        gap: 2rem;
-        padding: 2rem 1rem;
-    }
-    
-    .noticias picture img {
-        max-height: 250px;
-    }
+  .noticias {
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem 1rem;
+  }
+
+  .noticias picture img {
+    max-height: 250px;
+  }
 }
-
-
 
 /* ===========================================
     OPINIONES

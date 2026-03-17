@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Centro Médico TAC7 - <?php echo $page_title ?? 'Inicio'; ?></title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="../css/style.css">
 </head>
 
 <body>
@@ -15,18 +15,24 @@
 
       <div>
         <ul class="menu">
-          <li><a href="index.php">Centro Médico</a></li>
-          <li><a href="servicios.php">Especialidades</a></li>
-          <li><a href="quienes-somos.php">Cursos y Talleres</a></li>
-          <li><a href="contacto.php">Actualidad</a></li>
-          <li><a href="contacto.php">Contacto</a></li>
+          <li>
+            <a href="index.php#frase-servicios">Centro Médico</a>
+            <ul class="submenu">
+              <li><a href="index.php#nuestro-equipo">Nuestro equipo</a></li>
+              <li><a href="index.php#quienes-somos">Quienes somos</a></li>
+            </ul>
+          </li>
+          <li><a href="#">Especialidades</a></li>
+          <li><a href="#">Cursos y Talleres</a></li>
+          <li><a href="#">Actualidad</a></li>
+          <li><a href="#">Contacto</a></li>
         </ul>
       </div>
 
       <div>
         <ul class="menu">
-          <li><a href="login.php" class="btn-boutique">La Boutique de TAC7</a></li>
-          <li><a href="login.php" class="btn-cita">Cita online</a></li>
+          <li><a href="#" class="btn-boutique">La Boutique de TAC7</a></li>
+          <li><a href="/TAC7/public/cita-online.php" class="btn-cita">Cita online</a></li>
         </ul>
       </div>
 

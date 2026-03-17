@@ -1,5 +1,5 @@
 <?php $page_title = 'Centro Médico TAC7';
-include './includes/header.php'; ?>
+include '../includes/header.php'; ?>
 
 <!-- Hero -->
 <section class="hero">
@@ -7,7 +7,7 @@ include './includes/header.php'; ?>
 </section>
 
 <!-- Frase servicios -->
-<section class="frase-servicios">
+<section class="frase-servicios" id="frase-servicios">
   <h2>Servicios médicos de alta calidad con enfoque en la atención integral, personalizada, a tu medida y a tus tiempos.</h2>
 </section>
 
@@ -43,23 +43,21 @@ include 'noticias.php'; ?>
     <div class="logos-track">
         <!-- 3 REPETICIONES para loop infinito -->
         <div class="logo-set">
-            <img src="./assets/img/sanitas-logo.png" alt="Sanitas">
-            <img src="./assets/img/mapfre-logo.png" alt="Mapfre">
-            <img src="./assets/img/dkv-logo.png" alt="DKV">
+            <img src="../assets/img/sanitas-logo.png" alt="Sanitas">
+            <img src="../assets/img/mapfre-logo.png" alt="Mapfre">
+            <img src="../assets/img/dkv-logo.png" alt="DKV">
         </div>
         <div class="logo-set">
-            <img src="./assets/img/sanitas-logo.png" alt="Sanitas">
-            <img src="./assets/img/mapfre-logo.png" alt="Mapfre">
-            <img src="./assets/img/dkv-logo.png" alt="DKV">
+            <img src="../assets/img/sanitas-logo.png" alt="Sanitas">
+            <img src="../assets/img/mapfre-logo.png" alt="Mapfre">
+            <img src="../assets/img/dkv-logo.png" alt="DKV">
         </div>
         <div class="logo-set">
-            <img src="./assets/img/sanitas-logo.png" alt="Sanitas">
-            <img src="./assets/img/mapfre-logo.png" alt="Mapfre">
-            <img src="./assets/img/dkv-logo.png" alt="DKV">
+            <img src="../assets/img/sanitas-logo.png" alt="Sanitas">
+            <img src="../assets/img/mapfre-logo.png" alt="Mapfre">
+            <img src="../assets/img/dkv-logo.png" alt="DKV">
         </div>
     </div>
 </section>
 
-
-
-<?php include './includes/footer.php'; ?>
+<?php include '../includes/footer.php'; ?>
