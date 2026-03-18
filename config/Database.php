@@ -1,20 +1,34 @@
 <?php
+// config/Database.php - Render DATABASE_URL FIX
 class Database {
     private static $instance = null;
     private $pdo;
 
     private function __construct() {
-        if (getenv('DATABASE_URL')) {
-            $url = parse_url(getenv('DATABASE_URL'));
-            $host = $url['host'];
-            $port = $url['port'];
-            $dbname = ltrim($url['path'], '/');
-            $user = $url['user'];
-            $pass = $url['pass'];
+        $dbUrl = getenv('DATABASE_URL');
+        
+        if ($dbUrl) {
+            // Parsear Render DATABASE_URL robusto
+            $url = parse_url($dbUrl);
+            
+            $host = $url['host'] ?? 'localhost';
+            $port = isset($url['port']) ? $url['port'] : 5432;
+            $dbname = trim($url['path'] ?? '', '/');
+            $user = $url['user'] ?? 'postgres';
+            $pass = $url['pass'] ?? '';
+            
+            // Debug (quitar en producción)
+            error_log("DB Connect: host=$host, port=$port, db=$dbname");
+            
         } else {
-            $host = 'localhost'; $port = 5432; $dbname = 'centro_medico';
-            $user = 'postgres'; $pass = '1234';
+            // Local
+            $host = 'localhost';
+            $port = 5432;
+            $dbname = 'centro_medico';
+            $user = 'postgres';
+            $pass = '1234';
         }
+
         $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
         $this->pdo = new PDO($dsn, $user, $pass, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -34,7 +48,8 @@ class Database {
     }
 }
 
-define('APP_URL', getenv('APP_URL') ?: 'http://localhost/');
+// Config app
+define('APP_URL', '/');
 define('APP_NOMBRE', 'Centro Médico TAC7');
 session_start();
 date_default_timezone_set('Europe/Madrid');
