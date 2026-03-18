@@ -3,7 +3,6 @@ require_once __DIR__ . '/config/Database.php';
 
 $page_title = 'Reservar Cita';
 $db = Database::getInstance();
-$pdo = $db->getConnection();  // Obtener PDO
 
 // ========================================
 // GUARDAR CITA
@@ -16,13 +15,14 @@ if ($_POST) {
   $fecha_cita = $_POST['fecha_cita'];
   $hora_cita = $_POST['hora_cita'];
 
-  $sql = "INSERT INTO citas (paciente_id, medico_id, especialidad_id, fecha_cita, hora_cita, estado, notas) 
-            VALUES (1, ?, ?, ?, ?, 'pendiente', ?) RETURNING id";
+  // ✅ FIX: fecha_cita → fecha, hora_cita → hora
+  $sql = "INSERT INTO citas (paciente_id, medico_id, especialidad_id, fecha, hora, estado, notas) 
+          VALUES (1, ?, ?, ?, ?, 'pendiente', ?) RETURNING id";
   $cita_id = $db->insert($sql, [
     $medico_id,
     $especialidad_id,
-    $fecha_cita,
-    $hora_cita,
+    $fecha_cita,    // Input fecha_cita → DB fecha
+    $hora_cita,     // Input hora_cita → DB hora
     "$nombre ($email)"
   ]);
   $mensaje_exito = "✅ Cita #$cita_id RESERVADA!<br>📅 $fecha_cita $hora_cita";
@@ -35,6 +35,7 @@ $especialidad_id = $_GET['especialidad_id'] ?? '';
 $medico_id = $_GET['medico_id'] ?? '';
 $fecha_cita = $_GET['fecha_cita'] ?? '';
 
+// WHERE activo = true
 $especialidades = $db->fetchAll("SELECT id, nombre FROM especialidades WHERE activo = true ORDER BY nombre");
 
 $medicos = [];
@@ -119,7 +120,7 @@ if ($especialidad_id) {
       </select>
     </div>
 
-    <!-- DATOS PACIENTE (solo cuando hay médico+fecha) -->
+    <!-- DATOS PACIENTE -->
     <?php if ($medico_id): ?>
       <div class="form-group">
         <label>Tu Nombre *</label>
@@ -131,9 +132,7 @@ if ($especialidad_id) {
       </div>
     <?php endif; ?>
 
-    <button type="submit" class="btn-cita">
-      Reservar Cita
-    </button>
+    <button type="submit" class="btn-cita">Reservar Cita</button>
   </form>
 </div>
 
