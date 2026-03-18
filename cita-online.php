@@ -17,7 +17,7 @@ if ($_POST) {
   $hora_cita = $_POST['hora_cita'];
 
   $sql = "INSERT INTO citas (paciente_id, medico_id, especialidad_id, fecha_cita, hora_cita, estado, notas) 
-          VALUES (1, ?, ?, ?, ?, 'pendiente', ?) RETURNING id";
+            VALUES (1, ?, ?, ?, ?, 'pendiente', ?) RETURNING id";
   $cita_id = $db->insert($sql, [
     $medico_id,
     $especialidad_id,
@@ -35,19 +35,20 @@ $especialidad_id = $_GET['especialidad_id'] ?? '';
 $medico_id = $_GET['medico_id'] ?? '';
 $fecha_cita = $_GET['fecha_cita'] ?? '';
 
-$especialidades = $pdo->query("SELECT id, nombre FROM especialidades ORDER BY nombre")->fetchAll();
+$especialidades = $db->fetchAll("SELECT id, nombre FROM especialidades WHERE activo = true ORDER BY nombre");
 
 $medicos = [];
 if ($especialidad_id) {
-  $sql = "SELECT m.id, m.nombre || ' ' || m.apellidos as nombre_completo
-          FROM medicos m WHERE m.especialidad_id = ? ORDER BY m.apellidos";
-  $stmt = $pdo->prepare($sql);
-  $stmt->execute([$especialidad_id]);
-  $medicos = $stmt->fetchAll();
+  $medicos = $db->fetchAll("
+        SELECT m.id, m.nombre || ' ' || m.apellidos as nombre_completo
+        FROM medicos m
+        WHERE m.especialidad_id = ? AND m.activo = true
+        ORDER BY m.apellidos
+    ", [$especialidad_id]);
 }
 ?>
 
-<?php include '../includes/header.php'; ?>
+<?php include './includes/header.php'; ?>
 
 <?php if (isset($mensaje_exito)): ?>
   <div style="background:#d4edda;color:#155724;padding:1.5rem;margin:2rem auto;max-width:600px;border-radius:10px;text-align:center;">

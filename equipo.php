@@ -5,7 +5,7 @@
   <div class="carousel">
 
     <div class="card-doctor">
-      <img src="../assets/img/medico.jpg" alt="Dr. Juan González - Psicólogo">
+      <img src="./assets/img/medico.jpg" alt="Dr. Juan González - Psicólogo">
       <div class="doctor">
         <h3>Psicología</h3>
         <p>con Juan González</p>
@@ -13,7 +13,7 @@
     </div>
 
     <div class="card-doctor">
-      <img src="../assets/img/medico.jpg" alt="Dr. Juan González - Psicólogo">
+      <img src="./assets/img/medico.jpg" alt="Dr. Juan González - Psicólogo">
       <div class="doctor">
         <h3>Psicología</h3>
         <p>con Juan González</p>
@@ -21,7 +21,7 @@
     </div>
 
     <div class="card-doctor">
-      <img src="../assets/img/medico.jpg" alt="Dr. Juan González - Psicólogo">
+      <img src="./assets/img/medico.jpg" alt="Dr. Juan González - Psicólogo">
       <div class="doctor">
         <h3>Psicología</h3>
         <p>con Juan González</p>
@@ -29,7 +29,7 @@
     </div>
 
     <div class="card-doctor">
-      <img src="../assets/img/medico.jpg" alt="Dr. Juan González - Psicólogo">
+      <img src="./assets/img/medico.jpg" alt="Dr. Juan González - Psicólogo">
       <div class="doctor">
         <h3>Psicología</h3>
         <p>con Juan González</p>
@@ -37,7 +37,7 @@
     </div>
 
     <div class="card-doctor">
-      <img src="../assets/img/medico.jpg" alt="Dr. Juan González - Psicólogo">
+      <img src="./assets/img/medico.jpg" alt="Dr. Juan González - Psicólogo">
       <div class="doctor">
         <h3>Psicología</h3>
         <p>con Juan González</p>
@@ -45,7 +45,7 @@
     </div>
 
     <div class="card-doctor">
-      <img src="../assets/img/medico.jpg" alt="Dr. Juan González - Psicólogo">
+      <img src="./assets/img/medico.jpg" alt="Dr. Juan González - Psicólogo">
       <div class="doctor">
         <h3>Psicología</h3>
         <p>con Juan González</p>
@@ -53,7 +53,7 @@
     </div>
 
     <div class="card-doctor">
-      <img src="../assets/img/medico.jpg" alt="Dr. Juan González - Psicólogo">
+      <img src="./assets/img/medico.jpg" alt="Dr. Juan González - Psicólogo">
       <div class="doctor">
         <h3>Psicología</h3>
         <p>con Juan González</p>
