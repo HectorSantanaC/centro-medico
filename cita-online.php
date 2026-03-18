@@ -1,9 +1,9 @@
 <?php
-require_once '../config/config.php';
-require_once '../config/db.php';
+require_once __DIR__ . '/config/Database.php';
 
 $page_title = 'Reservar Cita';
 $db = Database::getInstance();
+$pdo = $db->getConnection();  // Obtener PDO
 
 // ========================================
 // GUARDAR CITA
