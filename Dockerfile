@@ -1,22 +1,22 @@
-# Dockerfile PHP + PostgreSQL para Render - CORREGIDO
+# Dockerfile PHP PostgreSQL Render - PERMISOS CORREGIDOS
 FROM php:8.2-apache
 
-# 1. Instalar librerías PostgreSQL + dependencias
+# Instalar PostgreSQL
 RUN apt-get update && apt-get install -y \
     libpq-dev \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && docker-php-ext-install pdo_pgsql
 
-# 2. Instalar PHP PostgreSQL drivers
-RUN docker-php-ext-install pdo_pgsql
+# ✅ FIX PERMISOS - IMPORTANTE
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html
 
-# 3. Copiar código de la app
+# Copiar app DESPUÉS de permisos
 COPY . /var/www/html/
 
-# 4. Configurar Apache
+# Configurar Apache
 RUN a2enmod rewrite \
-    && sed -i 's!/var/www/html!/var/www/html!g' /etc/apache2/sites-available/000-default.conf
+    && echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-# 5. Puerto para Render
 EXPOSE 8080
-
 CMD ["apache2-foreground"]
