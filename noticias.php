@@ -14,6 +14,6 @@
     </a>
   </article>
   <picture>
-    <img src="../assets/img/img-noticias.jpg">
+    <img src="./assets/img/img-noticias.jpg">
   </picture>
 </section>

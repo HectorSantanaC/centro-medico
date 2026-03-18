@@ -32,7 +32,7 @@
       <div>
         <ul class="menu">
           <li><a href="#" class="btn-boutique">La Boutique de TAC7</a></li>
-          <li><a href="/TAC7/public/cita-online.php" class="btn-cita">Cita online</a></li>
+          <li><a href="/TAC7/cita-online.php" class="btn-cita">Cita online</a></li>
         </ul>
       </div>
 

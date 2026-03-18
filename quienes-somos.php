@@ -2,7 +2,7 @@
 
 <section class="quienes-somos" id="quienes-somos">
   <picture class="hero-img">
-    <img src="../assets/img/centro-medico.jpg" alt="Centro Médico TAC7">
+    <img src="./assets/img/centro-medico.jpg" alt="Centro Médico TAC7">
   </picture>
 
   <div class="texto-bloque">
