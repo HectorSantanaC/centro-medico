@@ -137,4 +137,4 @@ if ($especialidad_id) {
   </form>
 </div>
 
-<?php include '../includes/footer.php'; ?>
+<?php include './includes/footer.php'; ?>

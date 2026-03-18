@@ -1,5 +1,5 @@
 <?php $page_title = 'Centro Médico TAC7';
-include '../includes/header.php'; ?>
+include './includes/header.php'; ?>
 
 <!-- Hero -->
 <section class="hero">
@@ -60,4 +60,4 @@ include 'noticias.php'; ?>
     </div>
 </section>
 
-<?php include '../includes/footer.php'; ?>
+<?php include './includes/footer.php'; ?>
