@@ -1,15 +1,22 @@
-# Dockerfile para Render - PHP + PostgreSQL
+# Dockerfile PHP + PostgreSQL para Render - CORREGIDO
 FROM php:8.2-apache
 
-# Instalar PostgreSQL driver
+# 1. Instalar librerías PostgreSQL + dependencias
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# 2. Instalar PHP PostgreSQL drivers
 RUN docker-php-ext-install pdo_pgsql
 
-# Copiar código app
+# 3. Copiar código de la app
 COPY . /var/www/html/
 
-# Configurar Apache
-RUN a2enmod rewrite
+# 4. Configurar Apache
+RUN a2enmod rewrite \
+    && sed -i 's!/var/www/html!/var/www/html!g' /etc/apache2/sites-available/000-default.conf
+
+# 5. Puerto para Render
 EXPOSE 8080
 
-# Render detecta puerto automáticamente
 CMD ["apache2-foreground"]
