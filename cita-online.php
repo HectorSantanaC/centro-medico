@@ -52,88 +52,138 @@ if ($especialidad_id) {
 <?php include './includes/header.php'; ?>
 
 <?php if (isset($mensaje_exito)): ?>
-  <div style="background:#d4edda;color:#155724;padding:1.5rem;margin:2rem auto;max-width:600px;border-radius:10px;text-align:center;">
-    <?= $mensaje_exito ?><br><a href="" style="color:#155724;">← Nueva</a>
+  <div class="cita-success">
+    <div style="font-size: 1.5rem;margin-bottom:1rem;">✅</div>
+    <?= $mensaje_exito ?>
+    <br><a href="">← Reservar otra cita</a>
   </div>
 <?php endif; ?>
 
-<div class="cita-container">
-  <div class="cita-titulo">
-    <h2><i class="fas fa-calendar-plus"></i> Reserva tu cita</h2>
+<section class="cita-section">
+  <div class="cita-container">
+    <!-- HEADER -->
+    <div class="cita-header">
+      <h2>Reserva tu cita en línea</h2>
+      <p>Selecciona especialidad, médico, fecha y hora que se ajuste a tu disponibilidad</p>
+    </div>
+
+    <form method="<?= $medico_id && $fecha_cita ? 'POST' : 'GET' ?>" action="" class="cita-form">
+      
+      <!-- PASO 1: ESPECIALIDAD -->
+      <div class="cita-paso">
+        <div class="paso-numero">1</div>
+        <div class="form-group">
+          <label>Especialidad <span class="required">*</span></label>
+          <div class="select-wrapper">
+            <select name="especialidad_id" id="especialidad_id" required onchange="this.form.submit()">
+              <option value="">Selecciona especialidad...</option>
+              <?php foreach ($especialidades as $esp): ?>
+                <option value="<?= $esp['id'] ?>" <?= ($especialidad_id == $esp['id']) ? 'selected' : '' ?>>
+                  <?= htmlspecialchars($esp['nombre']) ?>
+                </option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- PASO 2: MÉDICO -->
+      <div class="cita-paso">
+        <div class="paso-numero">2</div>
+        <div class="form-group">
+          <label>Médico <?php if ($especialidad_id): ?><span class="required">*</span><?php endif; ?></label>
+          <div class="select-wrapper">
+            <select name="medico_id" id="medico_id" <?= ($especialidad_id ? 'required' : '') ?> onchange="this.form.submit()">
+              <?php if (empty($medicos)): ?>
+                <option value="">Selecciona especialidad primero</option>
+              <?php else: ?>
+                <option value="">Selecciona médico...</option>
+                <?php foreach ($medicos as $med): ?>
+                  <option value="<?= $med['id'] ?>" <?= ($medico_id == $med['id']) ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($med['nombre_completo']) ?>
+                  </option>
+                <?php endforeach; ?>
+              <?php endif; ?>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- PASO 3: FECHA y HORA (lado a lado) -->
+      <div class="cita-pasos-row">
+        <div class="cita-paso">
+          <div class="paso-numero">3</div>
+          <div class="form-group">
+            <label>Fecha <span class="required">*</span></label>
+            <div class="input-wrapper">
+              <input type="date" name="fecha_cita"
+                min="<?= date('Y-m-d') ?>"
+                value="<?= htmlspecialchars($fecha_cita) ?>"
+                <?= ($medico_id ? 'required' : '') ?>
+                onchange="this.form.submit()">
+            </div>
+          </div>
+        </div>
+
+        <div class="cita-paso">
+          <div class="paso-numero">4</div>
+          <div class="form-group">
+            <label>Hora <span class="required">*</span></label>
+            <div class="select-wrapper">
+              <select name="hora_cita" <?= ($medico_id ? 'required' : '') ?>>
+                <option value="">Selecciona hora...</option>
+                <option value="09:00">09:00</option>
+                <option value="09:30">09:30</option>
+                <option value="10:00">10:00</option>
+                <option value="10:30">10:30</option>
+                <option value="11:00">11:00</option>
+                <option value="11:30">11:30</option>
+                <option value="12:00">12:00</option>
+                <option value="14:00">14:00</option>
+                <option value="14:30">14:30</option>
+                <option value="15:00">15:00</option>
+                <option value="15:30">15:30</option>
+                <option value="16:00">16:00</option>
+                <option value="16:30">16:30</option>
+                <option value="17:00">17:00</option>
+                <option value="17:30">17:30</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PASO 5: DATOS PACIENTE -->
+      <?php if ($medico_id): ?>
+      <div class="cita-paso">
+        <div class="paso-numero">5</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tu Nombre <span class="required">*</span></label>
+            <div class="input-wrapper">
+              <input type="text" name="nombre" placeholder="Ej: Juan García" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email <span class="required">*</span></label>
+            <div class="input-wrapper">
+              <input type="email" name="email" placeholder="Ej: juan@email.com" required>
+            </div>
+          </div>
+        </div>
+      </div>
+      <?php endif; ?>
+
+      <!-- BOTÓN SUBMIT -->
+      <div class="cita-actions">
+        <button type="submit" class="btn-cita">
+          <span>Confirmar Cita</span>
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+
+    </form>
   </div>
-
-  <form method="<?= $medico_id && $fecha_cita ? 'POST' : 'GET' ?>" action="" class="cita-form">
-    <!-- ESPECIALIDAD -->
-    <div class="form-group">
-      <label>Especialidad *</label>
-      <select name="especialidad_id" id="especialidad_id" required onchange="this.form.submit()">
-        <option value="">Selecciona especialidad...</option>
-        <?php foreach ($especialidades as $esp): ?>
-          <option value="<?= $esp['id'] ?>" <?= ($especialidad_id == $esp['id']) ? 'selected' : '' ?>>
-            <?= htmlspecialchars($esp['nombre']) ?>
-          </option>
-        <?php endforeach; ?>
-      </select>
-    </div>
-
-    <!-- MÉDICO -->
-    <div class="form-group">
-      <label>Médico</label>
-      <select name="medico_id" id="medico_id" onchange="this.form.submit()">
-        <?php if (empty($medicos)): ?>
-          <option value="">Selecciona especialidad primero</option>
-        <?php else: ?>
-          <option value="">Selecciona médico...</option>
-          <?php foreach ($medicos as $med): ?>
-            <option value="<?= $med['id'] ?>" <?= ($medico_id == $med['id']) ? 'selected' : '' ?>>
-              <?= htmlspecialchars($med['nombre_completo']) ?>
-            </option>
-          <?php endforeach; ?>
-        <?php endif; ?>
-      </select>
-    </div>
-
-    <!-- FECHA -->
-    <div class="form-group">
-      <label>Fecha *</label>
-      <input type="date" name="fecha_cita"
-        min="<?= date('Y-m-d') ?>"
-        value="<?= htmlspecialchars($fecha_cita) ?>"
-        onchange="this.form.submit()">
-    </div>
-
-    <!-- HORA -->
-    <div class="form-group">
-      <label>Hora *</label>
-      <select name="hora_cita" <?= ($medico_id ? 'required' : '') ?>>
-        <option value="">Selecciona hora...</option>
-        <option value="09:00">09:00</option>
-        <option value="09:30">09:30</option>
-        <option value="10:00">10:00</option>
-        <option value="10:30">10:30</option>
-        <option value="11:00">11:00</option>
-        <option value="11:30">11:30</option>
-        <option value="12:00">12:00</option>
-        <option value="16:00">16:00</option>
-        <option value="16:30">16:30</option>
-        <option value="17:00">17:00</option>
-      </select>
-    </div>
-
-    <!-- DATOS PACIENTE -->
-    <?php if ($medico_id): ?>
-      <div class="form-group">
-        <label>Tu Nombre *</label>
-        <input type="text" name="nombre" required>
-      </div>
-      <div class="form-group">
-        <label>Email *</label>
-        <input type="email" name="email" required>
-      </div>
-    <?php endif; ?>
-
-    <button type="submit" class="btn-cita">Reservar Cita</button>
-  </form>
-</div>
+</section>
 
 <?php include './includes/footer.php'; ?>

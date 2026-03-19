@@ -705,3 +705,296 @@ footer a {
   color: #ddd;
   text-decoration: none;
 }
+
+/* ===========================================
+    FORMULARIO CITA ONLINE
+   =========================================== */
+.cita-section {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8eef3 100%);
+  padding: 5rem 1.5rem;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+.cita-container {
+  max-width: 700px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  padding: 3rem;
+  animation: slideUp 0.6s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cita-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.cita-header h2 {
+  font-size: 2rem;
+  color: #1a1a2e;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.cita-header p {
+  color: #666;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.cita-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.cita-paso {
+  position: relative;
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  animation: fadeIn 0.5s ease forwards;
+  opacity: 0;
+}
+
+.cita-paso:nth-child(1) { animation-delay: 0.1s; }
+.cita-paso:nth-child(2) { animation-delay: 0.2s; }
+.cita-paso:nth-child(3) { animation-delay: 0.3s; }
+.cita-paso:nth-child(4) { animation-delay: 0.4s; }
+.cita-paso:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.paso-numero {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin-bottom: 0.5rem;
+  display: flex;
+  gap: 0.3rem;
+}
+
+.required {
+  color: #e74c3c;
+}
+
+.select-wrapper,
+.input-wrapper {
+  position: relative;
+}
+
+.select-wrapper select,
+.input-wrapper input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  background-color: white;
+}
+
+.select-wrapper select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+  background-size: 1.5em;
+  padding-right: 2.5rem;
+}
+
+.select-wrapper select:focus,
+.input-wrapper input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+  background-color: #f8fbff;
+}
+
+.select-wrapper select:hover,
+.input-wrapper input:hover {
+  border-color: #007bff;
+}
+
+.input-wrapper input::placeholder {
+  color: #999;
+}
+
+/* DOS COLUMNAS PARA FECHA Y HORA */
+.cita-pasos-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+/* FILA PARA NOMBRE Y EMAIL */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.cita-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px solid #f0f0f0;
+}
+
+.btn-reservar {
+  flex: 1;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+}
+
+.btn-reservar:hover {
+  background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+}
+
+.btn-reservar:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(0, 123, 255, 0.3);
+}
+
+.btn-reservar i {
+  font-size: 1.1rem;
+}
+
+/* MENSAJE DE ÉXITO */
+.cita-success {
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+  color: #155724;
+  padding: 1.5rem;
+  margin: 2rem auto;
+  max-width: 600px;
+  border-radius: 10px;
+  text-align: center;
+  border-left: 5px solid #28a745;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+  animation: slideDown 0.5s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cita-success a {
+  color: #155724;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.cita-success a:hover {
+  text-decoration: underline;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .cita-section {
+    padding: 2rem 1rem;
+  }
+
+  .cita-container {
+    padding: 2rem;
+    border-radius: 12px;
+  }
+
+  .cita-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .cita-paso {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .paso-numero {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  .form-group {
+    padding-left: 50px;
+  }
+
+  .cita-pasos-row {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .btn-reservar {
+    padding: 0.9rem 1.5rem;
+    font-size: 1rem;
+  }
+}
