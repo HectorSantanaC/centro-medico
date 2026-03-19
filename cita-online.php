@@ -29,8 +29,6 @@ if (isset($_GET['get_medicos']) && $_GET['get_medicos'] == '1') {
 // GUARDAR CITA
 // ========================================
 if ($_POST) {
-  $nombre = trim($_POST['nombre']);
-  $email = trim($_POST['email']);
   $medico_id = (int)$_POST['medico_id'];
   $especialidad_id = (int)$_POST['especialidad_id'];
   $fecha_cita = $_POST['fecha_cita'];
@@ -38,15 +36,14 @@ if ($_POST) {
 
   $paciente_id = $_SESSION['usuario_id'] ?? 1;
 
-  $sql = "INSERT INTO citas (paciente_id, medico_id, especialidad_id, fecha, hora, estado, notas) 
-          VALUES (?, ?, ?, ?, ?, 'pendiente', ?) RETURNING id";
+  $sql = "INSERT INTO citas (paciente_id, medico_id, especialidad_id, fecha, hora, estado) 
+          VALUES (?, ?, ?, ?, ?, 'pendiente') RETURNING id";
   $cita_id = $db->insert($sql, [
     $paciente_id,
     $medico_id,
     $especialidad_id,
     $fecha_cita,
-    $hora_cita,
-    "$nombre ($email)"
+    $hora_cita
   ]);
   $mensaje_exito = "✅ Cita #$cita_id RESERVADA!<br>📅 $fecha_cita $hora_cita";
 }
@@ -151,80 +148,16 @@ $especialidades = $db->fetchAll("SELECT id, nombre FROM especialidades WHERE act
         </div>
       </div>
 
-      <!-- PASO 5: DATOS PACIENTE -->
-      <div class="cita-paso" id="pasoPaciente" style="display: none;">
-        <div class="paso-numero">5</div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Tu Nombre <span class="required">*</span></label>
-            <div class="input-wrapper">
-              <input type="text" name="nombre" placeholder="Ej: Juan García" required>
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Email <span class="required">*</span></label>
-            <div class="input-wrapper">
-              <input type="email" name="email" placeholder="Ej: juan@email.com" required>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <!-- BOTÓN SUBMIT -->
       <div class="cita-actions">
-        <button type="submit" class="btn-cita">
+        <button type="submit" class="btn-reservar">
           <span>Confirmar Cita</span>
           <i class="fas fa-arrow-right"></i>
         </button>
       </div>
-
     </form>
   </div>
 </section>
 
 <?php include './includes/footer.php'; ?>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const espSelect = document.getElementById('especialidad_id');
-    const medSelect = document.getElementById('medico_id');
-    const fechaInput = document.getElementById('fecha_cita');
-    const horaSelect = document.querySelector('select[name="hora_cita"]');
-    const pasoPaciente = document.getElementById('pasoPaciente');
-
-    function updateRequiredFields() {
-      const hasMedico = medSelect.value !== '';
-      fechaInput.required = hasMedico;
-      horaSelect.required = hasMedico;
-      pasoPaciente.style.display = hasMedico ? 'block' : 'none';
-    }
-
-    espSelect.addEventListener('change', function() {
-      const espId = this.value;
-      medSelect.innerHTML = '<option value="">Cargando médicos...</option>';
-      medSelect.required = !!espId;
-
-      if (!espId) {
-        medSelect.innerHTML = '<option value="">Selecciona especialidad primero</option>';
-        updateRequiredFields();
-        return;
-      }
-
-      fetch('cita-online.php?get_medicos=1&especialidad_id=' + espId)
-        .then(r => r.json())
-        .then(data => {
-          let options = '<option value="">Selecciona médico...</option>';
-          data.forEach(m => {
-            options += `<option value="${m.id}">${m.nombre_completo}</option>`;
-          });
-          medSelect.innerHTML = options;
-          updateRequiredFields();
-        })
-        .catch(() => {
-          medSelect.innerHTML = '<option value="">Error al cargar médicos</option>';
-        });
-    });
-
-    medSelect.addEventListener('change', updateRequiredFields);
-  });
-</script>
+<script src="js/cita-online.js"></script>
