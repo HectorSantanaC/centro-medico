@@ -16,9 +16,10 @@ class Database
 			$user = $url['user'] ?? 'postgres';
 			$pass = $url['pass'] ?? '';
 		} else {
+			// Configuración para local (xampp)
 			$host = 'localhost';
 			$port = 5432;
-			$dbname = 'centro_medico';
+			$dbname = 'centro-medico';
 			$user = 'postgres';
 			$pass = '1234';
 		}

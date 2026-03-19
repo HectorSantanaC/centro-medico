@@ -74,6 +74,13 @@ $pdo->exec("INSERT INTO usuarios (nombre, apellidos, email, password, rol) VALUE
     ('Admin', 'TAC7', 'admin@tac7.com', '" . password_hash('admin123', PASSWORD_DEFAULT) . "', 'admin')
     ON CONFLICT DO NOTHING");
 
+$pdo->exec("INSERT INTO usuarios (nombre, apellidos, email, password, rol) VALUES 
+    ('Juan', 'García López', 'juan.garcia@email.com', '" . password_hash('paciente123', PASSWORD_DEFAULT) . "', 'paciente'),
+    ('María', 'Rodríguez Sánchez', 'maria.rodriguez@email.com', '" . password_hash('paciente123', PASSWORD_DEFAULT) . "', 'paciente'),
+    ('Carlos', 'Martínez Fernández', 'carlos.martinez@email.com', '" . password_hash('paciente123', PASSWORD_DEFAULT) . "', 'paciente'),
+    ('Ana', 'López García', 'ana.lopez@email.com', '" . password_hash('paciente123', PASSWORD_DEFAULT) . "', 'paciente')
+    ON CONFLICT DO NOTHING");
+
 echo "<h2 style='color:green'>🎉 ¡BASE DE DATOS LISTA!</h2>
       <p><strong>Tablas:</strong> usuarios, especialidades, medicos, citas</p>
       <p><strong>Datos prueba:</strong> 4 especialidades, 4 médicos, 1 admin</p>

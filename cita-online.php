@@ -5,6 +5,27 @@ $page_title = 'Reservar Cita';
 $db = Database::getInstance();
 
 // ========================================
+// AJAX: OBTENER MÉDICOS
+// ========================================
+if (isset($_GET['get_medicos']) && $_GET['get_medicos'] == '1') {
+  header('Content-Type: application/json');
+  $espId = (int)($_GET['especialidad_id'] ?? 0);
+
+  if ($espId > 0) {
+    $medicos = $db->fetchAll("
+      SELECT m.id, m.nombre || ' ' || m.apellidos as nombre_completo
+      FROM medicos m
+      WHERE m.especialidad_id = ? AND m.activo = true
+      ORDER BY m.apellidos
+    ", [$espId]);
+    echo json_encode($medicos);
+  } else {
+    echo json_encode([]);
+  }
+  exit;
+}
+
+// ========================================
 // GUARDAR CITA
 // ========================================
 if ($_POST) {
@@ -15,14 +36,16 @@ if ($_POST) {
   $fecha_cita = $_POST['fecha_cita'];
   $hora_cita = $_POST['hora_cita'];
 
-  // ✅ FIX: fecha_cita → fecha, hora_cita → hora
+  $paciente_id = $_SESSION['usuario_id'] ?? 1;
+
   $sql = "INSERT INTO citas (paciente_id, medico_id, especialidad_id, fecha, hora, estado, notas) 
-          VALUES (1, ?, ?, ?, ?, 'pendiente', ?) RETURNING id";
+          VALUES (?, ?, ?, ?, ?, 'pendiente', ?) RETURNING id";
   $cita_id = $db->insert($sql, [
+    $paciente_id,
     $medico_id,
     $especialidad_id,
-    $fecha_cita,    // Input fecha_cita → DB fecha
-    $hora_cita,     // Input hora_cita → DB hora
+    $fecha_cita,
+    $hora_cita,
     "$nombre ($email)"
   ]);
   $mensaje_exito = "✅ Cita #$cita_id RESERVADA!<br>📅 $fecha_cita $hora_cita";
@@ -31,22 +54,7 @@ if ($_POST) {
 // ========================================
 // DATOS FORM
 // ========================================
-$especialidad_id = $_GET['especialidad_id'] ?? '';
-$medico_id = $_GET['medico_id'] ?? '';
-$fecha_cita = $_GET['fecha_cita'] ?? '';
-
-// WHERE activo = true
 $especialidades = $db->fetchAll("SELECT id, nombre FROM especialidades WHERE activo = true ORDER BY nombre");
-
-$medicos = [];
-if ($especialidad_id) {
-  $medicos = $db->fetchAll("
-        SELECT m.id, m.nombre || ' ' || m.apellidos as nombre_completo
-        FROM medicos m
-        WHERE m.especialidad_id = ? AND m.activo = true
-        ORDER BY m.apellidos
-    ", [$especialidad_id]);
-}
 ?>
 
 <?php include './includes/header.php'; ?>
@@ -65,20 +73,22 @@ if ($especialidad_id) {
     <div class="cita-header">
       <h2>Reserva tu cita en línea</h2>
       <p>Selecciona especialidad, médico, fecha y hora que se ajuste a tu disponibilidad</p>
+      <a href="citas-crud.php" class="btn-ver-citas" style="margin-top: 10px; display: inline-block; background: #2c5282; color: white; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-size: 0.9rem;">📋 Ver citas agendadas</a>
     </div>
 
-    <form method="<?= $medico_id && $fecha_cita ? 'POST' : 'GET' ?>" action="" class="cita-form">
-      
+    <form method="POST" action="" class="cita-form" id="citaForm">
+      <input type="hidden" name="ajax" value="1">
+
       <!-- PASO 1: ESPECIALIDAD -->
       <div class="cita-paso">
         <div class="paso-numero">1</div>
         <div class="form-group">
           <label>Especialidad <span class="required">*</span></label>
           <div class="select-wrapper">
-            <select name="especialidad_id" id="especialidad_id" required onchange="this.form.submit()">
+            <select name="especialidad_id" id="especialidad_id" required>
               <option value="">Selecciona especialidad...</option>
               <?php foreach ($especialidades as $esp): ?>
-                <option value="<?= $esp['id'] ?>" <?= ($especialidad_id == $esp['id']) ? 'selected' : '' ?>>
+                <option value="<?= $esp['id'] ?>">
                   <?= htmlspecialchars($esp['nombre']) ?>
                 </option>
               <?php endforeach; ?>
@@ -91,19 +101,10 @@ if ($especialidad_id) {
       <div class="cita-paso">
         <div class="paso-numero">2</div>
         <div class="form-group">
-          <label>Médico <?php if ($especialidad_id): ?><span class="required">*</span><?php endif; ?></label>
+          <label>Médico <span class="required">*</span></label>
           <div class="select-wrapper">
-            <select name="medico_id" id="medico_id" <?= ($especialidad_id ? 'required' : '') ?> onchange="this.form.submit()">
-              <?php if (empty($medicos)): ?>
-                <option value="">Selecciona especialidad primero</option>
-              <?php else: ?>
-                <option value="">Selecciona médico...</option>
-                <?php foreach ($medicos as $med): ?>
-                  <option value="<?= $med['id'] ?>" <?= ($medico_id == $med['id']) ? 'selected' : '' ?>>
-                    <?= htmlspecialchars($med['nombre_completo']) ?>
-                  </option>
-                <?php endforeach; ?>
-              <?php endif; ?>
+            <select name="medico_id" id="medico_id">
+              <option value="">Selecciona especialidad primero</option>
             </select>
           </div>
         </div>
@@ -116,11 +117,8 @@ if ($especialidad_id) {
           <div class="form-group">
             <label>Fecha <span class="required">*</span></label>
             <div class="input-wrapper">
-              <input type="date" name="fecha_cita"
-                min="<?= date('Y-m-d') ?>"
-                value="<?= htmlspecialchars($fecha_cita) ?>"
-                <?= ($medico_id ? 'required' : '') ?>
-                onchange="this.form.submit()">
+              <input type="date" name="fecha_cita" id="fecha_cita"
+                min="<?= date('Y-m-d') ?>">
             </div>
           </div>
         </div>
@@ -130,7 +128,7 @@ if ($especialidad_id) {
           <div class="form-group">
             <label>Hora <span class="required">*</span></label>
             <div class="select-wrapper">
-              <select name="hora_cita" <?= ($medico_id ? 'required' : '') ?>>
+              <select name="hora_cita">
                 <option value="">Selecciona hora...</option>
                 <option value="09:00">09:00</option>
                 <option value="09:30">09:30</option>
@@ -154,8 +152,7 @@ if ($especialidad_id) {
       </div>
 
       <!-- PASO 5: DATOS PACIENTE -->
-      <?php if ($medico_id): ?>
-      <div class="cita-paso">
+      <div class="cita-paso" id="pasoPaciente" style="display: none;">
         <div class="paso-numero">5</div>
         <div class="form-row">
           <div class="form-group">
@@ -172,7 +169,6 @@ if ($especialidad_id) {
           </div>
         </div>
       </div>
-      <?php endif; ?>
 
       <!-- BOTÓN SUBMIT -->
       <div class="cita-actions">
@@ -187,3 +183,48 @@ if ($especialidad_id) {
 </section>
 
 <?php include './includes/footer.php'; ?>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const espSelect = document.getElementById('especialidad_id');
+    const medSelect = document.getElementById('medico_id');
+    const fechaInput = document.getElementById('fecha_cita');
+    const horaSelect = document.querySelector('select[name="hora_cita"]');
+    const pasoPaciente = document.getElementById('pasoPaciente');
+
+    function updateRequiredFields() {
+      const hasMedico = medSelect.value !== '';
+      fechaInput.required = hasMedico;
+      horaSelect.required = hasMedico;
+      pasoPaciente.style.display = hasMedico ? 'block' : 'none';
+    }
+
+    espSelect.addEventListener('change', function() {
+      const espId = this.value;
+      medSelect.innerHTML = '<option value="">Cargando médicos...</option>';
+      medSelect.required = !!espId;
+
+      if (!espId) {
+        medSelect.innerHTML = '<option value="">Selecciona especialidad primero</option>';
+        updateRequiredFields();
+        return;
+      }
+
+      fetch('cita-online.php?get_medicos=1&especialidad_id=' + espId)
+        .then(r => r.json())
+        .then(data => {
+          let options = '<option value="">Selecciona médico...</option>';
+          data.forEach(m => {
+            options += `<option value="${m.id}">${m.nombre_completo}</option>`;
+          });
+          medSelect.innerHTML = options;
+          updateRequiredFields();
+        })
+        .catch(() => {
+          medSelect.innerHTML = '<option value="">Error al cargar médicos</option>';
+        });
+    });
+
+    medSelect.addEventListener('change', updateRequiredFields);
+  });
+</script>
