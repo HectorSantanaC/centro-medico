@@ -62,20 +62,48 @@ foreach ($tables as $sql) {
     }
 }
 
-// 2. DATOS DE PRUEBA
+// 2. DATOS DE PRUEBA - ESPECIALIDADES
 $pdo->exec("INSERT INTO especialidades (nombre, descripcion) VALUES 
-    ('Cardiología', 'Especialistas en corazón'),
-    ('Dermatología', 'Piel y cabello'),
-    ('Traumatología', 'Huesos y articulaciones'),
-    ('Pediatría', 'Niños y adolescentes')
+    ('Cardiología', 'Especialistas en corazón y sistema circulatorio'),
+    ('Dermatología', 'Piel, cabello y uñas'),
+    ('Traumatología', 'Huesos, articulaciones y músculos'),
+    ('Pediatría', 'Salud infantil y adolescentes'),
+    ('Oftalmología', 'Salud visual y ojos'),
+    ('Ginecología', 'Salud femenina'),
+    ('Neurología', 'Sistema nervioso'),
+    ('Psicología', 'Salud mental'),
+    ('Nutrición', 'Alimentación y dietética'),
+    ('Medicina General', 'Atención primaria')
     ON CONFLICT DO NOTHING");
+echo "✅ Especialidades insertadas (10)<br>";
 
+// 3. DATOS DE PRUEBA - MÉDICOS
 $pdo->exec("INSERT INTO medicos (nombre, apellidos, especialidad_id) VALUES 
     ('Juan', 'Pérez', 1),
-    ('María', 'García', 2),
-    ('Ana', 'López', 3),
-    ('Carlos', 'Martínez', 4)
+    ('María', 'García', 1),
+    ('Ana', 'López', 2),
+    ('Carlos', 'Martínez', 3),
+    ('Alejandro', 'Hernández', 1),
+    ('Carmen', 'Ruiz', 1),
+    ('Patricia', 'Vega', 2),
+    ('Roberto', 'Sanz', 2),
+    ('Francisco', 'Gil', 3),
+    ('Isabel', 'Torres', 3),
+    ('Lucía', 'Navarro', 4),
+    ('Manuel', 'Crespo', 4),
+    ('Elena', 'Molina', 5),
+    ('Jorge', 'Peña', 5),
+    ('Sonia', 'Ortega', 6),
+    ('Antonio', 'Vargas', 7),
+    ('María Jesús', 'Fuentes', 8),
+    ('Pablo', 'Reyes', 8),
+    ('Cristina', 'Gallardo', 9),
+    ('Sergio', 'Rubio', 10),
+    ('Beatriz', 'Adrián', 10)
     ON CONFLICT DO NOTHING");
+echo "✅ Médicos insertados (21)<br>";
+
+// 4. DATOS DE PRUEBA - USUARIOS
 
 $pdo->exec("INSERT INTO usuarios (nombre, apellidos, email, password, rol) VALUES 
     ('Admin', 'TAC7', 'admin@tac7.com', 'admin123', 'admin')");
@@ -88,10 +116,10 @@ $pdo->exec("INSERT INTO usuarios (nombre, apellidos, email, password, rol) VALUE
 
 echo "<h2 style='color:green'>🎉 ¡BASE DE DATOS LISTA!</h2>
       <p><strong>Tablas:</strong> usuarios, especialidades, medicos, citas</p>
-      <p><strong>Datos prueba:</strong> 4 especialidades, 4 médicos, 1 admin</p>
+      <p><strong>Datos:</strong> 10 especialidades, 21 médicos, 5 pacientes, 1 admin</p>
       <a href='cita-online.php' class='btn'>→ Probar formulario citas</a>
       <a href='index.php' class='btn'>→ Página principal</a>
-      <hr><small><strong>IMPORTANTE:</strong> Borra este archivo después: <code>rm install.php</code></small>";
+      <hr><small><strong>INFO:</strong> Ejecuta este archivo cuando quieras resetear la BD.</small>";
 
 ?>
 <style>
