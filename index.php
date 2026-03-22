@@ -1,5 +1,8 @@
-<?php $page_title = 'Centro Médico TAC7';
-include './includes/header.php'; ?>
+<?php 
+require_once __DIR__ . '/config/Database.php';
+$page_title = 'Centro Médico TAC7';
+include './includes/header.php'; 
+?>
 
 <!-- Hero -->
 <section class="hero">
