@@ -43,19 +43,19 @@ include 'noticias.php'; ?>
     <div class="logos-track">
         <!-- 3 REPETICIONES para loop infinito -->
         <div class="logo-set">
-            <img src="../assets/img/sanitas-logo.png" alt="Sanitas">
-            <img src="../assets/img/mapfre-logo.png" alt="Mapfre">
-            <img src="../assets/img/dkv-logo.png" alt="DKV">
+            <img src="./assets/img/sanitas-logo.png" alt="Sanitas">
+            <img src="./assets/img/mapfre-logo.png" alt="Mapfre">
+            <img src="./assets/img/dkv-logo.png" alt="DKV">
         </div>
         <div class="logo-set">
-            <img src="../assets/img/sanitas-logo.png" alt="Sanitas">
-            <img src="../assets/img/mapfre-logo.png" alt="Mapfre">
-            <img src="../assets/img/dkv-logo.png" alt="DKV">
+            <img src="./assets/img/sanitas-logo.png" alt="Sanitas">
+            <img src="./assets/img/mapfre-logo.png" alt="Mapfre">
+            <img src="./assets/img/dkv-logo.png" alt="DKV">
         </div>
         <div class="logo-set">
-            <img src="../assets/img/sanitas-logo.png" alt="Sanitas">
-            <img src="../assets/img/mapfre-logo.png" alt="Mapfre">
-            <img src="../assets/img/dkv-logo.png" alt="DKV">
+            <img src="./assets/img/sanitas-logo.png" alt="Sanitas">
+            <img src="./assets/img/mapfre-logo.png" alt="Mapfre">
+            <img src="./assets/img/dkv-logo.png" alt="DKV">
         </div>
     </div>
 </section>

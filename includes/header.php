@@ -32,7 +32,29 @@
       <div>
         <ul class="menu">
           <li><a href="#" class="btn-boutique">La Boutique de TAC7</a></li>
+
           <li><a href="cita-online.php" class="btn-cita">Cita online</a></li>
+
+          <?php if (isset($_SESSION['usuario_id'])): ?>
+            <!-- USUARIO LOGUEADO - Mostrar opciones de usuario -->
+            <li>
+              <a href="#" class="btn-usuario">
+                👤 <?= htmlspecialchars($_SESSION['usuario_nombre']) ?>
+              </a>
+              <ul class="submenu submenu-derecha">
+                <?php if ($_SESSION['usuario_rol'] === 'admin'): ?>
+                  <li><a href="citas-crud.php">📋 Gestionar Citas</a></li>
+                <?php else: ?>
+                  <li><a href="mis-citas.php">📅 Mis Citas</a></li>
+                <?php endif; ?>
+                <li><a href="logout.php">🚪 Cerrar Sesión</a></li>
+              </ul>
+            </li>
+          <?php else: ?>
+            <!-- USUARIO NO LOGUEADO - Mostrar botones de login/registro -->
+            <li><a href="login.php" class="btn-login">Iniciar Sesión</a></li>
+            <li><a href="registro.php" class="btn-registro">Registrarse</a></li>
+          <?php endif; ?>
         </ul>
       </div>
 

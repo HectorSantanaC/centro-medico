@@ -6,6 +6,13 @@ $pdo = $db->getConnection();
 
 echo "<h1>🔨 Instalando base de datos...</h1>";
 
+// 0. BORRAR TABLAS EXISTENTES (reset completo)
+$pdo->exec("DROP TABLE IF EXISTS citas CASCADE");
+$pdo->exec("DROP TABLE IF EXISTS medicos CASCADE");
+$pdo->exec("DROP TABLE IF EXISTS especialidades CASCADE");
+$pdo->exec("DROP TABLE IF EXISTS usuarios CASCADE");
+echo "✅ Tablas anteriores eliminadas<br>";
+
 // 1. TABLAS
 $tables = [
     "CREATE TABLE IF NOT EXISTS usuarios (
@@ -65,21 +72,19 @@ $pdo->exec("INSERT INTO especialidades (nombre, descripcion) VALUES
 
 $pdo->exec("INSERT INTO medicos (nombre, apellidos, especialidad_id) VALUES 
     ('Juan', 'Pérez', 1),
-    ('María', 'García', 1),
-    ('Ana', 'López', 2),
-    ('Carlos', 'Martínez', 3)
+    ('María', 'García', 2),
+    ('Ana', 'López', 3),
+    ('Carlos', 'Martínez', 4)
     ON CONFLICT DO NOTHING");
 
 $pdo->exec("INSERT INTO usuarios (nombre, apellidos, email, password, rol) VALUES 
-    ('Admin', 'TAC7', 'admin@tac7.com', '" . password_hash('admin123', PASSWORD_DEFAULT) . "', 'admin')
-    ON CONFLICT DO NOTHING");
+    ('Admin', 'TAC7', 'admin@tac7.com', 'admin123', 'admin')");
 
 $pdo->exec("INSERT INTO usuarios (nombre, apellidos, email, password, rol) VALUES 
-    ('Juan', 'García López', 'juan.garcia@email.com', '" . password_hash('paciente123', PASSWORD_DEFAULT) . "', 'paciente'),
-    ('María', 'Rodríguez Sánchez', 'maria.rodriguez@email.com', '" . password_hash('paciente123', PASSWORD_DEFAULT) . "', 'paciente'),
-    ('Carlos', 'Martínez Fernández', 'carlos.martinez@email.com', '" . password_hash('paciente123', PASSWORD_DEFAULT) . "', 'paciente'),
-    ('Ana', 'López García', 'ana.lopez@email.com', '" . password_hash('paciente123', PASSWORD_DEFAULT) . "', 'paciente')
-    ON CONFLICT DO NOTHING");
+    ('Juan', 'García López', 'juan.garcia@email.com', 'paciente123', 'paciente'),
+    ('María', 'Rodríguez Sánchez', 'maria.rodriguez@email.com', 'paciente123', 'paciente'),
+    ('Carlos', 'Martínez Fernández', 'carlos.martinez@email.com', 'paciente123', 'paciente'),
+    ('Ana', 'López García', 'ana.lopez@email.com', 'paciente123', 'paciente')");
 
 echo "<h2 style='color:green'>🎉 ¡BASE DE DATOS LISTA!</h2>
       <p><strong>Tablas:</strong> usuarios, especialidades, medicos, citas</p>
