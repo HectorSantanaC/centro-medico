@@ -24,3 +24,28 @@ document.querySelectorAll('.menu > li').forEach(menuItem => {
         submenu.classList.toggle('mostrar');
     });
 });
+
+// Carousels con flechas (especialidades y equipo)
+document.addEventListener('DOMContentLoaded', function() {
+  const itemWidth = 272;
+  
+  document.querySelectorAll('[id^="carousel-"]').forEach(carousel => {
+    const wrapper = carousel.parentElement;
+    if (!wrapper) return;
+    
+    const prev = wrapper.querySelector('.carousel-btn.prev');
+    const next = wrapper.querySelector('.carousel-btn.next');
+    
+    if (prev) {
+      prev.addEventListener('click', () => {
+        carousel.scrollBy({ left: -itemWidth, behavior: 'smooth' });
+      });
+    }
+    
+    if (next) {
+      next.addEventListener('click', () => {
+        carousel.scrollBy({ left: itemWidth, behavior: 'smooth' });
+      });
+    }
+  });
+});

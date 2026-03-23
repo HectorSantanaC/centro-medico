@@ -271,39 +271,37 @@ section {
   max-width: 100%;
   margin: 0 auto;
 }
-.carousel {
+
+.carousel-equipo {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
   display: flex;
-  flex-direction: row; /* ← FIX1: Horizontal explícito */
-  gap: 1.5rem;
-  overflow-x: auto; /* Scroll horizontal */
-  padding: 1rem 1.5rem;
-  max-width: 100%;
-  scroll-snap-type: x mandatory; /* ← FIX2: Snap a items (smooth como koa) */
-  scrollbar-width: thin; /* ← FIX3: Scrollbar delgada webkit/firefox */
-  scrollbar-color: #007bff transparent;
-  scroll-behavior: smooth;
+  align-items: center;
 }
 
-/* Scrollbar custom webkit (Chrome/Safari) */
+.carousel {
+  display: flex;
+  gap: 2rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding: 1rem 5rem;
+  scrollbar-width: none;
+  align-items: center;
+  height: 100%;
+}
+
 .carousel::-webkit-scrollbar {
-  height: 8px;
-}
-.carousel::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-.carousel::-webkit-scrollbar-thumb {
-  background: #007bff;
-  border-radius: 10px;
-}
-.carousel::-webkit-scrollbar-thumb:hover {
-  background: #0056b3;
+  display: none;
 }
 
 /* Items carrusel */
 .carousel > div {
-  flex: 0 0 280px; /* Ancho fijo, no crece */
-  scroll-snap-align: center; /* Centra item al scroll */
+  flex: 0 0 280px;
+  height: 350px;
+  scroll-snap-align: center;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
@@ -318,11 +316,11 @@ section {
 }
 
 .card-doctor {
-  position: relative; /* Base para absolute */
-  width: 280px; /* Ancho carrusel */
+  position: relative;
+  width: 280px;
+  height: 350px;
   overflow: hidden;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  margin: 0 1rem;
   padding: 0;
 }
 
@@ -446,7 +444,7 @@ section {
 }
 
 /* ===========================================
-    ESPECIALIDADES
+    ESPECIALIDADES (CAROUSEL)
 =========================================== */
 .seccion-especialidades {
   padding: 5rem 2rem;
@@ -461,18 +459,34 @@ section {
   color: #333;
 }
 
-/* Grid responsive círculos */
+.carousel-especialidades {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
 .grid-especialidades {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  display: flex;
   gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding: 1rem 5rem;
+  scrollbar-width: none;
+  align-items: center;
+  height: 100%;
+}
+
+.grid-especialidades::-webkit-scrollbar {
+  display: none;
 }
 
 .especialidad {
-  width: 200px;
-  height: 200px;
+  flex: 0 0 240px;
+  height: 240px;
   border-radius: 50%;
   background-color: gray;
   display: flex;
@@ -485,23 +499,60 @@ section {
   box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
   position: relative;
   overflow: hidden;
+  scroll-snap-align: center;
 }
 
 .especialidad p {
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   color: white;
   margin: 0;
 }
 
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.carousel-btn:hover {
+  background: #007bff;
+  color: white;
+}
+
+.carousel-btn.prev {
+  left: 0;
+}
+
+.carousel-btn.next {
+  right: 0;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
-  .grid-especialidades {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1.5rem;
-  }
   .especialidad {
-    width: 150px;
+    flex: 0 0 150px;
     height: 150px;
+  }
+
+  .carousel-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .grid-especialidades {
+    padding: 1rem 2.5rem;
   }
 }
 
