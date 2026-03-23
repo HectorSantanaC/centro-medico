@@ -49,3 +49,32 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 });
+
+// Carousel de opiniones con dots
+document.addEventListener('DOMContentLoaded', function () {
+  const slider = document.getElementById('opiniones-slider');
+  if (!slider) return;
+
+  const dots = document.querySelectorAll('.opiniones-dots .dot');
+  const opinions = slider.querySelectorAll('.opinion');
+  let currentIndex = 0;
+
+  function showOpinion(index) {
+    opinions.forEach(op => op.classList.remove('active'));
+    dots.forEach(d => d.classList.remove('active'));
+    opinions[index].classList.add('active');
+    dots[index].classList.add('active');
+    currentIndex = index;
+  }
+
+  // Auto-scroll cada 10 segundos
+  setInterval(() => {
+    const next = (currentIndex + 1) % opinions.length;
+    showOpinion(next);
+  }, 10000);
+
+  // Click en dots
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => showOpinion(index));
+  });
+});

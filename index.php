@@ -36,10 +36,38 @@ include 'noticias.php'; ?>
 
 <!-- Opiniones -->
 <section class="opiniones">
-  <p>
-    "Desde que entras en TAC7 las instalaciones y los profesionales que trabajan en el centro te enamoran.
-    Me sentí muy cuidada y entendida desde el primer momento. Muchas gracias!"
-  </p>
+  <div class="opiniones-slider" id="opiniones-slider">
+    <div class="opinion active">
+      <p>
+        "Desde que entras en TAC7 las instalaciones y los profesionales que trabajan en el centro te enamoran. 
+        Me sentí muy cuidada y entendida desde el primer momento. Muchas gracias!"
+      </p>
+    </div>
+    <div class="opinion">
+      <p>
+        "Cercanía y clima de confianza, profundización con ejemplos sobre las dudas que iban surgiendo, aporte 
+        de estrategias y herramientas para el parto."
+      </p>
+    </div>
+    <div class="opinion">
+      <p>
+        "¡Muy recomendable! Me sentí muy cómoda! Explicaba todo con claridad y detalle. Se tomó el tiempo necesario 
+        para resolver mis dudas y transmitir tranquilidad. Una atención profesional y cercana que se agradece muchísimo."
+      </p>
+    </div>
+    <div class="opinion">
+      <p>
+        "Me ha encantado mi primera consulta con la Doctora. Me parece que tiene una visión actual de la ginecología. 
+        Da diferentes opciones de tratamiento adaptándose a la paciente. La recomiendo 100%."
+      </p>
+    </div>
+  </div>
+  <div class="opiniones-dots">
+    <button class="dot active" data-index="0"></button>
+    <button class="dot" data-index="1"></button>
+    <button class="dot" data-index="2"></button>
+    <button class="dot" data-index="3"></button>
+  </div>
 </section>
 
 <section class="aseguradoras">

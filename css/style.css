@@ -621,9 +621,10 @@ section {
 }
 
 /* ===========================================
-    OPINIONES
+    OPINIONES (CAROUSEL)
 =========================================== */
 .opiniones {
+  position: relative;
   min-height: 50vh;
   display: flex;
   flex-direction: column;
@@ -635,6 +636,62 @@ section {
     linear-gradient(rgba(0, 0, 0, 0.5)),
     url("../assets/img/opiniones-bg.jpg") center/cover no-repeat;
   color: white;
+  overflow: hidden;
+}
+
+.opiniones-slider {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  min-height: 150px;
+}
+
+.opinion {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 2rem;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease;
+}
+
+.opinion.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.opinion p {
+  font-size: 1.5rem;
+  font-style: italic;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.opiniones-dots {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.dot.active {
+  background: white;
+}
+
+.dot:hover {
+  background: rgba(255, 255, 255, 0.8);
 }
 
 /* ===========================================
