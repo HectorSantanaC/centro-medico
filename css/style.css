@@ -191,7 +191,7 @@ section {
 .cards-sobre-nosotros {
   display: flex;
   gap: 1.5rem;
-  height: 500px; /* ← Alto fijo para los 3 contenedores */
+  height: 600px; /* ← Alto fijo para los 3 contenedores */
   max-width: 100%;
   overflow: hidden;
 }
