@@ -331,6 +331,7 @@ section {
   text-align: left;
   left: 1.5rem; /* ← FIX2: Izquierda desde borde */
   color: white;
+  padding-bottom: 1.5rem;
 }
 
 .doctor h3 {
