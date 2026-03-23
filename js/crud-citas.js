@@ -1,7 +1,7 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   const especialidadSelect = document.getElementById('especialidadSelect');
   const medicoSelect = document.getElementById('medicoSelect');
-  
+
   if (especialidadSelect && medicoSelect) {
     function filtrarMedicos() {
       const especialidadId = especialidadSelect.value;

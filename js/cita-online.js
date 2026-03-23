@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   const espSelect = document.getElementById('especialidad_id');
   const medSelect = document.getElementById('medico_id');
   const fechaInput = document.getElementById('fecha_cita');
@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     horaSelect.required = hasMedico;
   }
 
-  espSelect.addEventListener('change', function() {
+  espSelect.addEventListener('change', function () {
     const espId = this.value;
     medSelect.innerHTML = '<option value="">Cargando médicos...</option>';
     medSelect.required = !!espId;
