@@ -7,10 +7,14 @@ document.addEventListener('DOMContentLoaded', function() {
       const especialidadId = especialidadSelect.value;
       Array.from(medicoSelect.options).forEach(opt => {
         if (!opt.value) return;
-        opt.style.display = (!especialidadId || opt.dataset.especialidad === especialidadId) ? '' : 'none';
+        const espId = opt.dataset.especialidad || '';
+        opt.style.display = (!especialidadId || espId === especialidadId) ? '' : 'none';
       });
-      if (especialidadId && medicoSelect.value && medicoSelect.options[medicoSelect.selectedIndex].dataset.especialidad !== especialidadId) {
-        medicoSelect.value = '';
+      if (especialidadId && medicoSelect.value) {
+        const selectedEsp = medicoSelect.options[medicoSelect.selectedIndex].dataset.especialidad || '';
+        if (selectedEsp !== especialidadId) {
+          medicoSelect.value = '';
+        }
       }
     }
     especialidadSelect.addEventListener('change', filtrarMedicos);
