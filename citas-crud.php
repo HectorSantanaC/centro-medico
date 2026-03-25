@@ -132,6 +132,7 @@ if ($action === 'list') {
 }
 
 $estados = ['pendiente', 'confirmada', 'completada', 'cancelada'];
+$active = 'citas';
 ?>
 
 <!DOCTYPE html>
@@ -146,27 +147,7 @@ $estados = ['pendiente', 'confirmada', 'completada', 'cancelada'];
 </head>
 
 <body>
-  <nav class="sidebar">
-    <div class="sidebar-header">
-      <h2>Centro Médico TAC7</h2>
-      <span>Panel de Administración</span>
-    </div>
-    <div class="user-info">
-      <strong><?= htmlspecialchars($_SESSION['usuario_nombre']) ?></strong>
-      <span><?= ucfirst($_SESSION['usuario_rol']) ?></span>
-    </div>
-    <div class="sidebar-menu">
-      <a href="admin.php"><span class="icon">🏠</span> Inicio</a>
-      <?php if ($_SESSION['usuario_rol'] === 'admin'): ?>
-      <a href="usuarios-crud.php"><span class="icon">👥</span> Usuarios</a>
-      <?php endif; ?>
-      <a href="citas-crud.php" class="active"><span class="icon">📅</span> Citas</a>
-      <a href="noticias.php"><span class="icon">📰</span> Contenido</a>
-    </div>
-    <div class="sidebar-footer">
-      <a href="logout.php"><span class="icon">🚪</span> Cerrar Sesión</a>
-    </div>
-  </nav>
+  <?php include 'includes/navbar-admin.php'; ?>
 
   <main class="main-content">
     <section class="crud-container">
