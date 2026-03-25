@@ -15,7 +15,7 @@ echo "✅ Tablas anteriores eliminadas<br>";
 
 // 1. TABLAS
 $tables = [
-    "CREATE TABLE IF NOT EXISTS usuarios (
+  "CREATE TABLE IF NOT EXISTS usuarios (
         id SERIAL PRIMARY KEY,
         nombre VARCHAR(100) NOT NULL,
         apellidos VARCHAR(100) NOT NULL,
@@ -25,14 +25,14 @@ $tables = [
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )",
 
-    "CREATE TABLE IF NOT EXISTS especialidades (
+  "CREATE TABLE IF NOT EXISTS especialidades (
         id SERIAL PRIMARY KEY,
         nombre VARCHAR(100) NOT NULL,
         descripcion TEXT,
         activo BOOLEAN DEFAULT true
     )",
 
-    "CREATE TABLE IF NOT EXISTS medicos (
+  "CREATE TABLE IF NOT EXISTS medicos (
         id SERIAL PRIMARY KEY,
         nombre VARCHAR(100) NOT NULL,
         apellidos VARCHAR(100) NOT NULL,
@@ -40,7 +40,7 @@ $tables = [
         activo BOOLEAN DEFAULT true
     )",
 
-    "CREATE TABLE IF NOT EXISTS citas (
+  "CREATE TABLE IF NOT EXISTS citas (
         id SERIAL PRIMARY KEY,
         paciente_id INTEGER REFERENCES usuarios(id),
         medico_id INTEGER REFERENCES medicos(id),
@@ -54,12 +54,12 @@ $tables = [
 ];
 
 foreach ($tables as $sql) {
-    try {
-        $pdo->exec($sql);
-        echo "✅ Tabla creada: " . preg_replace('/CREATE TABLE IF NOT EXISTS (\w+).*/', '$1', trim($sql)) . "<br>";
-    } catch (Exception $e) {
-        echo "⚠️ " . $e->getMessage() . "<br>";
-    }
+  try {
+    $pdo->exec($sql);
+    echo "✅ Tabla creada: " . preg_replace('/CREATE TABLE IF NOT EXISTS (\w+).*/', '$1', trim($sql)) . "<br>";
+  } catch (Exception $e) {
+    echo "⚠️ " . $e->getMessage() . "<br>";
+  }
 }
 
 // 2. DATOS DE PRUEBA - ESPECIALIDADES
@@ -109,20 +109,34 @@ $pdo->exec("INSERT INTO usuarios (nombre, apellidos, email, password, rol) VALUE
     ('Admin', 'TAC7', 'admin@tac7.com', 'admin123', 'admin')");
 
 $pdo->exec("INSERT INTO usuarios (nombre, apellidos, email, password, rol) VALUES 
-    ('Juan', 'García López', 'juan.garcia@email.com', 'paciente123', 'paciente'),
-    ('María', 'Rodríguez Sánchez', 'maria.rodriguez@email.com', 'paciente123', 'paciente'),
-    ('Carlos', 'Martínez Fernández', 'carlos.martinez@email.com', 'paciente123', 'paciente'),
-    ('Ana', 'López García', 'ana.lopez@email.com', 'paciente123', 'paciente')");
+    ('Gestor', 'Contenido', 'gestor@tac7.com', 'gestor123', 'gestor')");
+
+$pdo->exec("INSERT INTO usuarios (nombre, apellidos, email, password, rol) VALUES 
+    ('Juan', 'García López', 'juan.garcia@email.com', 'paciente123', 'paciente')");
 
 echo "<h2 style='color:green'>🎉 ¡BASE DE DATOS LISTA!</h2>
       <p><strong>Tablas:</strong> usuarios, especialidades, medicos, citas</p>
-      <p><strong>Datos:</strong> 10 especialidades, 21 médicos, 5 pacientes, 1 admin</p>
+      <p><strong>Datos:</strong> 10 especialidades, 21 médicos, 5 pacientes, 1 admin, 1 gestor</p>
       <a href='cita-online.php' class='btn'>→ Probar formulario citas</a>
       <a href='index.php' class='btn'>→ Página principal</a>
       <hr><small><strong>INFO:</strong> Ejecuta este archivo cuando quieras resetear la BD.</small>";
 
 ?>
 <style>
-body { font-family: Arial; max-width: 800px; margin: 50px auto; padding: 20px; }
-.btn { background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin: 10px; }
+  body {
+    font-family: Arial;
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+  }
+
+  .btn {
+    background: #007bff;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    display: inline-block;
+    margin: 10px;
+  }
 </style>

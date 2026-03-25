@@ -70,9 +70,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['usuario_rol'] = $usuario['rol'];
                 
                 // Redirigir según el rol
-                if ($usuario['rol'] === 'admin') {
-                    // Admin → ir a gestión de citas
-                    header('Location: citas-crud.php');
+                if ($usuario['rol'] === 'admin' || $usuario['rol'] === 'gestor') {
+                    // Admin/Gestor → ir a panel de admin
+                    header('Location: admin.php');
                 } else {
                     // Paciente → ir a página principal
                     header('Location: index.php');
@@ -135,6 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <strong>Usuarios de prueba:</strong>
         <p style="margin: 5px 0;">
             Admin: admin@tac7.com / admin123<br>
+            Gestor: gestor@tac7.com / gestor123<br>
             Paciente: juan.garcia@email.com / paciente123
         </p>
     </div>

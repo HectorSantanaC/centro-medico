@@ -42,9 +42,11 @@
                 👤 <?= htmlspecialchars($_SESSION['usuario_nombre']) ?>
               </a>
               <ul class="submenu submenu-derecha">
-                <?php if ($_SESSION['usuario_rol'] === 'admin'): ?>
-                  <li><a href="citas-crud.php">📋 Gestionar Citas</a></li>
-                <?php else: ?>
+                <?php if ($_SESSION['usuario_rol'] === 'admin' || $_SESSION['usuario_rol'] === 'gestor'): ?>
+                  <li><a href="admin.php">⚙️ Panel Admin</a></li>
+                  <li><a href="citas-crud.php">📋 Citas</a></li>
+                <?php endif; ?>
+                <?php if ($_SESSION['usuario_rol'] === 'paciente'): ?>
                   <li><a href="mis-citas.php">📅 Mis Citas</a></li>
                 <?php endif; ?>
                 <li><a href="logout.php">🚪 Cerrar Sesión</a></li>
