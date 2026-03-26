@@ -210,6 +210,12 @@ fetch(url)
 .btn-primary { }
 ```
 
+### Estilos CSS en Vistas
+
+- **NUNCA estilos inline** en las vistas
+- Usar archivos CSS externos: `css/blog.css`, `css/admin.css`
+- Los estilos van en archivos CSS, NO en etiquetas `<style>` en las vistas
+
 ---
 
 ## Base de Datos

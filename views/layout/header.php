@@ -24,7 +24,7 @@
           </li>
           <li><a href="#">Especialidades</a></li>
           <li><a href="#">Cursos y Talleres</a></li>
-          <li><a href="#">Actualidad</a></li>
+          <li><a href="blog.php">Actualidad</a></li>
           <li><a href="#">Contacto</a></li>
         </ul>
       </div>

@@ -376,6 +376,15 @@ tr:hover {
   outline: none;
   border-color: #2c5282;
 }
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.checkbox-label input[type="checkbox"] {
+  width: auto;
+}
 .form-actions {
   grid-column: span 2;
   display: flex;

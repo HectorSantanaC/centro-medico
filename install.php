@@ -50,6 +50,19 @@ $tables = [
         estado VARCHAR(20) DEFAULT 'pendiente',
         notas TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )",
+
+  "CREATE TABLE IF NOT EXISTS articulos (
+        id SERIAL PRIMARY KEY,
+        titulo VARCHAR(255) NOT NULL,
+        contenido TEXT NOT NULL,
+        resumen VARCHAR(500),
+        imagen VARCHAR(255),
+        autor VARCHAR(255),
+        categoria VARCHAR(100),
+        publicado BOOLEAN DEFAULT true,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )"
 ];
 
@@ -115,7 +128,7 @@ $pdo->exec("INSERT INTO usuarios (nombre, apellidos, email, password, rol) VALUE
     ('Juan', 'García López', 'juan.garcia@email.com', 'paciente123', 'paciente')");
 
 echo "<h2 style='color:green'>🎉 ¡BASE DE DATOS LISTA!</h2>
-      <p><strong>Tablas:</strong> usuarios, especialidades, medicos, citas</p>
+      <p><strong>Tablas:</strong> usuarios, especialidades, medicos, citas, articulos</p>
       <p><strong>Datos:</strong> 10 especialidades, 21 médicos, 5 pacientes, 1 admin, 1 gestor</p>
       <a href='cita-online.php' class='btn'>→ Probar formulario citas</a>
       <a href='index.php' class='btn'>→ Página principal</a>

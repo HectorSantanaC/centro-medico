@@ -1,0 +1,190 @@
+/* ===========================================
+    BLOG - Estilos para página pública
+   =========================================== */
+
+.blog-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.blog-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.blog-header h1 {
+  font-size: 2.5rem;
+  color: #2c5282;
+  margin-bottom: 10px;
+}
+
+.blog-header p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 30px;
+}
+
+.blog-card {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.blog-card:hover {
+  transform: translateY(-5px);
+}
+
+.blog-card-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  background: #f0f0f0;
+}
+
+.blog-card-content {
+  padding: 20px;
+}
+
+.blog-card-categoria {
+  display: inline-block;
+  background: #2c5282;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  margin-bottom: 10px;
+}
+
+.blog-card h3 {
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 1.3rem;
+}
+
+.blog-card-resumen {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.blog-card-meta {
+  display: flex;
+  justify-content: space-between;
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.blog-card-link {
+  display: inline-block;
+  color: #2c5282;
+  text-decoration: none;
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+.blog-card-link:hover {
+  text-decoration: underline;
+}
+
+.sin-articulos {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.sin-articulos p {
+  font-size: 1.2rem;
+}
+
+/* ===========================================
+    ARTÍCULO INDIVIDUAL
+   =========================================== */
+
+.articulo-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.articulo-header {
+  margin-bottom: 30px;
+}
+
+.articulo-categoria {
+  display: inline-block;
+  background: #2c5282;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  margin-bottom: 15px;
+}
+
+.articulo-titulo {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 15px;
+  line-height: 1.2;
+}
+
+.articulo-meta {
+  display: flex;
+  gap: 20px;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.articulo-imagen {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.articulo-contenido {
+  line-height: 1.8;
+  color: #444;
+  font-size: 1.1rem;
+}
+
+.articulo-contenido p {
+  margin-bottom: 20px;
+}
+
+.articulo-volver {
+  display: inline-block;
+  color: #2c5282;
+  text-decoration: none;
+  margin-bottom: 30px;
+}
+
+.articulo-volver:hover {
+  text-decoration: underline;
+}
+
+/* ===========================================
+    RESPONSIVE
+   =========================================== */
+
+@media (max-width: 768px) {
+  .blog-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .articulo-titulo {
+    font-size: 1.8rem;
+  }
+
+  .articulo-contenido {
+    font-size: 1rem;
+  }
+}
