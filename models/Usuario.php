@@ -60,4 +60,40 @@ class Usuario {
         $stmt->execute([$email]);
         return (bool) $stmt->fetch();
     }
+
+    public function allUsers(): array {
+        return $this->db->fetchAll("SELECT * FROM usuarios ORDER BY created_at DESC");
+    }
+
+    public function update(int $id, array $data): bool {
+        if (isset($data['password']) && !empty($data['password'])) {
+            $this->db->execute(
+                "UPDATE usuarios SET nombre=?, apellidos=?, email=?, password=?, rol=? WHERE id=?",
+                [$data['nombre'], $data['apellidos'], $data['email'], $data['password'], $data['rol'], $id]
+            );
+        } else {
+            $this->db->execute(
+                "UPDATE usuarios SET nombre=?, apellidos=?, email=?, rol=? WHERE id=?",
+                [$data['nombre'], $data['apellidos'], $data['email'], $data['rol'], $id]
+            );
+        }
+        return true;
+    }
+
+    public function delete(int $id): bool {
+        $this->db->execute("DELETE FROM usuarios WHERE id = ?", [$id]);
+        return true;
+    }
+
+    public function createWithRole(array $data): int {
+        $sql = "INSERT INTO usuarios (nombre, apellidos, email, password, rol) VALUES (?, ?, ?, ?, ?) RETURNING id";
+        
+        return $this->db->insert($sql, [
+            $data['nombre'],
+            $data['apellidos'],
+            $data['email'],
+            $data['password'],
+            $data['rol']
+        ]);
+    }
 }
