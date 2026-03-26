@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    fetch('cita-online.php?get_medicos=1&especialidad_id=' + espId)
+    fetch('api/medicos.php?especialidad_id=' + espId)
       .then(r => r.json())
       .then(data => {
         let options = '<option value="">Selecciona médico...</option>';

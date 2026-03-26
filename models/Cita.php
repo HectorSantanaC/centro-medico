@@ -55,6 +55,19 @@ class Cita {
         return true;
     }
 
+    public function create(array $data): int {
+        $sql = "INSERT INTO citas (paciente_id, medico_id, especialidad_id, fecha, hora, estado) 
+                VALUES (?, ?, ?, ?, ?, 'pendiente') RETURNING id";
+        
+        return $this->db->insert($sql, [
+            $data['paciente_id'],
+            $data['medico_id'],
+            $data['especialidad_id'],
+            $data['fecha'],
+            $data['hora']
+        ]);
+    }
+
     public function count(): int {
         return (int) $this->db->fetchAll("SELECT COUNT(*) as total FROM citas")[0]['total'];
     }
