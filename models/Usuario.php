@@ -42,4 +42,22 @@ class Usuario {
 
         return $stats;
     }
+
+    public function create(array $data): int {
+        $sql = "INSERT INTO usuarios (nombre, apellidos, email, password, rol) 
+                VALUES (?, ?, ?, ?, 'paciente') RETURNING id";
+        
+        return $this->db->insert($sql, [
+            $data['nombre'],
+            $data['apellidos'],
+            $data['email'],
+            $data['password']
+        ]);
+    }
+
+    public function existsByEmail(string $email): bool {
+        $stmt = $this->pdo->prepare("SELECT id FROM usuarios WHERE email = ?");
+        $stmt->execute([$email]);
+        return (bool) $stmt->fetch();
+    }
 }
