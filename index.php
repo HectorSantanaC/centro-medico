@@ -1,6 +1,16 @@
 <?php 
 require_once __DIR__ . '/config/Database.php';
+require_once __DIR__ . '/models/Medico.php';
+require_once __DIR__ . '/models/Especialidad.php';
+
 $page_title = 'Centro Médico TAC7';
+
+$medicoModel = new Medico();
+$medicos = $medicoModel->allActives();
+
+$especialidadModel = new Especialidad();
+$especialidades = $especialidadModel->allActives();
+
 include './views/layout/header.php'; 
 ?>
 
@@ -15,24 +25,132 @@ include './views/layout/header.php';
 </section>
 
 <!-- Sobre nosotros -->
-<?php $page_title = 'Sobre nosotros';
-include 'sobre-nosotros.php'; ?>
+<section class="sobre-nosotros">
+
+  <div class="cards-sobre-nosotros">
+    <picture>
+      <img src="./assets/img/sillon1.jpg">
+    </picture>
+
+    <div>
+      <img src="./assets/img/botox.jpg">
+      <p>Tu salud, nuestra razón de ser. Vemos la salud como un viaje continuo hacia el bienestar total. Queremos ser el lugar al que acudas cuando busques mantener y mejorar tu calidad de vida.</p>
+      <a href="">Quienes somos
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-narrow-right">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M5 12l14 0" />
+          <path d="M15 16l4 -4" />
+          <path d="M15 8l4 4" />
+        </svg>
+      </a>
+    </div>
+
+    <div>
+      <p>Somos un equipo de profesionales altamente cualificados que nos dedicamos a la atención sanitaria de calidad, basada en la empatía y el respeto.</p>
+      <img src="./assets/img/sillon2.jpg">
+    </div>
+  </div>
+</section>
 
 <!-- Sección de equipo médico -->
-<?php $page_title = 'Nuestro Equipo';
-include 'equipo.php'; ?>
+<section class="seccion-equipo" id="nuestro-equipo">
+  <h2>Nuestro Equipo Médico</h2>
+
+  <div class="carousel-equipo">
+    <button class="carousel-btn prev" aria-label="Anterior">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 18l-6-6 6-6" />
+      </svg>
+    </button>
+    <div class="carousel" id="carousel-equipo">
+
+      <?php foreach ($medicos as $medico): ?>
+        <div class="card-doctor">
+          <img src="./assets/img/medico.jpg" alt="Dr. <?= htmlspecialchars($medico['nombre'] . ' ' . $medico['apellidos']) ?> - <?= htmlspecialchars($medico['especialidad_nombre']) ?>">
+          <div class="doctor">
+            <h3><?= htmlspecialchars($medico['nombre'] . ' ' . $medico['apellidos']) ?></h3>
+            <p><?= htmlspecialchars($medico['especialidad_nombre']) ?></p>
+          </div>
+        </div>
+      <?php endforeach; ?>
+
+    </div>
+    <button class="carousel-btn next" aria-label="Siguiente">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 18l6-6-6-6" />
+      </svg>
+    </button>
+  </div>
+</section>
 
 <!-- Quienes somos -->
-<?php $page_title = 'Quienes somos';
-include 'quienes-somos.php'; ?>
+<section class="quienes-somos" id="quienes-somos">
+  <picture class="hero-img">
+    <img src="./assets/img/centro-medico.jpg" alt="Centro Médico TAC7">
+  </picture>
+
+  <div class="texto-bloque">
+    <div class="container">
+      <div>
+        <h3>Desde 1972, cuidando tu salud y bienestar con innovación, tradición y atención integral.</h3>
+        <h4>Tac7Salud</h4>
+      </div>
+      <div>
+        <p>Creemos en un enfoque integral que combina tradición, innovación y cercanía. Trabajamos cada día para ofrecer un entorno único, con servicios innovadores y productos diseñados para ayudarte a cuidar tu cuerpo, mejorar tu imagen y alcanzar más salud.
+          Junto a un equipo altamente cualificado y en constante formación, seguimos construyendo un espacio donde la confianza, la calidad y el bienestar sean los pilares de nuestro compromiso contigo.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- Nuestras especialidades -->
-<?php $page_title = 'Servicios';
-include 'servicios.php'; ?>
+<section class="seccion-especialidades">
+  <h2>Nuestras especialidades</h2>
+  <div class="carousel-especialidades">
+    <button class="carousel-btn prev" aria-label="Anterior">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 18l-6-6 6-6" />
+      </svg>
+    </button>
+    <div class="grid-especialidades" id="carousel-especialidades">
+      <?php foreach ($especialidades as $especialidad): ?>
+        <div class="especialidad">
+          <p><?= htmlspecialchars($especialidad['nombre']) ?></p>
+          <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-narrow-right">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M5 12l14 0" />
+            <path d="M15 16l4 -4" />
+            <path d="M15 8l4 4" />
+          </svg>
+        </div>
+      <?php endforeach; ?>
+    </div>
+    <button class="carousel-btn next" aria-label="Siguiente">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 18l6-6-6-6" />
+      </svg>
+    </button>
+  </div>
+</section>
 
 <!-- Noticias -->
-<?php $page_title = 'Noticias';
-include 'noticias.php'; ?>
+<section class="noticias">
+  <article class="publicaciones">
+    <h2>Noticias & Publicaciones</h2>
+    <h3>Actualidad, consejos de salud y publicaciones de nuestros profesionales para tu bienestar integral.</h3>
+    <a href="#">Visita el blog
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-narrow-right">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M5 12l14 0" />
+        <path d="M15 16l4 -4" />
+        <path d="M15 8l4 4" />
+      </svg>
+    </a>
+  </article>
+  <picture>
+    <img src="./assets/img/img-noticias.jpg">
+  </picture>
+</section>
 
 <!-- Opiniones -->
 <section class="opiniones">
