@@ -106,7 +106,7 @@ if ($action === 'list') {
     <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
-    <?php include './includes/navbar-admin.php' ?> 
+    <?php include './views/layout/navbar-admin.php' ?> 
 
     <main class="main-content">
         <?php if ($message): ?>

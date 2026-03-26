@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <?php include 'includes/navbar-admin.php'; ?>
+    <?php include __DIR__ . '/../layout/navbar-admin.php'; ?>
 
     <main class="main-content">
         <section class="crud-container">

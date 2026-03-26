@@ -1,7 +1,7 @@
 <?php 
 require_once __DIR__ . '/config/Database.php';
 $page_title = 'Centro Médico TAC7';
-include './includes/header.php'; 
+include './views/layout/header.php'; 
 ?>
 
 <!-- Hero -->
@@ -91,4 +91,4 @@ include 'noticias.php'; ?>
     </div>
 </section>
 
-<?php include './includes/footer.php'; ?>
+<?php include './views/layout/footer.php'; ?>

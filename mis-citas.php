@@ -68,7 +68,7 @@ $citas = $db->fetchAll(
 $estados = ['pendiente', 'confirmada', 'completada', 'cancelada'];
 ?>
 
-<?php include 'includes/header.php'; ?>
+<?php include './views/layout/header.php'; ?>
 
 <section class="section" style="max-width: 1000px; margin: 30px auto; padding: 0 20px;">
     
@@ -148,4 +148,4 @@ $estados = ['pendiente', 'confirmada', 'completada', 'cancelada'];
     
 </section>
 
-<?php include 'includes/footer.php'; ?>
+<?php include './views/layout/footer.php'; ?>

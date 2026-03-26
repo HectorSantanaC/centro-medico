@@ -22,6 +22,13 @@ class Usuario {
         return $result ?: null;
     }
 
+    public function findByEmail(string $email): ?array {
+        $stmt = $this->pdo->prepare("SELECT id, nombre, apellidos, email, password, rol FROM usuarios WHERE email = ?");
+        $stmt->execute([$email]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ?: null;
+    }
+
     public function getStats(): array {
         $stats = [];
 

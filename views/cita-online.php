@@ -1,4 +1,4 @@
-<?php include __DIR__ . '/../includes/header.php'; ?>
+<?php include __DIR__ . '/../layout/header.php'; ?>
 
 <?php if ($mensaje_exito): ?>
     <div class="cita-success">
@@ -105,6 +105,6 @@
     </div>
 </section>
 
-<?php include __DIR__ . '/../includes/footer.php'; ?>
+<?php include __DIR__ . '/../layout/footer.php'; ?>
 
 <script src="js/cita-online.js"></script>
