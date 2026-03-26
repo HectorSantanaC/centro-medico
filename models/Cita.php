@@ -71,4 +71,27 @@ class Cita {
     public function count(): int {
         return (int) $this->db->fetchAll("SELECT COUNT(*) as total FROM citas")[0]['total'];
     }
+
+    public function getByPaciente(int $pacienteId): array {
+        return $this->db->fetchAll(
+            "SELECT c.*, 
+                    m.nombre as medico_nombre, 
+                    m.apellidos as medico_apellidos,
+                    e.nombre as especialidad_nombre
+             FROM citas c
+             LEFT JOIN medicos m ON c.medico_id = m.id
+             LEFT JOIN especialidades e ON c.especialidad_id = e.id
+             WHERE c.paciente_id = ?
+             ORDER BY c.fecha DESC, c.hora DESC",
+            [$pacienteId]
+        );
+    }
+
+    public function cancel(int $id, int $pacienteId): bool {
+        $this->db->execute(
+            "UPDATE citas SET estado = 'cancelada' WHERE id = ? AND paciente_id = ?",
+            [$id, $pacienteId]
+        );
+        return true;
+    }
 }
