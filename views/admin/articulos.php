@@ -28,7 +28,6 @@
         <table>
           <thead>
             <tr>
-              <th>ID</th>
               <th>Título</th>
               <th>Categoría</th>
               <th>Autor</th>
@@ -40,7 +39,6 @@
           <tbody>
             <?php foreach ($articulos as $articulo): ?>
               <tr>
-                <td><?= $articulo['id'] ?></td>
                 <td><?= htmlspecialchars($articulo['titulo']) ?></td>
                 <td><?= htmlspecialchars($articulo['categoria'] ?? '-') ?></td>
                 <td><?= htmlspecialchars($articulo['autor'] ?? '-') ?></td>

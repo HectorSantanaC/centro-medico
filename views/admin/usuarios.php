@@ -28,7 +28,6 @@
         <table>
           <thead>
             <tr>
-              <th>ID</th>
               <th>Nombre</th>
               <th>Apellidos</th>
               <th>Email</th>
@@ -40,7 +39,6 @@
           <tbody>
             <?php foreach ($usuarios as $usuario): ?>
               <tr>
-                <td><?= $usuario['id'] ?></td>
                 <td><?= htmlspecialchars($usuario['nombre']) ?></td>
                 <td><?= htmlspecialchars($usuario['apellidos']) ?></td>
                 <td><?= htmlspecialchars($usuario['email']) ?></td>

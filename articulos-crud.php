@@ -6,7 +6,6 @@ $controller = new ArticulosController();
 $data = $controller->handleRequest();
 
 $action = $data['action'];
-$id = $data['id'];
 $articulos = $data['articulos'];
 $articulo = $data['articulo'];
 $categorias = $data['categorias'];
