@@ -27,9 +27,9 @@
           <?php endif; ?>
 
           <div class="blog-card-content">
-            <?php if ($articulo['categoria']): ?>
+            <?php if ($articulo['topico_nombre']): ?>
               <span class="blog-card-categoria">
-                <?= htmlspecialchars($articulo['categoria']) ?>
+                <?= htmlspecialchars($articulo['topico_nombre']) ?>
               </span>
             <?php endif; ?>
 

@@ -31,8 +31,12 @@ $active = $active ?? '';
       </a>
     <?php endif; ?>
 
-    <a href="articulos-crud.php" class="<?= $active === 'contenido' ? 'active' : '' ?>">
-      <span class="icon">📰</span> Contenido
+    <a href="articulos-crud.php" class="<?= $active === 'contenidos' ? 'active' : '' ?>">
+      <span class="icon">📰</span> Contenidos
+    </a>
+
+    <a href="topicos-crud.php" class="<?= $active === 'topicos' ? 'active' : '' ?>">
+      <span class="icon">📚</span> Tópicos
     </a>
   </div>
 

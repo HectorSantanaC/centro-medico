@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../models/Articulo.php';
+require_once __DIR__ . '/../models/Topico.php';
 
 class ArticulosController
 {
@@ -33,7 +34,7 @@ class ArticulosController
         'resumen' => trim($_POST['resumen'] ?? ''),
         'imagen' => trim($_POST['imagen'] ?? ''),
         'autor' => trim($_POST['autor'] ?? ''),
-        'categoria' => trim($_POST['categoria'] ?? ''),
+        'topico' => !empty($_POST['topico']) ? (int)$_POST['topico'] : null,
         'publicado' => isset($_POST['publicado'])
       ];
 
@@ -73,7 +74,7 @@ class ArticulosController
 
     $articulos = [];
     $articuloEdit = null;
-    $categorias = ['Salud', 'Consejos', 'Noticias', 'Bienestar', 'Medicina'];
+    $topicos = (new Topico())->all();
 
     if ($action === 'list') {
       $articulos = $canManage ?
@@ -90,7 +91,7 @@ class ArticulosController
       'id' => $id,
       'articulos' => $articulos,
       'articulo' => $articuloEdit,
-      'categorias' => $categorias,
+      'topicos' => $topicos,
       'message' => $message,
       'messageType' => $messageType,
       'canManage' => $canManage

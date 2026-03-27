@@ -5,9 +5,9 @@
   <a href="blog.php" class="articulo-volver">← Volver al blog</a>
 
   <header class="articulo-header">
-    <?php if ($articulo['categoria']): ?>
+    <?php if ($articulo['topico_nombre']): ?>
       <span class="articulo-categoria">
-        <?= htmlspecialchars($articulo['categoria']) ?>
+        <?= htmlspecialchars($articulo['topico_nombre']) ?>
       </span>
     <?php endif; ?>
 

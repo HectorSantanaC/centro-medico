@@ -16,17 +16,21 @@ class Articulo
   public function all(): array
   {
     return $this->db->fetchAll("
-            SELECT * FROM articulos 
-            WHERE publicado = true 
-            ORDER BY created_at DESC
+            SELECT a.*, t.nombre as topico_nombre
+            FROM articulos a
+            LEFT JOIN topicos t ON a.topico = t.id
+            WHERE a.publicado = true 
+            ORDER BY a.created_at DESC
         ");
   }
 
   public function allAdmin(): array
   {
     return $this->db->fetchAll("
-            SELECT * FROM articulos 
-            ORDER BY created_at DESC
+            SELECT a.*, t.nombre as topico_nombre
+            FROM articulos a
+            LEFT JOIN topicos t ON a.topico = t.id
+            ORDER BY a.created_at DESC
         ");
   }
 
@@ -40,7 +44,7 @@ class Articulo
 
   public function create(array $data): int
   {
-    $sql = "INSERT INTO articulos (titulo, contenido, resumen, imagen, autor, categoria, publicado) 
+    $sql = "INSERT INTO articulos (titulo, contenido, resumen, imagen, autor, topico, publicado) 
                 VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id";
 
     return $this->db->insert($sql, [
@@ -49,7 +53,7 @@ class Articulo
       $data['resumen'] ?? '',
       $data['imagen'] ?? '',
       $data['autor'] ?? '',
-      $data['categoria'] ?? '',
+      $data['topico'],
       $data['publicado'] ?? true
     ]);
   }
@@ -62,7 +66,7 @@ class Articulo
                     resumen = ?, 
                     imagen = ?, 
                     autor = ?, 
-                    categoria = ?, 
+                    topico = ?, 
                     publicado = ?,
                     updated_at = CURRENT_TIMESTAMP
                 WHERE id = ?";
@@ -73,7 +77,7 @@ class Articulo
       $data['resumen'] ?? '',
       $data['imagen'] ?? '',
       $data['autor'] ?? '',
-      $data['categoria'] ?? '',
+      $data['topico'],
       $data['publicado'] ?? true,
       $id
     ]);

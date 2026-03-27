@@ -28,26 +28,27 @@
         <table>
           <thead>
             <tr>
+              <th>Fecha</th>
               <th>Título</th>
-              <th>Categoría</th>
+              <th>Tópico</th>
               <th>Autor</th>
               <th>Publicado</th>
-              <th>Fecha</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             <?php foreach ($articulos as $articulo): ?>
               <tr>
+                <td><?= date('d/m/Y', strtotime($articulo['created_at'])) ?></td>
                 <td><?= htmlspecialchars($articulo['titulo']) ?></td>
-                <td><?= htmlspecialchars($articulo['categoria'] ?? '-') ?></td>
+                <td><?= htmlspecialchars($articulo['topico_nombre'] ?? '-') ?></td>
                 <td><?= htmlspecialchars($articulo['autor'] ?? '-') ?></td>
                 <td>
                   <span class="rol-badge rol-<?= $articulo['publicado'] ? 'admin' : 'paciente' ?>">
                     <?= $articulo['publicado'] ? 'Sí' : 'No' ?>
                   </span>
                 </td>
-                <td><?= date('d/m/Y', strtotime($articulo['created_at'])) ?></td>
+                
                 <td class="actions">
                   <a href="?action=edit&id=<?= $articulo['id'] ?>" class="btn btn-secondary btn-sm">Editar</a>
                   <a href="?action=delete&id=<?= $articulo['id'] ?>"
@@ -101,13 +102,13 @@
             </div>
 
             <div class="form-group">
-              <label>Categoría</label>
-              <select name="categoria">
-                <option value="">Sin categoría</option>
-                <?php foreach ($categorias as $cat): ?>
-                  <option value="<?= $cat ?>"
-                    <?= ($articulo['categoria'] ?? '') === $cat ? 'selected' : '' ?>>
-                    <?= $cat ?>
+              <label>Tópico</label>
+              <select name="topico">
+                <option value="">Sin tópico</option>
+                <?php foreach ($topicos as $top): ?>
+                  <option value="<?= $top['id'] ?>"
+                    <?= ($articulo['topico'] ?? '') == $top['id'] ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($top['nombre']) ?>
                   </option>
                 <?php endforeach; ?>
               </select>

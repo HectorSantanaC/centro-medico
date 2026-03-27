@@ -11,59 +11,69 @@ $pdo->exec("DROP TABLE IF EXISTS citas CASCADE");
 $pdo->exec("DROP TABLE IF EXISTS medicos CASCADE");
 $pdo->exec("DROP TABLE IF EXISTS especialidades CASCADE");
 $pdo->exec("DROP TABLE IF EXISTS usuarios CASCADE");
+$pdo->exec("DROP TABLE IF EXISTS topicos CASCADE");
+$pdo->exec("DROP TABLE IF EXISTS articulos CASCADE");
 echo "✅ Tablas anteriores eliminadas<br>";
 
 // 1. TABLAS
 $tables = [
   "CREATE TABLE IF NOT EXISTS usuarios (
-        id SERIAL PRIMARY KEY,
-        nombre VARCHAR(100) NOT NULL,
-        apellidos VARCHAR(100) NOT NULL,
-        email VARCHAR(100) UNIQUE NOT NULL,
-        password VARCHAR(255) NOT NULL,
-        rol VARCHAR(20) DEFAULT 'paciente',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )",
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    apellidos VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    rol VARCHAR(20) DEFAULT 'paciente',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )",
 
   "CREATE TABLE IF NOT EXISTS especialidades (
-        id SERIAL PRIMARY KEY,
-        nombre VARCHAR(100) NOT NULL,
-        descripcion TEXT,
-        activo BOOLEAN DEFAULT true
-    )",
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    activo BOOLEAN DEFAULT true
+  )",
 
   "CREATE TABLE IF NOT EXISTS medicos (
-        id SERIAL PRIMARY KEY,
-        nombre VARCHAR(100) NOT NULL,
-        apellidos VARCHAR(100) NOT NULL,
-        especialidad_id INTEGER REFERENCES especialidades(id),
-        activo BOOLEAN DEFAULT true
-    )",
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    apellidos VARCHAR(100) NOT NULL,
+    especialidad_id INTEGER REFERENCES especialidades(id),
+    activo BOOLEAN DEFAULT true
+  )",
 
   "CREATE TABLE IF NOT EXISTS citas (
-        id SERIAL PRIMARY KEY,
-        paciente_id INTEGER REFERENCES usuarios(id),
-        medico_id INTEGER REFERENCES medicos(id),
-        especialidad_id INTEGER REFERENCES especialidades(id),
-        fecha DATE NOT NULL,
-        hora TIME NOT NULL,
-        estado VARCHAR(20) DEFAULT 'pendiente',
-        notas TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )",
+    id SERIAL PRIMARY KEY,
+    paciente_id INTEGER REFERENCES usuarios(id),
+    medico_id INTEGER REFERENCES medicos(id),
+    especialidad_id INTEGER REFERENCES especialidades(id),
+    fecha DATE NOT NULL,
+    hora TIME NOT NULL,
+    estado VARCHAR(20) DEFAULT 'pendiente',
+    notas TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )",
+
+    "CREATE TABLE IF NOT EXISTS topicos (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )",
 
   "CREATE TABLE IF NOT EXISTS articulos (
-        id SERIAL PRIMARY KEY,
-        titulo VARCHAR(255) NOT NULL,
-        contenido TEXT NOT NULL,
-        resumen VARCHAR(500),
-        imagen VARCHAR(255),
-        autor VARCHAR(255),
-        categoria VARCHAR(100),
-        publicado BOOLEAN DEFAULT true,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )"
+    id SERIAL PRIMARY KEY,
+    titulo VARCHAR(255) NOT NULL,
+    contenido TEXT NOT NULL,
+    resumen VARCHAR(500),
+    imagen VARCHAR(255),
+    autor VARCHAR(255),
+    topico INTEGER REFERENCES topicos(id),
+    publicado BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )"
 ];
 
 foreach ($tables as $sql) {
