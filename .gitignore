@@ -1,0 +1,17 @@
+# Archivos del proyecto
+AGENTS.md
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Logs
+*.log
+
+# XAMPP
+xampp-controll/
