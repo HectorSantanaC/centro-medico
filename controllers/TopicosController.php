@@ -10,7 +10,7 @@ class TopicosController {
     }
 
     public function handleRequest(): array {
-        if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_rol'] !== 'admin') {
+        if (!isset($_SESSION['usuario_id']) || !in_array($_SESSION['usuario_rol'], ['admin', 'gestor'])) {
             header('Location: login.php');
             exit;
         }
