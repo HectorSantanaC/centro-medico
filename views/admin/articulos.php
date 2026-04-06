@@ -28,7 +28,6 @@
         <table>
           <thead>
             <tr>
-              <th>Orden</th>
               <th>Título</th>
               <th>Tópico</th>
               <th>Fecha</th>
@@ -40,7 +39,6 @@
           <tbody>
             <?php foreach ($articulos as $articulo): ?>
               <tr>
-                <td><?= htmlspecialchars($articulo['orden'] ?? 0) ?></td>
                 <td><?= htmlspecialchars($articulo['titulo']) ?></td>
                 <td><?= htmlspecialchars($articulo['topico_nombre'] ?? '-') ?></td>
                 <td><?= !empty($articulo['fecha_contenido']) ? date('d/m/Y', strtotime($articulo['fecha_contenido'])) : '-' ?></td>
