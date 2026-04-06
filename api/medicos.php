@@ -8,9 +8,9 @@ header('Content-Type: application/json');
 $espId = (int)($_GET['especialidad_id'] ?? 0);
 
 if ($espId > 0) {
-    $medicoModel = new Medico();
-    $medicos = $medicoModel->getByEspecialidad($espId);
-    echo json_encode($medicos);
+  $medicoModel = new Medico();
+  $medicos = $medicoModel->getByEspecialidad($espId);
+  echo json_encode($medicos);
 } else {
-    echo json_encode([]);
+  echo json_encode([]);
 }
