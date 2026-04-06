@@ -130,12 +130,20 @@ class ArticulosController
 
     $uploadDir = __DIR__ . '/../assets/img/articulos/';
     if (!is_dir($uploadDir)) {
-      mkdir($uploadDir, 0755, true);
+      if (!mkdir($uploadDir, 0755, true)) {
+        error_log("No se pudo crear el directorio de uploads: $uploadDir");
+        return null;
+      }
     }
 
     $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
     $filename = uniqid('articulo_') . '.' . $extension;
     $destination = $uploadDir . $filename;
+
+    if (!is_writable($uploadDir)) {
+      error_log("El directorio de uploads no tiene permisos de escritura: $uploadDir");
+      return null;
+    }
 
     if (move_uploaded_file($file['tmp_name'], $destination)) {
       return 'assets/img/articulos/' . $filename;
