@@ -16,8 +16,12 @@
     <div class="blog-grid">
       <?php foreach ($articulos as $articulo): ?>
         <article class="blog-card">
-          <?php if ($articulo['imagen']): ?>
+          <?php if (!empty($articulo['imagen'])): ?>
             <img src="<?= htmlspecialchars($articulo['imagen']) ?>"
+              alt="<?= htmlspecialchars($articulo['titulo']) ?>"
+              class="blog-card-img">
+          <?php elseif (!empty($articulo['imagen_url'])): ?>
+            <img src="<?= htmlspecialchars($articulo['imagen_url']) ?>"
               alt="<?= htmlspecialchars($articulo['titulo']) ?>"
               class="blog-card-img">
           <?php else: ?>
