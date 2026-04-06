@@ -114,7 +114,7 @@
 
             <div class="form-group">
               <label class="checkbox-label">
-                Orden
+                Publicar
                 <input type="checkbox" name="publicado"
                   <?= !isset($articulo['publicado']) || $articulo['publicado'] ? 'checked' : '' ?>>
               </label>
