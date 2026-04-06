@@ -16,9 +16,12 @@ $canManage = $data['canManage'];
 
 $page_title = 'Blog';
 
-if (($action === 'view' || $action === 'edit') && $articulo && !$canManage) {
+if ($action === 'view' && $articulo) {
   $page_title = $articulo['titulo'];
   include __DIR__ . '/views/blogarticulo.php';
+} elseif ($action === 'view' && !$articulo) {
+  header('Location: blog.php');
+  exit;
 } else {
   include __DIR__ . '/views/blog.php';
 }

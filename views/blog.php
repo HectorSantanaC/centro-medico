@@ -48,7 +48,7 @@
               <span><?= date('d/m/Y', strtotime($articulo['created_at'])) ?></span>
             </div>
 
-            <a href="?id=<?= $articulo['id'] ?>" class="blog-card-link">
+            <a href="?action=view&id=<?= $articulo['id'] ?>" class="blog-card-link">
               Leer más →
             </a>
           </div>

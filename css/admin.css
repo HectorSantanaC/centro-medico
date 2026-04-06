@@ -165,7 +165,14 @@ body {
   font-size: 12px;
   opacity: 0.7;
 }
-
+.help-text {
+  font-size: 12px;
+  color: #666;
+  margin-top: 5px;
+}
+.info-seo {
+  padding: 20px 0;
+}
 .sidebar {
   width: 260px;
   background: linear-gradient(180deg, #2c5282 0%, #1a365d 100%);

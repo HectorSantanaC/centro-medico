@@ -44,41 +44,69 @@ class Articulo
 
   public function create(array $data): int
   {
-    $sql = "INSERT INTO articulos (titulo, contenido, resumen, imagen, autor, topico, publicado) 
-                VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id";
+    $sql = "INSERT INTO articulos (
+      titulo, topico, contenido_completo, contenido_reducido, 
+      fecha_contenido, fecha_caducidad, orden, notas,
+      imagen, imagen_url, autor, publicado,
+      seo_titulo, seo_descripcion, seo_palabras_clave
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id";
 
     return $this->db->insert($sql, [
       $data['titulo'],
-      $data['contenido'],
-      $data['resumen'] ?? '',
-      $data['imagen'] ?? '',
-      $data['autor'] ?? '',
       $data['topico'],
-      $data['publicado'] ?? true
+      $data['contenido_completo'] ?? '',
+      $data['contenido_reducido'] ?? '',
+      $data['fecha_contenido'] ?? null,
+      $data['fecha_caducidad'] ?? null,
+      $data['orden'] ?? 0,
+      $data['notas'] ?? '',
+      $data['imagen'] ?? '',
+      $data['imagen_url'] ?? '',
+      $data['autor'] ?? '',
+      $data['publicado'] ?? true,
+      $data['seo_titulo'] ?? '',
+      $data['seo_descripcion'] ?? '',
+      $data['seo_palabras_clave'] ?? ''
     ]);
   }
 
   public function update(int $id, array $data): bool
   {
     $sql = "UPDATE articulos SET 
-                    titulo = ?, 
-                    contenido = ?, 
-                    resumen = ?, 
-                    imagen = ?, 
-                    autor = ?, 
-                    topico = ?, 
-                    publicado = ?,
-                    updated_at = CURRENT_TIMESTAMP
-                WHERE id = ?";
+      titulo = ?, 
+      topico = ?, 
+      contenido_completo = ?, 
+      contenido_reducido = ?, 
+      fecha_contenido = ?, 
+      fecha_caducidad = ?, 
+      orden = ?, 
+      notas = ?,
+      imagen = ?, 
+      imagen_url = ?,
+      autor = ?, 
+      publicado = ?,
+      seo_titulo = ?,
+      seo_descripcion = ?,
+      seo_palabras_clave = ?,
+      updated_at = CURRENT_TIMESTAMP
+    WHERE id = ?";
 
     $this->db->execute($sql, [
       $data['titulo'],
-      $data['contenido'],
-      $data['resumen'] ?? '',
-      $data['imagen'] ?? '',
-      $data['autor'] ?? '',
       $data['topico'],
+      $data['contenido_completo'] ?? '',
+      $data['contenido_reducido'] ?? '',
+      $data['fecha_contenido'] ?? null,
+      $data['fecha_caducidad'] ?? null,
+      $data['orden'] ?? 0,
+      $data['notas'] ?? '',
+      $data['imagen'] ?? '',
+      $data['imagen_url'] ?? '',
+      $data['autor'] ?? '',
       $data['publicado'] ?? true,
+      $data['seo_titulo'] ?? '',
+      $data['seo_descripcion'] ?? '',
+      $data['seo_palabras_clave'] ?? '',
       $id
     ]);
     return true;
