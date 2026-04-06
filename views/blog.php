@@ -35,9 +35,9 @@
 
             <h3><?= htmlspecialchars($articulo['titulo']) ?></h3>
 
-            <?php if ($articulo['resumen']): ?>
+            <?php if (!empty($articulo['contenido_reducido'])): ?>
               <p class="blog-card-resumen">
-                <?= htmlspecialchars($articulo['resumen']) ?>
+                <?= htmlspecialchars($articulo['contenido_reducido']) ?>
               </p>
             <?php endif; ?>
 
