@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gestión de Artículos</title>
   <link rel="stylesheet" href="css/admin.css">
+  <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 </head>
 
 <body>
@@ -102,14 +103,12 @@
 
             <div class="form-group">
               <label>Contenido reducido</label>
-              <textarea name="contenido_reducido" rows="3"
-                placeholder="Breve descripción para tarjetas"><?= htmlspecialchars($articulo['contenido_reducido'] ?? $articulo['resumen'] ?? '') ?></textarea>
+              <textarea name="contenido_reducido" id="contenido_reducido" class="editor-html" rows="5"><?= $articulo['contenido_reducido'] ?? $articulo['resumen'] ?? '' ?></textarea>
             </div>
 
             <div class="form-group">
               <label>Contenido completo</label>
-              <textarea name="contenido_completo" rows="10"
-                placeholder="Contenido completo del artículo"><?= htmlspecialchars($articulo['contenido_completo'] ?? $articulo['contenido'] ?? '') ?></textarea>
+              <textarea name="contenido_completo" id="contenido_completo" class="editor-html" rows="10"><?= $articulo['contenido_completo'] ?? $articulo['contenido'] ?? '' ?></textarea>
             </div>
 
             <div class="form-group">
@@ -170,10 +169,24 @@
               </button>
               <a href="articulos-crud.php" class="btn btn-secondary">Cancelar</a>
             </div>
+          </div>
         </form>
       </div>
     <?php endif; ?>
   </main>
+
+  <script>
+    CKEDITOR.replaceAll(function(textarea, config) {
+      if (textarea.className.indexOf('editor-html') !== -1) {
+        config.versionCheck = false;
+        config.language = 'es';
+        config.height = 170;
+        return true;
+      }
+      return false;
+    });
+  </script>
+
 </body>
 
 </html>
