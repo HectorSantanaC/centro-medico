@@ -151,9 +151,7 @@
 
             <div class="form-group">
               <label>Descripción</label>
-              <textarea name="seo_descripcion" rows="2">
-                <?= htmlspecialchars($articulo['seo_descripcion'] ?? '') ?>
-              </textarea>
+              <textarea name="seo_descripcion" rows="2"><?= htmlspecialchars($articulo['seo_descripcion'] ?? '') ?></textarea>
             </div>
 
             <div class="form-group">
