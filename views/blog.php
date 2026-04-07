@@ -41,7 +41,7 @@
 
             <?php if (!empty($articulo['contenido_reducido'])): ?>
               <p class="blog-card-resumen">
-                <?= htmlspecialchars($articulo['contenido_reducido']) ?>
+                <?= $articulo['contenido_reducido'] ?>
               </p>
             <?php endif; ?>
 

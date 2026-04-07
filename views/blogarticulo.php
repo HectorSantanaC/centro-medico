@@ -35,7 +35,7 @@
     </header>
 
     <div class="articulo-contenido">
-      <?= nl2br(htmlspecialchars($articulo['contenido_completo'] ?? '')) ?>
+      <?= nl2br($articulo['contenido_completo'] ?? '') ?>
     </div>
   </article>
 
