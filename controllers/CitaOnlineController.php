@@ -39,7 +39,7 @@ class CitaOnlineController extends BaseController
         ]
       );
       $data['paciente_id'] = $this->getCurrentUserId();
-      $cita_id = $this->citaModel->create($data);
+      $this->citaModel->create($data);
       
       $mensaje_exito = "Cita RESERVADA!<br>📅  " . date('d/m/Y', strtotime($data['fecha'])) . " " . $data['hora'];
     }
