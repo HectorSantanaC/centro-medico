@@ -29,16 +29,13 @@ class Topico {
   }
 
   public function update(int $id, array $data): bool {
-    $sql = "UPDATE topicos SET nombre = :nombre WHERE id = :id";
-
-    $data['id'] = $id;
-    $this->db->execute($sql, $data);
-
+    $sql = "UPDATE topicos SET nombre = ? WHERE id = ?";
+    $this->db->execute($sql, [$data['name'], $id]);
     return true;
   }
 
   public function delete(int $id): bool {
-    $this->db->execute("DELETE FROM topicos WHERE id = :id", ['id' => $id]);
+    $this->db->execute("DELETE FROM topicos WHERE id = ?", [$id]);
     return true;
   }
 }
