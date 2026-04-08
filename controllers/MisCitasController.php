@@ -23,14 +23,14 @@ class MisCitasController extends BaseController
 
     $page_title = 'Mis Citas';
     $usuario_id = $this->getCurrentUserId();
-    $mensaje = '';
-    $mensaje_tipo = '';
+    $message = '';
+    $messageType = '';
 
     if (isset($_GET['cancelar']) && $_GET['cancelar']) {
       $cita_id = (int)$_GET['cancelar'];
       $this->citaModel->cancel($cita_id, $usuario_id);
-      $mensaje = 'Cita cancelada correctamente';
-      $mensaje_tipo = 'success';
+      $message = 'Cita cancelada correctamente';
+      $messageType = 'success';
     }
 
     $citas = $this->citaModel->getByPaciente($usuario_id);
@@ -40,8 +40,8 @@ class MisCitasController extends BaseController
       'page_title' => $page_title,
       'citas' => $citas,
       'estados' => $estados,
-      'mensaje' => $mensaje,
-      'mensaje_tipo' => $mensaje_tipo
+      'message' => $message,
+      'messageType' => $messageType
     ];
   }
 }

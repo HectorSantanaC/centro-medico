@@ -9,10 +9,10 @@
     </a>
   </div>
   
-  <?php if ($mensaje): ?>
+  <?php if ($message): ?>
     <div style="padding: 15px; border-radius: 5px; margin-bottom: 20px; 
-      background: <?= $mensaje_tipo === 'success' ? '#d4edda; color: #155724' : '#f8d7da; color: #721c24' ?>;">
-      <?= htmlspecialchars($mensaje) ?>
+      background: <?= $messageType === 'success' ? '#d4edda; color: #155724' : '#f8d7da; color: #721c24' ?>;">
+      <?= htmlspecialchars($message) ?>
     </div>
   <?php endif; ?>
   
