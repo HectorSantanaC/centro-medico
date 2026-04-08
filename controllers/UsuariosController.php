@@ -24,6 +24,8 @@ class UsuariosController extends BaseController
     $roles = ['admin', 'gestor', 'paciente'];
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      $this->requireCsrfToken();
+      
       $data = [
         'nombre' => trim($_POST['nombre'] ?? ''),
         'apellidos' => trim($_POST['apellidos'] ?? ''),

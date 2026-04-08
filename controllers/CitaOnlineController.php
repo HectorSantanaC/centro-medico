@@ -24,6 +24,8 @@ class CitaOnlineController extends BaseController
     $mensaje_exito = '';
 
     if ($_POST) {
+      $this->requireCsrfToken();
+      
       $data = $this->getPostData(
         [
           'medico_id' => 'int',

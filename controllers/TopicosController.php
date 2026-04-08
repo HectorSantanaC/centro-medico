@@ -23,6 +23,8 @@ class TopicosController extends BaseController
     $messageType = '';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      $this->requireCsrfToken();
+      
       $data = [
         'name' => trim($_POST['nombre'] ?? '')
       ];

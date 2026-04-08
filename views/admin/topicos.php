@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gestión de Tópicos</title>
   <link rel="stylesheet" href="css/admin.css">
+  <?php require_once __DIR__ . '/../../helpers/sanitize.php'; ?>
 </head>
 
 <body>
@@ -55,6 +56,7 @@
         <h2><?= $action === 'create' ? 'Crear' : 'Editar' ?> Tópico</h2>
 
         <form method="POST">
+          <?= csrf_field() ?>
           <div class="form-group">
             <label>Nombre *</label>
             <input type="text" name="nombre" required

@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Centro Médico TAC7 - <?php echo $page_title ?? 'Inicio'; ?></title>
   <link rel="stylesheet" href="css/style.css">
+  <?php require_once __DIR__ . '/../../helpers/sanitize.php'; ?>
 </head>
 
 <body>

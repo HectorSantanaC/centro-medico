@@ -29,6 +29,8 @@ class ArticulosController extends BaseController
     }
 
     if ($canManage && $_SERVER['REQUEST_METHOD'] === 'POST') {
+      $this->requireCsrfToken();
+      
       $imagen = '';
       if (!empty($_FILES['imagen_file']['name'])) {
         $imagen = $this->uploadImage($_FILES['imagen_file']);

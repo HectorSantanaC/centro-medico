@@ -29,3 +29,26 @@ function sanitizePostData(array $fields, array $map = []): array
 
   return $result;
 }
+
+function csrf_token(): string
+{
+  if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+  }
+
+  if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+  }
+
+  return $_SESSION['csrf_token'];
+}
+
+function csrf_field(): string
+{
+  return '<input type="hidden" name="csrf_token" value="' . csrf_token() . '">';
+}
+
+function csrf_url(): string
+{
+  return 'csrf_token=' . csrf_token();
+}

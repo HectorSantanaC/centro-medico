@@ -7,6 +7,7 @@
   <title>Gestión de Artículos</title>
   <link rel="stylesheet" href="css/admin.css">
   <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+  <?php require_once __DIR__ . '/../../helpers/sanitize.php'; ?>
 </head>
 
 <body>
@@ -69,6 +70,7 @@
         <h2><?= $action === 'create' ? 'Crear' : 'Editar' ?> Artículo</h2>
 
         <form method="POST" enctype="multipart/form-data">
+          <?= csrf_field() ?>
           <div class="form-group">
             <label>Título *</label>
             <input type="text" name="titulo" required

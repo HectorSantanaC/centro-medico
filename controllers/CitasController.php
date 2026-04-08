@@ -32,6 +32,8 @@ class CitasController extends BaseController
     $messageType = '';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      $this->requireCsrfToken();
+      
       $data = $this->getSanitizedInput([
         'paciente_id' => 'int',
         'medico_id' => 'int',

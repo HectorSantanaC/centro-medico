@@ -81,6 +81,7 @@
           <h2>Editar Cita</h2>
 
           <form method="POST" class="form-grid">
+            <?= csrf_field() ?>
             <div class="form-group">
               <label>Paciente</label>
               <input type="text" value="<?= htmlspecialchars(($pacienteInfo['nombre'] ?? '') . ' ' . ($pacienteInfo['apellidos'] ?? '')) ?>" disabled>

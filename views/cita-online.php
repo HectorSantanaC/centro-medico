@@ -25,6 +25,7 @@
     </div>
 
     <form method="POST" action="" class="cita-form" id="citaForm">
+      <?= csrf_field() ?>
       <input type="hidden" name="ajax" value="1">
 
       <div class="cita-paso">

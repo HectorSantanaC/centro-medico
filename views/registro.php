@@ -15,6 +15,7 @@
   <?php endif; ?>
   
   <form method="POST" action="registro.php" style="display: flex; flex-direction: column; gap: 15px;">
+    <?= csrf_field() ?>
     
     <div>
       <label style="display: block; margin-bottom: 5px; font-weight: bold;">Nombre *</label>
