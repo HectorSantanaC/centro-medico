@@ -27,16 +27,22 @@ class CitaOnlineController
     $mensaje_exito = '';
 
     if ($_POST) {
-      $data = sanitizePostData([
-        'medico_id' => 'int',
-        'especialidad_id' => 'int',
-        'fecha_cita' => 'string',
-        'hora_cita' => 'string'
-      ]);
+      $data = sanitizePostData(
+        [
+          'medico_id' => 'int',
+          'especialidad_id' => 'int',
+          'fecha' => 'string',
+          'hora' => 'string'
+        ],
+        [
+          'fecha' => 'fecha_cita',
+          'hora' => 'hora_cita'
+        ]
+      );
       $data['paciente_id'] = $_SESSION['usuario_id'];
       $cita_id = $this->citaModel->create($data);
       
-      $mensaje_exito = "Cita RESERVADA!<br>📅  " . date('d/m/Y', strtotime($data['fecha_cita'])) . " " . $data['hora_cita'];
+      $mensaje_exito = "Cita RESERVADA!<br>📅  " . date('d/m/Y', strtotime($data['fecha'])) . " " . $data['hora'];
     }
 
     $especialidades = $this->especialidadModel->allActives();

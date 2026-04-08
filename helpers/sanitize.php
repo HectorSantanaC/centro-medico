@@ -1,11 +1,12 @@
 <?php
 
-function sanitizePostData(array $fields): array
+function sanitizePostData(array $fields, array $map = []): array
 {
   $result = [];
 
   foreach ($fields as $field => $type) {
-    $value = $_POST[$field] ?? '';
+    $postKey = $map[$field] ?? $field;
+    $value = $_POST[$postKey] ?? '';
 
     switch ($type) {
       case 'int':
