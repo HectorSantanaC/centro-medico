@@ -1,5 +1,6 @@
 <?php
 
+require_once __DIR__ . '/../helpers/sanitize.php';
 require_once __DIR__ . '/../models/Cita.php';
 require_once __DIR__ . '/../models/Usuario.php';
 require_once __DIR__ . '/../models/Especialidad.php';
@@ -33,7 +34,15 @@ class CitasController
     $messageType = '';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-      $data = $this->sanitizePostData();
+      $data = sanitizePostData([
+        'paciente_id' => 'int',
+        'medico_id' => 'int',
+        'especialidad_id' => 'int',
+        'fecha' => 'string',
+        'hora' => 'string',
+        'estado' => 'default',
+        'notas' => 'text'
+      ]);
       
       if ($action === 'edit' && $id) {
         try {
@@ -92,19 +101,6 @@ class CitasController
       'pacientes' => $this->usuarioModel->all(),
       'estados' => ['pendiente', 'confirmada', 'completada', 'cancelada'],
       'active' => 'citas'
-    ];
-  }
-
-  private function sanitizePostData(): array
-  {
-    return [
-      'paciente_id' => (int) ($_POST['paciente_id'] ?? 0),
-      'medico_id' => (int) ($_POST['medico_id'] ?? 0),
-      'especialidad_id' => (int) ($_POST['especialidad_id'] ?? 0),
-      'fecha' => $_POST['fecha'] ?? '',
-      'hora' => $_POST['hora'] ?? '',
-      'estado' => $_POST['estado'] ?? 'pendiente',
-      'notas' => trim($_POST['notas'] ?? '')
     ];
   }
 }

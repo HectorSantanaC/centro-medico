@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../helpers/sanitize.php';
+
 require_once __DIR__ . '/../models/Cita.php';
 require_once __DIR__ . '/../models/Especialidad.php';
 
@@ -25,10 +27,16 @@ class CitaOnlineController
     $mensaje_exito = '';
 
     if ($_POST) {
-      $data = $this->sanitizePostData();
+      $data = sanitizePostData([
+        'medico_id' => 'int',
+        'especialidad_id' => 'int',
+        'fecha_cita' => 'string',
+        'hora_cita' => 'string'
+      ]);
+      $data['paciente_id'] = $_SESSION['usuario_id'];
       $cita_id = $this->citaModel->create($data);
       
-      $mensaje_exito = "Cita RESERVADA!<br>📅  " . date('d/m/Y', strtotime($data['fecha'])) . " " . $data['hora'];
+      $mensaje_exito = "Cita RESERVADA!<br>📅  " . date('d/m/Y', strtotime($data['fecha_cita'])) . " " . $data['hora_cita'];
     }
 
     $especialidades = $this->especialidadModel->allActives();
@@ -38,17 +46,6 @@ class CitaOnlineController
       'especialidades' => $especialidades,
       'mensaje_exito' => $mensaje_exito,
       'user_role' => $_SESSION['usuario_rol'] ?? 'paciente'
-    ];
-  }
-
-  private function sanitizePostData(): array
-  {
-    return [
-      'paciente_id' => $_SESSION['usuario_id'],
-      'medico_id' => (int)($_POST['medico_id'] ?? 0),
-      'especialidad_id' => (int)($_POST['especialidad_id'] ?? 0),
-      'fecha' => $_POST['fecha_cita'] ?? '',
-      'hora' => $_POST['hora_cita'] ?? ''
     ];
   }
 }
