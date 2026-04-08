@@ -28,7 +28,7 @@ class AuthController
 
         if (!$usuario) {
           $error = 'Email o contraseña incorrectos';
-        } elseif ($password !== $usuario['password']) {
+        } elseif (!password_verify($password, $usuario['password'])) {
           $error = 'Email o contraseña incorrectos';
         } else {
           $this->loginUser($usuario);

@@ -51,6 +51,8 @@ class Usuario
 
   public function create(array $data): int
   {
+    $passwordHash = password_hash($data['password'], PASSWORD_DEFAULT);
+    
     $sql = "INSERT INTO usuarios (nombre, apellidos, email, password, rol) 
       VALUES (?, ?, ?, ?, 'paciente') RETURNING id";
     
@@ -58,7 +60,7 @@ class Usuario
       $data['nombre'],
       $data['apellidos'],
       $data['email'],
-      $data['password']
+      $passwordHash
     ]);
   }
 
@@ -77,9 +79,10 @@ class Usuario
   public function update(int $id, array $data): bool
   {
     if (isset($data['password']) && !empty($data['password'])) {
+      $passwordHash = password_hash($data['password'], PASSWORD_DEFAULT);
       $this->db->execute(
         "UPDATE usuarios SET nombre=?, apellidos=?, email=?, password=?, rol=? WHERE id=?",
-        [$data['nombre'], $data['apellidos'], $data['email'], $data['password'], $data['rol'], $id]
+        [$data['nombre'], $data['apellidos'], $data['email'], $passwordHash, $data['rol'], $id]
       );
     } else {
       $this->db->execute(
@@ -98,13 +101,15 @@ class Usuario
 
   public function createWithRole(array $data): int
   {
+    $passwordHash = password_hash($data['password'], PASSWORD_DEFAULT);
+    
     $sql = "INSERT INTO usuarios (nombre, apellidos, email, password, rol) VALUES (?, ?, ?, ?, ?) RETURNING id";
     
     return $this->db->insert($sql, [
       $data['nombre'],
       $data['apellidos'],
       $data['email'],
-      $data['password'],
+      $passwordHash,
       $data['rol']
     ]);
   }

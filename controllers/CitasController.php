@@ -62,11 +62,21 @@ class CitasController
 
     $citas = [];
     $citaEdit = null;
+    $pacienteInfo = null;
 
     if ($action === 'list') {
       $citas = $this->citaModel->all();
     } elseif ($action === 'edit' && $id) {
       $citaEdit = $this->citaModel->find($id);
+      if ($citaEdit && isset($citaEdit['paciente_id'])) {
+        $paciente = $this->usuarioModel->find($citaEdit['paciente_id']);
+        if ($paciente) {
+          $pacienteInfo = [
+            'nombre' => $paciente['nombre'],
+            'apellidos' => $paciente['apellidos']
+          ];
+        }
+      }
     }
 
     return [
@@ -76,6 +86,7 @@ class CitasController
       'messageType' => $messageType,
       'citas' => $citas,
       'citaEdit' => $citaEdit,
+      'pacienteInfo' => $pacienteInfo,
       'especialidades' => $this->especialidadModel->allActives(),
       'medicos' => $this->medicoModel->allActives(),
       'pacientes' => $this->usuarioModel->all(),

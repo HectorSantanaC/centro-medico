@@ -74,12 +74,7 @@
       <?php elseif ($action === 'edit'): ?>
 
         <?php
-        $pacienteInfo = null;
-        if (isset($citaEdit['paciente_id'])) {
-          $stmtPaciente = $pdo->prepare("SELECT nombre, apellidos FROM usuarios WHERE id = ?");
-          $stmtPaciente->execute([$citaEdit['paciente_id']]);
-          $pacienteInfo = $stmtPaciente->fetch(PDO::FETCH_ASSOC);
-        }
+        $pacienteInfo = $pacienteInfo ?? null;
         ?>
 
         <div class="form-card">
