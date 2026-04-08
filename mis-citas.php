@@ -8,7 +8,7 @@ $data = $controller->handleRequest();
 $page_title = $data['page_title'];
 $citas = $data['citas'];
 $estados = $data['estados'];
-$mensaje = $data['mensaje'];
-$mensaje_tipo = $data['mensaje_tipo'];
+$message = $data['message'];
+$messageType = $data['messageType'];
 
 include __DIR__ . '/views/mis-citas.php';
