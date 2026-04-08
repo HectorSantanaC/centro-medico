@@ -1,10 +1,11 @@
 <?php
 
+require_once __DIR__ . '/../controllers/BaseController.php';
 require_once __DIR__ . '/../models/Usuario.php';
 require_once __DIR__ . '/../models/Especialidad.php';
 require_once __DIR__ . '/../models/Medico.php';
 
-class AdminController
+class AdminController extends BaseController
 {
   private Usuario $usuarioModel;
   private Especialidad $especialidadModel;
@@ -12,6 +13,7 @@ class AdminController
 
   public function __construct()
   {
+    parent::__construct();
     $this->usuarioModel = new Usuario();
     $this->especialidadModel = new Especialidad();
     $this->medicoModel = new Medico();
@@ -19,12 +21,9 @@ class AdminController
 
   public function handleRequest(): array
   {
-    if (!isset($_SESSION['usuario_id']) || !in_array($_SESSION['usuario_rol'], ['admin', 'gestor'])) {
-      header('Location: login.php');
-      exit;
-    }
+    $this->requireRole(['admin', 'gestor']);
 
-    $isAdmin = $_SESSION['usuario_rol'] === 'admin';
+    $isAdmin = $this->isAdmin();
     $stats = $this->getStats($isAdmin);
 
     return [

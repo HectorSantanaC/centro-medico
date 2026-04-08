@@ -1,12 +1,12 @@
 <?php
 
-require_once __DIR__ . '/../helpers/sanitize.php';
+require_once __DIR__ . '/../controllers/BaseController.php';
 require_once __DIR__ . '/../models/Cita.php';
 require_once __DIR__ . '/../models/Usuario.php';
 require_once __DIR__ . '/../models/Especialidad.php';
 require_once __DIR__ . '/../models/Medico.php';
 
-class CitasController
+class CitasController extends BaseController
 {
   private Cita $citaModel;
   private Usuario $usuarioModel;
@@ -15,6 +15,7 @@ class CitasController
 
   public function __construct()
   {
+    parent::__construct();
     $this->citaModel = new Cita();
     $this->usuarioModel = new Usuario();
     $this->especialidadModel = new Especialidad();
@@ -23,10 +24,7 @@ class CitasController
 
   public function handleRequest(): array
   {
-    if (!isset($_SESSION['usuario_id']) || !in_array($_SESSION['usuario_rol'], ['admin', 'gestor'])) {
-      header('Location: login.php');
-      exit;
-    }
+    $this->requireRole(['admin', 'gestor']);
 
     $action = $_REQUEST['action'] ?? 'list';
     $id = isset($_REQUEST['id']) ? (int) $_REQUEST['id'] : null;
@@ -34,7 +32,7 @@ class CitasController
     $messageType = '';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-      $data = sanitizePostData([
+      $data = $this->getSanitizedInput([
         'paciente_id' => 'int',
         'medico_id' => 'int',
         'especialidad_id' => 'int',

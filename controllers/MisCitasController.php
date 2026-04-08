@@ -1,30 +1,28 @@
 <?php
 
+require_once __DIR__ . '/../controllers/BaseController.php';
 require_once __DIR__ . '/../models/Cita.php';
 
-class MisCitasController
+class MisCitasController extends BaseController
 {
   private Cita $citaModel;
 
   public function __construct()
   {
+    parent::__construct();
     $this->citaModel = new Cita();
   }
 
   public function handleRequest(): array
   {
-    if (!isset($_SESSION['usuario_id'])) {
-      header('Location: login.php');
-      exit;
-    }
+    $this->requireAuth();
 
-    if ($_SESSION['usuario_rol'] === 'admin') {
-      header('Location: citas-crud.php');
-      exit;
+    if ($this->isAdmin()) {
+      $this->redirect('citas-crud.php');
     }
 
     $page_title = 'Mis Citas';
-    $usuario_id = $_SESSION['usuario_id'];
+    $usuario_id = $this->getCurrentUserId();
     $mensaje = '';
     $mensaje_tipo = '';
 

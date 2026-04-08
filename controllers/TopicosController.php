@@ -1,22 +1,21 @@
 <?php
 
+require_once __DIR__ . '/../controllers/BaseController.php';
 require_once __DIR__ . '/../models/Topico.php';
 
-class TopicosController
+class TopicosController extends BaseController
 {
   private Topico $topicoModel;
 
   public function __construct()
   {
+    parent::__construct();
     $this->topicoModel = new Topico();
   }
 
   public function handleRequest(): array
   {
-    if (!isset($_SESSION['usuario_id']) || !in_array($_SESSION['usuario_rol'], ['admin', 'gestor'])) {
-      header('Location: login.php');
-      exit;
-    }
+    $this->requireRole(['admin', 'gestor']);
 
     $action = $_REQUEST['action'] ?? 'list';
     $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : null;

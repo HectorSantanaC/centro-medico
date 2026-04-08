@@ -1,14 +1,16 @@
 <?php
 
+require_once __DIR__ . '/../controllers/BaseController.php';
 require_once __DIR__ . '/../models/Articulo.php';
 require_once __DIR__ . '/../models/Topico.php';
 
-class ArticulosController
+class ArticulosController extends BaseController
 {
   private Articulo $articuloModel;
 
   public function __construct()
   {
+    parent::__construct();
     $this->articuloModel = new Articulo();
   }
 
@@ -23,8 +25,7 @@ class ArticulosController
       in_array($_SESSION['usuario_rol'], ['admin', 'gestor']);
 
     if (!$canManage && $action !== 'list' && $action !== 'view') {
-      header('Location: login.php');
-      exit;
+      $this->redirect('login.php');
     }
 
     if ($canManage && $_SERVER['REQUEST_METHOD'] === 'POST') {

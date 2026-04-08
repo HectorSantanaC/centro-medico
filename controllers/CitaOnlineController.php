@@ -1,33 +1,30 @@
 <?php
 
-require_once __DIR__ . '/../helpers/sanitize.php';
-
+require_once __DIR__ . '/../controllers/BaseController.php';
 require_once __DIR__ . '/../models/Cita.php';
 require_once __DIR__ . '/../models/Especialidad.php';
 
-class CitaOnlineController
+class CitaOnlineController extends BaseController
 {
   private Cita $citaModel;
   private Especialidad $especialidadModel;
 
   public function __construct()
   {
+    parent::__construct();
     $this->citaModel = new Cita();
     $this->especialidadModel = new Especialidad();
   }
 
   public function handleRequest(): array
   {
-    if (!isset($_SESSION['usuario_id'])) {
-      header('Location: login.php');
-      exit;
-    }
+    $this->requireAuth();
 
     $page_title = 'Reservar Cita';
     $mensaje_exito = '';
 
     if ($_POST) {
-      $data = sanitizePostData(
+      $data = $this->getPostData(
         [
           'medico_id' => 'int',
           'especialidad_id' => 'int',
@@ -39,7 +36,7 @@ class CitaOnlineController
           'hora' => 'hora_cita'
         ]
       );
-      $data['paciente_id'] = $_SESSION['usuario_id'];
+      $data['paciente_id'] = $this->getCurrentUserId();
       $cita_id = $this->citaModel->create($data);
       
       $mensaje_exito = "Cita RESERVADA!<br>📅  " . date('d/m/Y', strtotime($data['fecha'])) . " " . $data['hora'];
@@ -51,7 +48,7 @@ class CitaOnlineController
       'page_title' => $page_title,
       'especialidades' => $especialidades,
       'mensaje_exito' => $mensaje_exito,
-      'user_role' => $_SESSION['usuario_rol'] ?? 'paciente'
+      'user_role' => $this->getCurrentUserRole()
     ];
   }
 }

@@ -1,22 +1,21 @@
 <?php
 
+require_once __DIR__ . '/../controllers/BaseController.php';
 require_once __DIR__ . '/../models/Usuario.php';
 
-class UsuariosController
+class UsuariosController extends BaseController
 {
   private Usuario $usuarioModel;
 
   public function __construct()
   {
+    parent::__construct();
     $this->usuarioModel = new Usuario();
   }
 
   public function handleRequest(): array
   {
-    if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_rol'] !== 'admin') {
-      header('Location: login.php');
-      exit;
-    }
+    $this->requireRole(['admin']);
 
     $action = $_REQUEST['action'] ?? 'list';
     $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : null;
