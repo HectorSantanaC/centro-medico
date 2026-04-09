@@ -25,6 +25,20 @@
         <a href="?action=create" class="btn btn-primary">+ Nuevo Médico</a>
       </div>
 
+      <form method="GET" class="filtros-form">
+        <input type="text" name="nombre" value="<?= htmlspecialchars($filtros['nombre'] ?? '') ?>" placeholder="Buscar por nombre...">
+        <select name="especialidad_id">
+          <option value="">Todas las especialidades</option>
+          <?php foreach ($especialidades as $esp): ?>
+            <option value="<?= $esp['id'] ?>" <?= ($filtros['especialidad_id'] ?? '') == $esp['id'] ? 'selected' : '' ?>>
+              <?= htmlspecialchars($esp['nombre']) ?>
+            </option>
+          <?php endforeach; ?>
+        </select>
+        <button type="submit" class="btn btn-primary">Filtrar</button>
+        <a href="medicos-crud.php" class="btn btn-secondary">Limpiar</a>
+      </form>
+
       <div class="table-container">
         <table>
           <thead>

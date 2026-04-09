@@ -12,6 +12,7 @@ $especialidades = $data['especialidades'];
 $page = $data['page'];
 $totalPages = $data['totalPages'];
 $totalItems = $data['totalItems'];
+$filtros = $data['filtros'];
 $message = $data['message'];
 $messageType = $data['messageType'];
 $active = $data['active'];

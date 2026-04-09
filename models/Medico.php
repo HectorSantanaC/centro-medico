@@ -76,22 +76,58 @@ class Medico
     return true;
   }
 
-  public function allPaginated(int $page = 1, int $perPage = 10): array
+  public function allPaginated(int $page = 1, int $perPage = 10, array $filtros = []): array
   {
     $offset = ($page - 1) * $perPage;
+    $where = [];
+    $params = [];
+
+    if (!empty($filtros['nombre'])) {
+      $where[] = "(m.nombre ILIKE ? OR m.apellidos ILIKE ?)";
+      $params[] = '%' . $filtros['nombre'] . '%';
+      $params[] = '%' . $filtros['nombre'] . '%';
+    }
+
+    if (!empty($filtros['especialidad_id']) && $filtros['especialidad_id'] > 0) {
+      $where[] = "m.especialidad_id = ?";
+      $params[] = (int) $filtros['especialidad_id'];
+    }
+
+    $whereSql = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
+    $params[] = $perPage;
+    $params[] = $offset;
+
     return $this->db->fetchAll("
       SELECT m.*, e.nombre as especialidad_nombre 
       FROM medicos m 
       LEFT JOIN especialidades e ON m.especialidad_id = e.id 
+      $whereSql
       ORDER BY m.nombre, m.apellidos
       LIMIT ? OFFSET ?
-    ", [$perPage, $offset]);
+    ", $params);
   }
 
-  public function countAll(): int
+  public function countAll(array $filtros = []): int
   {
+    $where = [];
+    $params = [];
+
+    if (!empty($filtros['nombre'])) {
+      $where[] = "(nombre ILIKE ? OR apellidos ILIKE ?)";
+      $params[] = '%' . $filtros['nombre'] . '%';
+      $params[] = '%' . $filtros['nombre'] . '%';
+    }
+
+    if (!empty($filtros['especialidad_id']) && $filtros['especialidad_id'] > 0) {
+      $where[] = "especialidad_id = ?";
+      $params[] = (int) $filtros['especialidad_id'];
+    }
+
+    $whereSql = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
+
     return (int) $this->db->fetchAll(
-      "SELECT COUNT(*) as total FROM medicos"
+      "SELECT COUNT(*) as total FROM medicos $whereSql",
+      $params
     )[0]['total'];
   }
 
