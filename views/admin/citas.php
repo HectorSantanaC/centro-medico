@@ -68,6 +68,23 @@
               </tbody>
             </table>
           </div>
+
+          <?php if ($totalPages > 1): ?>
+            <div class="pagination">
+              <?php if ($page > 1): ?>
+                <a href="?page=<?= $page - 1 ?>" class="btn btn-secondary">← Anterior</a>
+              <?php endif; ?>
+              
+              <span class="pagination-info">
+                Página <?= $page ?> de <?= $totalPages ?>
+                (<?= $totalCitas ?> citas)
+              </span>
+              
+              <?php if ($page < $totalPages): ?>
+                <a href="?page=<?= $page + 1 ?>" class="btn btn-secondary">Siguiente →</a>
+              <?php endif; ?>
+            </div>
+          <?php endif; ?>
         <?php endif; ?>
 
 

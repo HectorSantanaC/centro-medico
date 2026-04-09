@@ -75,9 +75,35 @@ class Cita
     ]);
   }
 
-  public function count(): int
+  public function allPaginated(int $page = 1, int $perPage = 10): array
   {
-    return (int) $this->db->fetchAll("SELECT COUNT(*) as total FROM citas")[0]['total'];
+    $offset = ($page - 1) * $perPage;
+    
+    $stmt = $this->pdo->prepare("
+      SELECT c.*, 
+        u.nombre as paciente_nombre, 
+        u.apellidos as paciente_apellidos, 
+        m.nombre as medico_nombre, 
+        m.apellidos as medico_apellidos, 
+        e.nombre as especialidad_nombre 
+      FROM citas c 
+      LEFT JOIN usuarios u ON c.paciente_id = u.id 
+      LEFT JOIN medicos m ON c.medico_id = m.id 
+      LEFT JOIN especialidades e ON c.especialidad_id = e.id 
+      ORDER BY c.fecha DESC, c.hora DESC
+      LIMIT :limit OFFSET :offset
+    ");
+    $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll();
+  }
+
+  public function countAll(): int
+  {
+    $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM citas");
+    $stmt->execute();
+    return (int) $stmt->fetchColumn();
   }
 
   public function getByPaciente(int $pacienteId): array

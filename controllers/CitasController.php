@@ -70,11 +70,19 @@ class CitasController extends BaseController
     }
 
     $citas = [];
+    $page = 1;
+    $totalPages = 1;
+    $totalCitas = 0;
     $citaEdit = null;
     $pacienteInfo = null;
 
     if ($action === 'list') {
-      $citas = $this->citaModel->all();
+      $page = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+      $perPage = 10;
+      
+      $citas = $this->citaModel->allPaginated($page, $perPage);
+      $totalCitas = $this->citaModel->countAll();
+      $totalPages = $totalCitas > 0 ? ceil($totalCitas / $perPage) : 1;
     } elseif ($action === 'edit' && $id) {
       $citaEdit = $this->citaModel->find($id);
       if ($citaEdit && isset($citaEdit['paciente_id'])) {
@@ -94,6 +102,9 @@ class CitasController extends BaseController
       'message' => $message,
       'messageType' => $messageType,
       'citas' => $citas,
+      'page' => $page ?? 1,
+      'totalPages' => $totalPages ?? 1,
+      'totalCitas' => $totalCitas ?? 0,
       'citaEdit' => $citaEdit,
       'pacienteInfo' => $pacienteInfo,
       'especialidades' => $this->especialidadModel->allActives(),
