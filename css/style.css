@@ -1111,3 +1111,107 @@ footer a {
     font-size: 1rem;
   }
 }
+
+/* ===========================================
+    MIS CITAS
+   =========================================== */
+.mis-citas-section {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+.mis-citas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.mis-citas-header h1 {
+  margin: 0;
+}
+
+.btn-nueva-cita {
+  background: #2c5282;
+  color: white;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.btn-nueva-cita:hover {
+  background: #1a365d;
+}
+
+.mis-citas-message {
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.mis-citas-message.success {
+  background: #d4edda;
+  color: #155724;
+}
+
+.mis-citas-message.error {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.mis-citas-empty {
+  background: #f8f9fa;
+  padding: 40px;
+  text-align: center;
+  border-radius: 8px;
+}
+
+.mis-citas-empty p {
+  font-size: 1.1rem;
+  color: #666;
+  margin: 0;
+}
+
+.mis-citas-empty a {
+  color: #2c5282;
+}
+
+.mis-citas-table-wrapper {
+  overflow-x: auto;
+}
+
+.mis-citas-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.mis-citas-table th {
+  background: #2c5282;
+  color: white;
+  padding: 15px;
+  text-align: left;
+}
+
+.mis-citas-table td {
+  padding: 15px;
+}
+
+.mis-citas-table tr {
+  border-bottom: 1px solid #eee;
+}
+
+.btn-cancelar {
+  color: #dc3545;
+  text-decoration: none;
+}
+
+.btn-cancelar:hover {
+  text-decoration: underline;
+}
+
+.estado-none {
+  color: #999;
+}
