@@ -66,9 +66,16 @@ class EspecialidadesController extends BaseController
 
     $especialidades = [];
     $especialidadEdit = null;
+    $page = 1;
+    $totalPages = 1;
+    $totalItems = 0;
 
     if ($action === 'list') {
-      $especialidades = $this->especialidadModel->all();
+      $page = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+      $perPage = 10;
+      $especialidades = $this->especialidadModel->allPaginated($page, $perPage);
+      $totalItems = $this->especialidadModel->countAll();
+      $totalPages = $totalItems > 0 ? ceil($totalItems / $perPage) : 1;
     } elseif ($action === 'edit' && $id) {
       $especialidadEdit = $this->especialidadModel->find($id);
     }
@@ -78,6 +85,9 @@ class EspecialidadesController extends BaseController
       'id' => $id,
       'especialidades' => $especialidades,
       'especialidadEdit' => $especialidadEdit,
+      'page' => $page,
+      'totalPages' => $totalPages,
+      'totalItems' => $totalItems,
       'message' => $message,
       'messageType' => $messageType,
       'active' => 'especialidades'

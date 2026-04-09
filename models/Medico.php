@@ -76,6 +76,25 @@ class Medico
     return true;
   }
 
+  public function allPaginated(int $page = 1, int $perPage = 10): array
+  {
+    $offset = ($page - 1) * $perPage;
+    return $this->db->fetchAll("
+      SELECT m.*, e.nombre as especialidad_nombre 
+      FROM medicos m 
+      LEFT JOIN especialidades e ON m.especialidad_id = e.id 
+      ORDER BY m.nombre, m.apellidos
+      LIMIT ? OFFSET ?
+    ", [$perPage, $offset]);
+  }
+
+  public function countAll(): int
+  {
+    return (int) $this->db->fetchAll(
+      "SELECT COUNT(*) as total FROM medicos"
+    )[0]['total'];
+  }
+
   public function getByEspecialidad(int $especialidadId): array
   {
     if ($especialidadId <= 0) {

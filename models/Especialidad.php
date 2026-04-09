@@ -55,6 +55,22 @@ class Especialidad
     return true;
   }
 
+  public function allPaginated(int $page = 1, int $perPage = 10): array
+  {
+    $offset = ($page - 1) * $perPage;
+    return $this->db->fetchAll(
+      "SELECT * FROM especialidades ORDER BY nombre LIMIT ? OFFSET ?",
+      [$perPage, $offset]
+    );
+  }
+
+  public function countAll(): int
+  {
+    return (int) $this->db->fetchAll(
+      "SELECT COUNT(*) as total FROM especialidades"
+    )[0]['total'];
+  }
+
   public function count(): int
   {
     return (int) $this->db->fetchAll(

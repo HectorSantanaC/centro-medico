@@ -75,9 +75,16 @@ class MedicosController extends BaseController
     $medicos = [];
     $medicoEdit = null;
     $especialidades = [];
+    $page = 1;
+    $totalPages = 1;
+    $totalItems = 0;
 
     if ($action === 'list') {
-      $medicos = $this->medicoModel->all();
+      $page = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+      $perPage = 10;
+      $medicos = $this->medicoModel->allPaginated($page, $perPage);
+      $totalItems = $this->medicoModel->countAll();
+      $totalPages = $totalItems > 0 ? ceil($totalItems / $perPage) : 1;
       $especialidades = $this->especialidadModel->allActives();
     } elseif ($action === 'edit' && $id) {
       $medicoEdit = $this->medicoModel->find($id);
@@ -92,6 +99,9 @@ class MedicosController extends BaseController
       'medicos' => $medicos,
       'medicoEdit' => $medicoEdit,
       'especialidades' => $especialidades,
+      'page' => $page,
+      'totalPages' => $totalPages,
+      'totalItems' => $totalItems,
       'message' => $message,
       'messageType' => $messageType,
       'active' => 'medicos'
