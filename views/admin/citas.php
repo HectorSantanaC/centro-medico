@@ -23,7 +23,7 @@
       <?php if ($action === 'list'): ?>
 
         <div class="page-header">
-          <h1>Gestion de Citas</h1>
+          <h1>Agenda</h1>
           <a href="cita-online.php" class="btn btn-primary">+ Nueva Cita</a>
         </div>
 
@@ -43,6 +43,14 @@
             <?php foreach ($especialidades as $esp): ?>
               <option value="<?= $esp['id'] ?>" <?= ($filtros['especialidad_id'] ?? '') == $esp['id'] ? 'selected' : '' ?>>
                 <?= htmlspecialchars($esp['nombre']) ?>
+              </option>
+            <?php endforeach; ?>
+          </select>
+          <select name="paciente_id">
+            <option value="">Todos los pacientes</option>
+            <?php foreach ($pacientes as $pac): ?>
+              <option value="<?= $pac['id'] ?>" <?= ($filtros['paciente_id'] ?? '') == $pac['id'] ? 'selected' : '' ?>>
+                <?= htmlspecialchars($pac['nombre'] . ' ' . $pac['apellidos']) ?>
               </option>
             <?php endforeach; ?>
           </select>

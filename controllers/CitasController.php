@@ -84,7 +84,8 @@ class CitasController extends BaseController
         'fecha_desde' => $_GET['fecha_desde'] ?? null,
         'fecha_hasta' => $_GET['fecha_hasta'] ?? null,
         'estado' => $_GET['estado'] ?? null,
-        'especialidad_id' => isset($_GET['especialidad_id']) && $_GET['especialidad_id'] > 0 ? (int) $_GET['especialidad_id'] : null
+        'especialidad_id' => isset($_GET['especialidad_id']) && $_GET['especialidad_id'] > 0 ? (int) $_GET['especialidad_id'] : null,
+        'paciente_id' => isset($_GET['paciente_id']) && $_GET['paciente_id'] > 0 ? (int) $_GET['paciente_id'] : null
       ];
       
       $citas = $this->citaModel->allPaginated($page, $perPage, $filtros);

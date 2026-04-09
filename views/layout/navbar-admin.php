@@ -23,11 +23,11 @@ $active = $active ?? '';
         <span class="icon">👥</span> Usuarios
       </a>
       <a href="citas-crud.php" class="<?= $active === 'citas' ? 'active' : '' ?>">
-        <span class="icon">📅</span> Citas
+        <span class="icon">📅</span> Agenda
       </a>
     <?php else: ?>
       <a href="citas-crud.php" class="<?= $active === 'citas' ? 'active' : '' ?>">
-        <span class="icon">📅</span> Citas
+        <span class="icon">📅</span> Agenda
       </a>
     <?php endif; ?>
 

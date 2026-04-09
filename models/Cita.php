@@ -101,6 +101,11 @@ class Cita
       $params['especialidad_id'] = (int) $filtros['especialidad_id'];
     }
 
+    if (!empty($filtros['paciente_id']) && $filtros['paciente_id'] > 0) {
+      $where[] = "c.paciente_id = :paciente_id";
+      $params['paciente_id'] = (int) $filtros['paciente_id'];
+    }
+
     $whereSql = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
 
     $sql = "
@@ -152,6 +157,11 @@ class Cita
     if (!empty($filtros['especialidad_id']) && $filtros['especialidad_id'] > 0) {
       $where[] = "especialidad_id = :especialidad_id";
       $params['especialidad_id'] = (int) $filtros['especialidad_id'];
+    }
+
+    if (!empty($filtros['paciente_id']) && $filtros['paciente_id'] > 0) {
+      $where[] = "paciente_id = :paciente_id";
+      $params['paciente_id'] = (int) $filtros['paciente_id'];
     }
 
     $whereSql = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
