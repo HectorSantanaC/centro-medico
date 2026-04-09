@@ -35,31 +35,48 @@ body {
   padding: 1rem 1.5rem;
   width: 100%;
   background: #fffff0;
-  z-index: 1000; /* Mantiene el navbar por encima del contenido */
+  z-index: 1000;
   box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
-  height: 80px;
-}
-
-main {
-  padding-top: 0;
-  flex: 1;
+  height: auto;
+  min-height: 70px;
 }
 
 .logo {
   font-size: 1rem;
-  width: 20px;
   font-weight: bold;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+.logo a {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
 }
 
 .menu {
   display: flex;
   list-style: none;
-  gap: 2rem;
+  gap: 1.5rem;
+  align-items: center;
+  margin: 0;
+  padding: 0;
 }
 
 .menu a {
-  color: black;
+  color: inherit;
   text-decoration: none;
+  white-space: nowrap;
+}
+
+.menu-derecha {
+  gap: 1rem;
 }
 
 .btn-boutique,
@@ -67,30 +84,201 @@ main {
   padding: 0.5rem 1rem;
   border-radius: 25px;
   border: 1px solid black;
+  font-size: 0.9rem;
 }
 
 .social-icons {
   display: flex;
   gap: 1rem;
   list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.social-icons li {
+  list-style: none;
 }
 
 .social-icons .icon {
-  color: inherit; /* Hereda negro padre */
+  color: inherit;
   text-decoration: none;
+  display: flex;
+  align-items: center;
 }
 
 .social-icons .icon:visited,
 .social-icons .icon:link,
 .social-icons .icon:active {
-  color: inherit !important; /* ← QUITA lila visited */
+  color: inherit !important;
 }
 
-@media (max-width: 768px) {
-  .menu {
-    flex-direction: column;
+.social-icons svg {
+  color: inherit;
+}
+
+/* Botón hamburguesa */
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.menu-toggle span {
+  display: block;
+  width: 100%;
+  height: 3px;
+  background-color: #333;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* SUBMENÚ (puro CSS) */
+.menu li {
+  position: relative;
+}
+
+.menu .submenu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #333;
+  min-width: 220px;
+  list-style: none;
+  margin: 0;
+  padding: 10px 0;
+  z-index: 9999;
+}
+
+.menu li:hover .submenu,
+.menu .submenu.mostrar {
+  display: block;
+}
+
+.menu .submenu li a {
+  padding: 12px 20px;
+  color: #ddd;
+  display: block;
+}
+
+.menu .submenu li a:hover {
+  background: #444;
+}
+
+/* Responsive Tablet */
+@media (max-width: 1024px) {
+  .nav-menu {
     gap: 1rem;
   }
+  
+  .menu {
+    gap: 1rem;
+  }
+  
+  .btn-boutique,
+  .btn-cita {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Responsive Móvil */
+@media (max-width: 768px) {
+  .navbar {
+    flex-wrap: wrap;
+    padding: 1rem;
+  }
+  
+  .menu-toggle {
+    display: flex;
+    order: 3;
+  }
+  
+  .nav-menu {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding-top: 1rem;
+    order: 4;
+  }
+  
+  .nav-menu.active {
+    display: flex;
+  }
+  
+  .menu {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    width: 100%;
+  }
+  
+  .menu li {
+    width: 100%;
+  }
+  
+  .menu a {
+    display: block;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .menu-derecha {
+    gap: 0;
+  }
+  
+  .btn-boutique,
+  .btn-cita,
+  .btn-login,
+  .btn-registro,
+  .btn-usuario {
+    width: 100%;
+    text-align: center;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .menu .submenu {
+    position: static;
+    background: #f5f5f5;
+    padding-left: 1rem;
+  }
+  
+  .menu .submenu li a {
+    color: #333;
+    border-bottom: none;
+  }
+  
+  .menu .submenu li a:hover {
+    background: #eee;
+  }
+  
+  .social-icons {
+    position: absolute;
+    top: 1rem;
+    right: 4rem;
+  }
+}
+
+/* Animación menú abierto */
+.menu-toggle.active span:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+
+.menu-toggle.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
 }
 
 /* SUBMENÚ (puro CSS) */
