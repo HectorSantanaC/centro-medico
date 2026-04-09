@@ -23,7 +23,7 @@
       <?php if ($action === 'list'): ?>
 
         <div class="page-header">
-          <h1>Agenda</h1>
+          <h1>📅 Agenda</h1>
           <a href="cita-online.php" class="btn btn-primary">+ Nueva Cita</a>
         </div>
 

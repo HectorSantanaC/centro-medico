@@ -22,14 +22,19 @@ $active = $active ?? '';
       <a href="usuarios-crud.php" class="<?= $active === 'usuarios' ? 'active' : '' ?>">
         <span class="icon">👥</span> Usuarios
       </a>
-      <a href="citas-crud.php" class="<?= $active === 'citas' ? 'active' : '' ?>">
-        <span class="icon">📅</span> Agenda
-      </a>
-    <?php else: ?>
-      <a href="citas-crud.php" class="<?= $active === 'citas' ? 'active' : '' ?>">
-        <span class="icon">📅</span> Agenda
-      </a>
     <?php endif; ?>
+
+    <a href="citas-crud.php" class="<?= $active === 'citas' ? 'active' : '' ?>">
+      <span class="icon">📅</span> Agenda
+    </a>
+
+    <a href="especialidades-crud.php" class="<?= $active === 'especialidades' ? 'active' : '' ?>">
+      <span class="icon">🏥</span> Especialidades
+    </a>
+
+    <a href="medicos-crud.php" class="<?= $active === 'medicos' ? 'active' : '' ?>">
+      <span class="icon">👨‍⚕️</span> Médicos
+    </a>
 
     <a href="articulos-crud.php" class="<?= $active === 'contenidos' ? 'active' : '' ?>">
       <span class="icon">📰</span> Contenidos
