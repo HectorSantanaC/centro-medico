@@ -18,7 +18,7 @@ $page_title = 'Blog';
 
 if ($action === 'view' && $articulo) {
   $page_title = $articulo['titulo'];
-  include __DIR__ . '/views/blogarticulo.php';
+  include __DIR__ . '/views/blog-articulo.php';
 } elseif ($action === 'view' && !$articulo) {
   header('Location: blog.php');
   exit;

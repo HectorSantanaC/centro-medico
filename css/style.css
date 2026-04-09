@@ -103,7 +103,7 @@ main {
   position: absolute;
   top: 100%;
   left: 0;
-  background: #333; /* TEMPORAL para depurar */
+  background: #333;
   min-width: 220px;
   list-style: none;
   margin: 0;
