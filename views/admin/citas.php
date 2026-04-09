@@ -27,6 +27,29 @@
           <a href="cita-online.php" class="btn btn-primary">+ Nueva Cita</a>
         </div>
 
+        <form method="GET" class="filtros-form">
+          <input type="date" name="fecha_desde" value="<?= $filtros['fecha_desde'] ?? '' ?>" placeholder="Desde">
+          <input type="date" name="fecha_hasta" value="<?= $filtros['fecha_hasta'] ?? '' ?>" placeholder="Hasta">
+          <select name="estado">
+            <option value="">Todos los estados</option>
+            <?php foreach ($estados as $est): ?>
+              <option value="<?= $est ?>" <?= ($filtros['estado'] ?? '') === $est ? 'selected' : '' ?>>
+                <?= ucfirst($est) ?>
+              </option>
+            <?php endforeach; ?>
+          </select>
+          <select name="especialidad_id">
+            <option value="">Todas las especialidades</option>
+            <?php foreach ($especialidades as $esp): ?>
+              <option value="<?= $esp['id'] ?>" <?= ($filtros['especialidad_id'] ?? '') == $esp['id'] ? 'selected' : '' ?>>
+                <?= htmlspecialchars($esp['nombre']) ?>
+              </option>
+            <?php endforeach; ?>
+          </select>
+          <button type="submit" class="btn btn-primary">Filtrar</button>
+          <a href="citas-crud.php" class="btn btn-secondary">Limpiar</a>
+        </form>
+
         <?php if (empty($citas)): ?>
           <div class="message" style="background: #e7f3ff; color: #004085; border-left: 5px solid #007bff;">
             No hay citas registradas.

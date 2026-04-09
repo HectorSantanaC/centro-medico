@@ -17,6 +17,7 @@ $citas = $data['citas'];
 $page = $data['page'];
 $totalPages = $data['totalPages'];
 $totalCitas = $data['totalCitas'];
+$filtros = $data['filtros'];
 $citaEdit = $data['citaEdit'];
 $especialidades = $data['especialidades'];
 $medicos = $data['medicos'];

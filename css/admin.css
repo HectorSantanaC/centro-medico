@@ -372,3 +372,30 @@ tr:hover {
   color: #666;
   font-size: 14px;
 }
+
+.filtros-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.filtros-form input[type="date"],
+.filtros-form select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  min-width: 150px;
+}
+
+.filtros-form input[type="date"] {
+  min-width: 140px;
+}
+
+.filtros-form .btn {
+  padding: 8px 16px;
+}

@@ -80,8 +80,15 @@ class CitasController extends BaseController
       $page = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
       $perPage = 10;
       
-      $citas = $this->citaModel->allPaginated($page, $perPage);
-      $totalCitas = $this->citaModel->countAll();
+      $filtros = [
+        'fecha_desde' => $_GET['fecha_desde'] ?? null,
+        'fecha_hasta' => $_GET['fecha_hasta'] ?? null,
+        'estado' => $_GET['estado'] ?? null,
+        'especialidad_id' => isset($_GET['especialidad_id']) && $_GET['especialidad_id'] > 0 ? (int) $_GET['especialidad_id'] : null
+      ];
+      
+      $citas = $this->citaModel->allPaginated($page, $perPage, $filtros);
+      $totalCitas = $this->citaModel->countAll($filtros);
       $totalPages = $totalCitas > 0 ? ceil($totalCitas / $perPage) : 1;
     } elseif ($action === 'edit' && $id) {
       $citaEdit = $this->citaModel->find($id);
@@ -105,6 +112,7 @@ class CitasController extends BaseController
       'page' => $page ?? 1,
       'totalPages' => $totalPages ?? 1,
       'totalCitas' => $totalCitas ?? 0,
+      'filtros' => $filtros ?? [],
       'citaEdit' => $citaEdit,
       'pacienteInfo' => $pacienteInfo,
       'especialidades' => $this->especialidadModel->allActives(),

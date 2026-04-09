@@ -75,11 +75,35 @@ class Cita
     ]);
   }
 
-  public function allPaginated(int $page = 1, int $perPage = 10): array
+  public function allPaginated(int $page = 1, int $perPage = 10, array $filtros = []): array
   {
     $offset = ($page - 1) * $perPage;
-    
-    $stmt = $this->pdo->prepare("
+    $where = [];
+    $params = [];
+
+    if (!empty($filtros['fecha_desde'])) {
+      $where[] = "c.fecha >= :fecha_desde";
+      $params['fecha_desde'] = $filtros['fecha_desde'];
+    }
+
+    if (!empty($filtros['fecha_hasta'])) {
+      $where[] = "c.fecha <= :fecha_hasta";
+      $params['fecha_hasta'] = $filtros['fecha_hasta'];
+    }
+
+    if (!empty($filtros['estado']) && $filtros['estado'] !== '') {
+      $where[] = "c.estado = :estado";
+      $params['estado'] = $filtros['estado'];
+    }
+
+    if (!empty($filtros['especialidad_id']) && $filtros['especialidad_id'] > 0) {
+      $where[] = "c.especialidad_id = :especialidad_id";
+      $params['especialidad_id'] = (int) $filtros['especialidad_id'];
+    }
+
+    $whereSql = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
+
+    $sql = "
       SELECT c.*, 
         u.nombre as paciente_nombre, 
         u.apellidos as paciente_apellidos, 
@@ -90,18 +114,53 @@ class Cita
       LEFT JOIN usuarios u ON c.paciente_id = u.id 
       LEFT JOIN medicos m ON c.medico_id = m.id 
       LEFT JOIN especialidades e ON c.especialidad_id = e.id 
+      $whereSql
       ORDER BY c.fecha DESC, c.hora DESC
       LIMIT :limit OFFSET :offset
-    ");
+    ";
+
+    $stmt = $this->pdo->prepare($sql);
+    foreach ($params as $key => $value) {
+      $stmt->bindValue(':' . $key, $value);
+    }
     $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
     $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
     $stmt->execute();
     return $stmt->fetchAll();
   }
 
-  public function countAll(): int
+  public function countAll(array $filtros = []): int
   {
-    $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM citas");
+    $where = [];
+    $params = [];
+
+    if (!empty($filtros['fecha_desde'])) {
+      $where[] = "fecha >= :fecha_desde";
+      $params['fecha_desde'] = $filtros['fecha_desde'];
+    }
+
+    if (!empty($filtros['fecha_hasta'])) {
+      $where[] = "fecha <= :fecha_hasta";
+      $params['fecha_hasta'] = $filtros['fecha_hasta'];
+    }
+
+    if (!empty($filtros['estado']) && $filtros['estado'] !== '') {
+      $where[] = "estado = :estado";
+      $params['estado'] = $filtros['estado'];
+    }
+
+    if (!empty($filtros['especialidad_id']) && $filtros['especialidad_id'] > 0) {
+      $where[] = "especialidad_id = :especialidad_id";
+      $params['especialidad_id'] = (int) $filtros['especialidad_id'];
+    }
+
+    $whereSql = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
+
+    $sql = "SELECT COUNT(*) FROM citas $whereSql";
+    $stmt = $this->pdo->prepare($sql);
+    foreach ($params as $key => $value) {
+      $stmt->bindValue(':' . $key, $value);
+    }
     $stmt->execute();
     return (int) $stmt->fetchColumn();
   }
