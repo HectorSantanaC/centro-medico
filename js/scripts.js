@@ -1,8 +1,13 @@
 // Validar formularios antes de enviar
 document.querySelectorAll('form').forEach(form => {
   form.addEventListener('submit', e => {
-    const email = form.querySelector('input[type="email"]').value;
-    if (!email.includes('@')) {
+    const emailInput = form.querySelector('input[type="email"]');
+    if (!emailInput) return;
+    
+    const email = emailInput.value;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    if (email && !emailRegex.test(email)) {
       alert('Email inválido');
       e.preventDefault();
     }
