@@ -39,6 +39,4 @@
       </div>
     <?php endif; ?>
   </main>
-</body>
-
-</html>
+<?php include __DIR__ . '/../layout/footer-admin.php'; ?>

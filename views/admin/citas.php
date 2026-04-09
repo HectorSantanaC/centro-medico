@@ -61,7 +61,7 @@
                     </td>
                     <td class="actions">
                       <a href="?action=edit&id=<?= $cita['id'] ?>" class="btn btn-secondary btn-sm">Editar</a>
-                      <a href="?action=delete&id=<?= $cita['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar esta cita?')">Eliminar</a>
+                      <a href="?action=delete&id=<?= $cita['id'] ?>" class="btn btn-danger btn-sm btn-delete" data-confirm="¿Eliminar esta cita?">Eliminar</a>
                     </td>
                   </tr>
                 <?php endforeach; ?>
@@ -151,6 +151,7 @@
   </main>
 
   <script src="js/crud-citas.js"></script>
+  <script src="js/scripts.js"></script>
 </body>
 
 </html>

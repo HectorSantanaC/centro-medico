@@ -40,8 +40,8 @@
                 <td class="actions">
                   <a href="?action=edit&id=<?= $topico['id'] ?>" class="btn btn-secondary btn-sm">Editar</a>
                   <a href="?action=delete&id=<?= $topico['id'] ?>"
-                    class="btn btn-danger btn-sm"
-                    onclick="return confirm('¿Eliminar este tópico?')">Eliminar</a>
+                    class="btn btn-danger btn-sm btn-delete"
+                    data-confirm="¿Eliminar este tópico?">Eliminar</a>
                 </td>
               </tr>
             <?php endforeach; ?>
@@ -73,6 +73,4 @@
       </div>
     <?php endif; ?>
   </main>
-</body>
-
-</html>
+<?php include __DIR__ . '/../layout/footer-admin.php'; ?>

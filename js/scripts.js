@@ -78,3 +78,14 @@ document.addEventListener('DOMContentLoaded', function () {
     dot.addEventListener('click', () => showOpinion(index));
   });
 });
+
+// Confirmación de eliminación con event delegation
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('.btn-delete');
+  if (!btn) return;
+  
+  const mensaje = btn.dataset.confirm || '¿Estás seguro?';
+  if (!confirm(mensaje)) {
+    e.preventDefault();
+  }
+});

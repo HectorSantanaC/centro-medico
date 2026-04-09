@@ -52,8 +52,8 @@
                 <td class="actions">
                   <a href="?action=edit&id=<?= $usuario['id'] ?>" class="btn btn-secondary btn-sm">Editar</a>
                   <a href="?action=delete&id=<?= $usuario['id'] ?>"
-                    class="btn btn-danger btn-sm"
-                    onclick="return confirm('¿Eliminar este usuario?')">Eliminar</a>
+                    class="btn btn-danger btn-sm btn-delete"
+                    data-confirm="¿Eliminar este usuario?">Eliminar</a>
                 </td>
               </tr>
             <?php endforeach; ?>
@@ -115,6 +115,4 @@
       </div>
     <?php endif; ?>
   </main>
-</body>
-
-</html>
+<?php include __DIR__ . '/../layout/footer-admin.php'; ?>

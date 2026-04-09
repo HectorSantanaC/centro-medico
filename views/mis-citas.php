@@ -59,7 +59,8 @@
               <td style="padding: 15px;">
                 <?php if ($cita['estado'] === 'pendiente' || $cita['estado'] === 'confirmada'): ?>
                   <a href="?cancelar=<?= $cita['id'] ?>" 
-                    onclick="return confirm('¿Estás seguro de que quieres cancelar esta cita?');"
+                    class="btn-delete"
+                    data-confirm="¿Estás seguro de que quieres cancelar esta cita?"
                     style="color: #dc3545; text-decoration: none;">
                     Cancelar
                   </a>

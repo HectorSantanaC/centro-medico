@@ -54,8 +54,8 @@
                 <td class="actions">
                   <a href="?action=edit&id=<?= $articulo['id'] ?>" class="btn btn-secondary btn-sm">Editar</a>
                   <a href="?action=delete&id=<?= $articulo['id'] ?>"
-                    class="btn btn-danger btn-sm"
-                    onclick="return confirm('¿Eliminar este artículo?')">Eliminar</a>
+                    class="btn btn-danger btn-sm btn-delete"
+                    data-confirm="¿Eliminar este artículo?">Eliminar</a>
                 </td>
               </tr>
             <?php endforeach; ?>
@@ -186,6 +186,7 @@
       return false;
     });
   </script>
+  <script src="js/scripts.js"></script>
 
 </body>
 
