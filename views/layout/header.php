@@ -29,7 +29,7 @@
               <li><a href="index.php#quienes-somos">Quienes somos</a></li>
             </ul>
           </li>
-          <li><a href="#">Especialidades</a></li>
+          <li><a href="index.php#seccion-especialidades">Especialidades</a></li>
           <li><a href="#">Cursos y Talleres</a></li>
           <li><a href="blog.php">Actualidad</a></li>
           <li><a href="#">Contacto</a></li>

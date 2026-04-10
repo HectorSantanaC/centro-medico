@@ -693,6 +693,7 @@ section {
   position: relative;
   overflow: hidden;
   scroll-snap-align: center;
+  text-decoration: none;
 }
 
 .especialidad p {
@@ -1402,4 +1403,50 @@ footer a {
 
 .estado-none {
   color: #999;
+}
+
+/* ===========================================
+    ESPECIALIDAD PAGE
+=========================================== */
+.especialidad-header {
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+.especialidad-header .volver {
+  display: inline-block;
+  color: #007bff;
+  text-decoration: none;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.especialidad-header .volver:hover {
+  text-decoration: underline;
+}
+
+.especialidad-header h1 {
+  margin: 0 0 0.5rem;
+  font-size: 2.5rem;
+}
+
+.especialidad-header p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.especialidad-header .btn-nueva-cita {
+  display: inline-block;
+  margin-top: 1rem;
+}
+
+.grid-especialidad {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  padding: 2rem 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  justify-items: center;
+  justify-content: center;
 }

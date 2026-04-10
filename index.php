@@ -104,7 +104,7 @@ include './views/layout/header.php';
 </section>
 
 <!-- Nuestras especialidades -->
-<section class="seccion-especialidades">
+<section class="seccion-especialidades" id="seccion-especialidades">
   <h2>Nuestras especialidades</h2>
   <div class="carousel-especialidades">
     <button class="carousel-btn prev" aria-label="Anterior">
@@ -114,7 +114,7 @@ include './views/layout/header.php';
     </button>
     <div class="grid-especialidades" id="carousel-especialidades">
       <?php foreach ($especialidades as $especialidad): ?>
-        <div class="especialidad">
+        <a href="especialidad.php?id=<?= $especialidad['id'] ?>" class="especialidad">
           <p><?= htmlspecialchars($especialidad['nombre']) ?></p>
           <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-narrow-right">
             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -122,7 +122,7 @@ include './views/layout/header.php';
             <path d="M15 16l4 -4" />
             <path d="M15 8l4 4" />
           </svg>
-        </div>
+        </a>
       <?php endforeach; ?>
     </div>
     <button class="carousel-btn next" aria-label="Siguiente">
