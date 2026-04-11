@@ -11,7 +11,7 @@ $medicos = $medicoModel->allActives();
 $especialidadModel = new Especialidad();
 $especialidades = $especialidadModel->allActives();
 
-include './views/layout/header.php'; 
+require_once './views/layout/header.php'; 
 ?>
 
 <!-- Hero -->
@@ -209,4 +209,4 @@ include './views/layout/header.php';
     </div>
 </section>
 
-<?php include './views/layout/footer.php'; ?>
+<?php require_once './views/layout/footer.php'; ?>

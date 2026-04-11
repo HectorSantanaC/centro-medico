@@ -10,7 +10,7 @@
 </head>
 
 <body>
-  <?php include __DIR__ . '/../layout/navbar-admin.php'; ?>
+  <?php require_once __DIR__ . '/../layout/navbar-admin.php'; ?>
 
   <main class="main-content">
     <?php if ($message): ?>
@@ -115,4 +115,4 @@
       </div>
     <?php endif; ?>
   </main>
-<?php include __DIR__ . '/../layout/footer-admin.php'; ?>
+<?php require_once __DIR__ . '/../layout/footer-admin.php'; ?>

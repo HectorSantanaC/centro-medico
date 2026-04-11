@@ -1,4 +1,4 @@
-<?php include __DIR__ . '/layout/header.php'; ?>
+<?php require_once __DIR__ . '/layout/header.php'; ?>
 <link rel="stylesheet" href="css/blog.css">
 
 <section class="blog-container">
@@ -62,4 +62,4 @@
   <?php endif; ?>
 </section>
 
-<?php include __DIR__ . '/layout/footer.php'; ?>
+<?php require_once __DIR__ . '/layout/footer.php'; ?>

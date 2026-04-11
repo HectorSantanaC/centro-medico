@@ -1,4 +1,4 @@
-<?php include __DIR__ . '/layout/header.php'; ?>
+<?php require_once __DIR__ . '/layout/header.php'; ?>
 
 <section class="section mis-citas-section">
   
@@ -65,4 +65,4 @@
   
 </section>
 
-<?php include __DIR__ . '/layout/footer.php'; ?>
+<?php require_once __DIR__ . '/layout/footer.php'; ?>

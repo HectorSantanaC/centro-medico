@@ -11,4 +11,4 @@ $estados = $data['estados'];
 $message = $data['message'];
 $messageType = $data['messageType'];
 
-include __DIR__ . '/views/mis-citas.php';
+require_once __DIR__ . '/views/mis-citas.php';

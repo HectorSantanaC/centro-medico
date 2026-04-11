@@ -9,7 +9,7 @@
 </head>
 
 <body>
-  <?php include __DIR__ . '/../layout/navbar-admin.php'; ?>
+  <?php require_once __DIR__ . '/../layout/navbar-admin.php'; ?>
 
   <main class="main-content">
     <section class="crud-container">

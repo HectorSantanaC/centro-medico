@@ -1,4 +1,4 @@
-<?php include __DIR__ . '/layout/header.php'; ?>
+<?php require_once __DIR__ . '/layout/header.php'; ?>
 
 <section class="section" style="max-width: 500px; margin: 50px auto;">
   <h1 style="text-align: center; margin-bottom: 30px;">Registro de Paciente</h1>
@@ -61,4 +61,4 @@
   </p>
 </section>
 
-<?php include __DIR__ . '/layout/footer.php'; ?>
+<?php require_once __DIR__ . '/layout/footer.php'; ?>

@@ -1,4 +1,4 @@
-<?php include __DIR__ . '/../layout/header.php'; ?>
+<?php require_once __DIR__ . '/../layout/header.php'; ?>
 
 <section class="section" style="max-width: 400px; margin: 50px auto;">
   <h1 style="text-align: center; margin-bottom: 30px;">Accede a tu cuenta</h1>
@@ -50,4 +50,4 @@
   </div>
 </section>
 
-<?php include __DIR__ . '/../layout/footer.php'; ?>
+<?php require_once __DIR__ . '/../layout/footer.php'; ?>

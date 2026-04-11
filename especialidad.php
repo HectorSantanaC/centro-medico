@@ -26,7 +26,7 @@ $medicos = $medicoModel->getByEspecialidad($especialidadId);
 
 $page_title = $especialidad['nombre'] . ' - Centro Médico TAC7';
 
-include './views/layout/header.php';
+require_once './views/layout/header.php';
 ?>
 
 <section class="especialidad-header">
@@ -54,4 +54,4 @@ include './views/layout/header.php';
 </section>
 <?php endif; ?>
 
-<?php include './views/layout/footer.php'; ?>
+<?php require_once './views/layout/footer.php'; ?>

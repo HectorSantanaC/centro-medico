@@ -11,4 +11,4 @@ $nombre = $data['nombre'];
 $apellidos = $data['apellidos'];
 $email = $data['email'];
 
-include __DIR__ . '/views/registro.php';
+require_once __DIR__ . '/views/registro.php';
