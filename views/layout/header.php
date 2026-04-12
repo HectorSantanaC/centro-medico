@@ -40,7 +40,9 @@
         <li><a href="#" class="btn-boutique">La Boutique de TAC7</a></li>
 
         <li><a href="cita-online.php" class="btn-cita">Cita online</a></li>
+      </ul>
 
+      <ul class="menu menu-auth">
         <?php if (isset($_SESSION['usuario_id'])): ?>
           <li>
             <a href="#" class="btn-usuario">

@@ -99,11 +99,19 @@ document.addEventListener('click', function(e) {
 document.addEventListener('DOMContentLoaded', function() {
   const menuToggle = document.querySelector('.menu-toggle');
   const navMenu = document.querySelector('.nav-menu');
+  const menuDerecha = document.querySelector('.menu-derecha');
+  const menuAuth = document.querySelector('.menu-auth');
   
   if (menuToggle && navMenu) {
     menuToggle.addEventListener('click', function() {
       menuToggle.classList.toggle('active');
       navMenu.classList.toggle('active');
+      if (menuDerecha) {
+        menuDerecha.classList.toggle('active');
+      }
+      if (menuAuth) {
+        menuAuth.classList.toggle('active');
+      }
     });
     
     // Cerrar menú al hacer click en un enlace
@@ -111,6 +119,12 @@ document.addEventListener('DOMContentLoaded', function() {
       link.addEventListener('click', () => {
         menuToggle.classList.remove('active');
         navMenu.classList.remove('active');
+        if (menuDerecha) {
+          menuDerecha.classList.remove('active');
+        }
+        if (menuAuth) {
+          menuAuth.classList.remove('active');
+        }
       });
     });
     
