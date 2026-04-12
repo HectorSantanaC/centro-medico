@@ -191,11 +191,11 @@ body {
   .nav-menu {
     gap: 1rem;
   }
-  
+
   .menu {
     gap: 1rem;
   }
-  
+
   .btn-boutique,
   .btn-cita {
     padding: 0.4rem 0.8rem;
@@ -209,12 +209,11 @@ body {
     flex-wrap: wrap;
     padding: 1rem;
   }
-  
+
   .menu-toggle {
     display: flex;
-    order: 3;
   }
-  
+
   .nav-menu {
     display: none;
     width: 100%;
@@ -222,58 +221,54 @@ body {
     align-items: flex-start;
     gap: 1rem;
     padding-top: 1rem;
-    order: 4;
   }
-  
+
   .nav-menu.active {
     display: flex;
   }
-  
+
   .menu {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
     width: 100%;
   }
-  
+
   .menu li {
     width: 100%;
   }
-  
+
   .menu a {
     display: block;
     padding: 0.5rem 0;
-    border-bottom: 1px solid #eee;
   }
-  
+
   .menu-derecha {
     display: none;
     gap: 0;
   }
-  
+
   .menu-derecha.active {
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin-top: 0.5rem;
+    margin-top: 3rem;
     padding-top: 0.5rem;
-    border-top: 1px solid #eee;
   }
-  
+
   .menu-auth {
     display: none;
     gap: 0;
   }
-  
+
   .menu-auth.active {
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin-top: 0.5rem;
+    margin-top: 3rem;
     padding-top: 0.5rem;
-    border-top: 1px solid #eee;
   }
-  
+
   .btn-boutique,
   .btn-cita,
   .btn-login,
@@ -284,27 +279,27 @@ body {
     padding: 0.75rem 1rem;
     margin-bottom: 0.5rem;
   }
-  
+
   .menu .submenu {
     position: static;
     background: #f5f5f5;
     padding-left: 1rem;
   }
-  
+
   .menu .submenu li a {
     color: #333;
     border-bottom: none;
   }
-  
+
   .menu .submenu li a:hover {
     background: #eee;
   }
-  
-.btn-login {
-  padding-left: 3rem;
-}
 
-.social-icons {
+  .btn-login {
+    padding-left: 3rem;
+  }
+
+  .social-icons {
     position: absolute;
     top: 1rem;
     right: 4rem;
@@ -358,14 +353,18 @@ body {
 }
 
 /* OFFSET para anclas (#id) - IMPORTANTE */
-h1[id], h2[id], h3[id], h4[id], 
-.frase-servicios[id], 
+h1[id],
+h2[id],
+h3[id],
+h4[id],
+.frase-servicios[id],
 section[id] {
   scroll-margin-top: 90px; /* Espacio desde navbar */
 }
 
 /* Todas las secciones principales */
-.hero, .frase-servicios, 
+.hero,
+.frase-servicios,
 section {
   scroll-margin-top: 90px;
 }
@@ -1118,11 +1117,21 @@ footer a {
   opacity: 0;
 }
 
-.cita-paso:nth-child(1) { animation-delay: 0.1s; }
-.cita-paso:nth-child(2) { animation-delay: 0.2s; }
-.cita-paso:nth-child(3) { animation-delay: 0.3s; }
-.cita-paso:nth-child(4) { animation-delay: 0.4s; }
-.cita-paso:nth-child(5) { animation-delay: 0.5s; }
+.cita-paso:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.cita-paso:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.cita-paso:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.cita-paso:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.cita-paso:nth-child(5) {
+  animation-delay: 0.5s;
+}
 
 @keyframes fadeIn {
   to {
@@ -1417,7 +1426,7 @@ footer a {
   width: 100%;
   border-collapse: collapse;
   background: white;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .mis-citas-table th {
