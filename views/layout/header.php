@@ -34,34 +34,34 @@
           <li><a href="blog.php">Actualidad</a></li>
           <li><a href="#">Contacto</a></li>
         </ul>
-
-        <ul class="menu menu-derecha">
-          <li><a href="#" class="btn-boutique">La Boutique de TAC7</a></li>
-
-          <li><a href="cita-online.php" class="btn-cita">Cita online</a></li>
-
-          <?php if (isset($_SESSION['usuario_id'])): ?>
-            <li>
-              <a href="#" class="btn-usuario">
-                👤 <?= htmlspecialchars($_SESSION['usuario_nombre']) ?>
-              </a>
-              <ul class="submenu submenu-derecha">
-                <?php if ($_SESSION['usuario_rol'] === 'admin' || $_SESSION['usuario_rol'] === 'gestor'): ?>
-                  <li><a href="admin.php">⚙️ Panel Admin</a></li>
-                  <li><a href="citas-crud.php">📋 Citas</a></li>
-                <?php endif; ?>
-                <?php if ($_SESSION['usuario_rol'] === 'paciente'): ?>
-                  <li><a href="mis-citas.php">📅 Mis Citas</a></li>
-                <?php endif; ?>
-                <li><a href="logout.php">🚪 Cerrar Sesión</a></li>
-              </ul>
-            </li>
-          <?php else: ?>
-            <li><a href="login.php" class="btn-login">Iniciar Sesión</a></li>
-            <li><a href="registro.php" class="btn-registro">Registrarse</a></li>
-          <?php endif; ?>
-        </ul>
       </div>
+
+      <ul class="menu menu-derecha">
+        <li><a href="#" class="btn-boutique">La Boutique de TAC7</a></li>
+
+        <li><a href="cita-online.php" class="btn-cita">Cita online</a></li>
+
+        <?php if (isset($_SESSION['usuario_id'])): ?>
+          <li>
+            <a href="#" class="btn-usuario">
+              👤 <?= htmlspecialchars($_SESSION['usuario_nombre']) ?>
+            </a>
+            <ul class="submenu submenu-derecha">
+              <?php if ($_SESSION['usuario_rol'] === 'admin' || $_SESSION['usuario_rol'] === 'gestor'): ?>
+                <li><a href="admin.php">⚙️ Panel Admin</a></li>
+                <li><a href="citas-crud.php">📋 Citas</a></li>
+              <?php endif; ?>
+              <?php if ($_SESSION['usuario_rol'] === 'paciente'): ?>
+                <li><a href="mis-citas.php">📅 Mis Citas</a></li>
+              <?php endif; ?>
+              <li><a href="logout.php">🚪 Cerrar Sesión</a></li>
+            </ul>
+          </li>
+        <?php else: ?>
+          <li><a href="login.php" class="btn-login">Iniciar Sesión</a></li>
+          <li><a href="registro.php" class="btn-registro">Registrarse</a></li>
+        <?php endif; ?>
+      </ul>
 
       <ul class="social-icons">
         <li>
