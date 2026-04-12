@@ -89,7 +89,7 @@
 
           <div class="form-group">
             <label>Contraseña <?= $action === 'edit' ? '(dejar vacío para mantener)' : '*' ?></label>
-            <input type="text" name="password"
+            <input type="password" name="password"
               placeholder="<?= $action === 'edit' ? 'Sin cambios' : 'Contraseña por defecto: password123' ?>">
           </div>
 

@@ -134,16 +134,17 @@ $pdo->exec("INSERT INTO medicos (nombre, apellidos, especialidad_id) VALUES
     ON CONFLICT DO NOTHING");
 echo "✅ Médicos insertados (21)<br>";
 
-// 4. DATOS DE PRUEBA - USUARIOS
+// 4. DATOS DE PRUEBA - USUARIOS (con contraseñas hasheadas)
+$adminPassword = password_hash('admin123', PASSWORD_DEFAULT);
+$gestorPassword = password_hash('gestor123', PASSWORD_DEFAULT);
+$pacientePassword = password_hash('paciente123', PASSWORD_DEFAULT);
 
 $pdo->exec("INSERT INTO usuarios (nombre, apellidos, email, password, rol) VALUES 
-    ('Admin', 'TAC7', 'admin@tac7.com', 'admin123', 'admin')");
-
+    ('Admin', 'TAC7', 'admin@tac7.com', '$adminPassword', 'admin')");
 $pdo->exec("INSERT INTO usuarios (nombre, apellidos, email, password, rol) VALUES 
-    ('Gestor', 'Contenido', 'gestor@tac7.com', 'gestor123', 'gestor')");
-
+    ('Gestor', 'Contenido', 'gestor@tac7.com', '$gestorPassword', 'gestor')");
 $pdo->exec("INSERT INTO usuarios (nombre, apellidos, email, password, rol) VALUES 
-    ('Juan', 'García López', 'juan.garcia@email.com', 'paciente123', 'paciente')");
+    ('Juan', 'García López', 'juan.garcia@email.com', '$pacientePassword', 'paciente')");
 
 echo "<h2 style='color:green'>🎉 ¡BASE DE DATOS LISTA!</h2>
       <p><strong>Tablas:</strong> usuarios, especialidades, medicos, citas, articulos</p>
