@@ -42,4 +42,12 @@ for ($t = $inicio; $t <= $fin; $t += 1800) {
   }
 }
 
+if ($fecha === date('Y-m-d')) {
+  $horaActual = date('H:i');
+  $horasDisponibles = array_filter($horasDisponibles, function($h) use ($horaActual) {
+    return $h > $horaActual;
+  });
+  $horasDisponibles = array_values($horasDisponibles);
+}
+
 echo json_encode(['horas' => $horasDisponibles]);
