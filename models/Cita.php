@@ -199,4 +199,13 @@ class Cita
     );
     return true;
   }
+
+  public function getOcupadasPorFechaMedico(string $fecha, int $medicoId): array
+  {
+    return $this->db->fetchAll(
+      "SELECT hora FROM citas 
+       WHERE fecha = ? AND medico_id = ? AND estado != 'cancelada'",
+      [$fecha, $medicoId]
+    );
+  }
 }
