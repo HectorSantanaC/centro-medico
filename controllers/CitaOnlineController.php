@@ -6,14 +6,11 @@ require_once __DIR__ . '/../models/Especialidad.php';
 
 class CitaOnlineController extends BaseController
 {
-  private Cita $citaModel;
-  private Especialidad $especialidadModel;
-
-  public function __construct()
-  {
+  public function __construct(
+    private Cita $citaModel = new Cita(),
+    private Especialidad $especialidadModel = new Especialidad()
+  ) {
     parent::__construct();
-    $this->citaModel = new Cita();
-    $this->especialidadModel = new Especialidad();
   }
 
   public function handleRequest(): array

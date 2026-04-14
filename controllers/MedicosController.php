@@ -6,14 +6,11 @@ require_once __DIR__ . '/../models/Especialidad.php';
 
 class MedicosController extends BaseController
 {
-  private Medico $medicoModel;
-  private Especialidad $especialidadModel;
-
-  public function __construct()
-  {
+  public function __construct(
+    private Medico $medicoModel = new Medico(),
+    private Especialidad $especialidadModel = new Especialidad()
+  ) {
     parent::__construct();
-    $this->medicoModel = new Medico();
-    $this->especialidadModel = new Especialidad();
   }
 
   public function handleRequest(): array

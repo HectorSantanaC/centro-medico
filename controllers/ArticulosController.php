@@ -6,12 +6,11 @@ require_once __DIR__ . '/../models/Topico.php';
 
 class ArticulosController extends BaseController
 {
-  private Articulo $articuloModel;
-
-  public function __construct()
-  {
+  public function __construct(
+    private Articulo $articuloModel = new Articulo(),
+    private Topico $topicoModel = new Topico()
+  ) {
     parent::__construct();
-    $this->articuloModel = new Articulo();
   }
 
   public function handleRequest(): array
@@ -94,7 +93,7 @@ class ArticulosController extends BaseController
 
     $articulos = [];
     $articuloEdit = null;
-    $topicos = (new Topico())->all();
+    $topicos = $this->topicoModel->all();
 
     if ($action === 'list') {
       $articulos = $canManage ?

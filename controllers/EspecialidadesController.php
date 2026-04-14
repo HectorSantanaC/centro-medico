@@ -5,12 +5,10 @@ require_once __DIR__ . '/../models/Especialidad.php';
 
 class EspecialidadesController extends BaseController
 {
-  private Especialidad $especialidadModel;
-
-  public function __construct()
-  {
+  public function __construct(
+    private Especialidad $especialidadModel = new Especialidad()
+  ) {
     parent::__construct();
-    $this->especialidadModel = new Especialidad();
   }
 
   public function handleRequest(): array

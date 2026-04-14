@@ -8,18 +8,13 @@ require_once __DIR__ . '/../models/Medico.php';
 
 class CitasController extends BaseController
 {
-  private Cita $citaModel;
-  private Usuario $usuarioModel;
-  private Especialidad $especialidadModel;
-  private Medico $medicoModel;
-
-  public function __construct()
-  {
+  public function __construct(
+    private Cita $citaModel = new Cita(),
+    private Usuario $usuarioModel = new Usuario(),
+    private Especialidad $especialidadModel = new Especialidad(),
+    private Medico $medicoModel = new Medico()
+  ) {
     parent::__construct();
-    $this->citaModel = new Cita();
-    $this->usuarioModel = new Usuario();
-    $this->especialidadModel = new Especialidad();
-    $this->medicoModel = new Medico();
   }
 
   public function handleRequest(): array

@@ -7,16 +7,12 @@ require_once __DIR__ . '/../models/Medico.php';
 
 class AdminController extends BaseController
 {
-  private Usuario $usuarioModel;
-  private Especialidad $especialidadModel;
-  private Medico $medicoModel;
-
-  public function __construct()
-  {
+  public function __construct(
+    private Usuario $usuarioModel = new Usuario(),
+    private Especialidad $especialidadModel = new Especialidad(),
+    private Medico $medicoModel = new Medico()
+  ) {
     parent::__construct();
-    $this->usuarioModel = new Usuario();
-    $this->especialidadModel = new Especialidad();
-    $this->medicoModel = new Medico();
   }
 
   public function handleRequest(): array

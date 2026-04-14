@@ -5,12 +5,10 @@ require_once __DIR__ . '/../models/Topico.php';
 
 class TopicosController extends BaseController
 {
-  private Topico $topicoModel;
-
-  public function __construct()
-  {
+  public function __construct(
+    private Topico $topicoModel = new Topico()
+  ) {
     parent::__construct();
-    $this->topicoModel = new Topico();
   }
 
   public function handleRequest(): array

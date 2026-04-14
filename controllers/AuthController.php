@@ -4,12 +4,9 @@ require_once __DIR__ . '/../models/Usuario.php';
 
 class AuthController
 {
-  private Usuario $usuarioModel;
-
-  public function __construct()
-  {
-    $this->usuarioModel = new Usuario();
-  }
+  public function __construct(
+    private Usuario $usuarioModel = new Usuario()
+  ) {}
 
   public function handleLogin(): array
   {

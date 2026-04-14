@@ -5,12 +5,10 @@ require_once __DIR__ . '/../models/Cita.php';
 
 class MisCitasController extends BaseController
 {
-  private Cita $citaModel;
-
-  public function __construct()
-  {
+  public function __construct(
+    private Cita $citaModel = new Cita()
+  ) {
     parent::__construct();
-    $this->citaModel = new Cita();
   }
 
   public function handleRequest(): array

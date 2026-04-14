@@ -5,12 +5,10 @@ require_once __DIR__ . '/../models/Usuario.php';
 
 class UsuariosController extends BaseController
 {
-  private Usuario $usuarioModel;
-
-  public function __construct()
-  {
+  public function __construct(
+    private Usuario $usuarioModel = new Usuario()
+  ) {
     parent::__construct();
-    $this->usuarioModel = new Usuario();
   }
 
   public function handleRequest(): array
