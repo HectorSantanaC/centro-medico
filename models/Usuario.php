@@ -76,6 +76,19 @@ class Usuario
     return $this->db->fetchAll("SELECT * FROM usuarios ORDER BY created_at DESC");
   }
 
+  public function allSafe(): array
+  {
+    return $this->db->fetchAll("SELECT id, nombre, apellidos, email, rol, created_at FROM usuarios ORDER BY created_at DESC");
+  }
+
+  public function findSafe(int $id): ?array
+  {
+    $stmt = $this->pdo->prepare("SELECT id, nombre, apellidos, email, rol, created_at FROM usuarios WHERE id = ?");
+    $stmt->execute([$id]);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result ?: null;
+  }
+
   public function update(int $id, array $data): bool
   {
     if (isset($data['password']) && !empty($data['password'])) {
