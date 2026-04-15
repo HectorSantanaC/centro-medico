@@ -6,113 +6,92 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gestión de Usuarios</title>
   <link rel="stylesheet" href="css/admin.css">
-  <?php require_once __DIR__ . '/../../helpers/sanitize.php'; ?>
 </head>
 
 <body>
   <?php require_once __DIR__ . '/../layout/navbar-admin.php'; ?>
 
   <main class="main-content">
-    <?php if ($message): ?>
-      <div class="message <?= $messageType ?>">
-        <?= htmlspecialchars($message) ?>
-      </div>
-    <?php endif; ?>
+    <div class="page-header">
+      <h1>Gestión de Usuarios</h1>
+      <button id="btn-crear" class="btn btn-primary">+ Nuevo Usuario</button>
+    </div>
 
-    <?php if ($action === 'list'): ?>
-      <div class="page-header">
-        <h1>👥 Gestión de Usuarios</h1>
-        <a href="?action=create" class="btn btn-primary">+ Nuevo Usuario</a>
-      </div>
-
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Apellidos</th>
-              <th>Email</th>
-              <th>Rol</th>
-              <th>Fecha Alta</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($usuarios as $usuario): ?>
-              <tr>
-                <td><?= htmlspecialchars($usuario['nombre']) ?></td>
-                <td><?= htmlspecialchars($usuario['apellidos']) ?></td>
-                <td><?= htmlspecialchars($usuario['email']) ?></td>
-                <td>
-                  <span class="rol-badge rol-<?= $usuario['rol'] ?>">
-                    <?= ucfirst($usuario['rol']) ?>
-                  </span>
-                </td>
-                <td><?= date('d/m/Y', strtotime($usuario['created_at'])) ?></td>
-                <td class="actions">
-                  <a href="?action=edit&id=<?= $usuario['id'] ?>" class="btn btn-secondary btn-sm">Editar</a>
-                  <a href="?action=delete&id=<?= $usuario['id'] ?>"
-                    class="btn btn-danger btn-sm btn-delete"
-                    data-confirm="¿Eliminar este usuario?">Eliminar</a>
-                </td>
-              </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
-      </div>
-
-    <?php elseif ($action === 'create' || $action === 'edit'): ?>
-      <a href="usuarios-crud.php" class="back-link">← Volver al listado</a>
-
-      <div class="form-card">
-        <h2><?= $action === 'create' ? 'Crear' : 'Editar' ?> Usuario</h2>
-
-        <form method="POST">
-          <?= csrf_field() ?>
-          <div class="form-group">
-            <label>Nombre *</label>
-            <input type="text" name="nombre" required
-              value="<?= htmlspecialchars($usuarioEdit['nombre'] ?? '') ?>">
-          </div>
-
-          <div class="form-group">
-            <label>Apellidos *</label>
-            <input type="text" name="apellidos" required
-              value="<?= htmlspecialchars($usuarioEdit['apellidos'] ?? '') ?>">
-          </div>
-
-          <div class="form-group">
-            <label>Email *</label>
-            <input type="email" name="email" required
-              value="<?= htmlspecialchars($usuarioEdit['email'] ?? '') ?>">
-          </div>
-
-          <div class="form-group">
-            <label>Contraseña <?= $action === 'edit' ? '(dejar vacío para mantener)' : '*' ?></label>
-            <input type="password" name="password"
-              placeholder="<?= $action === 'edit' ? 'Sin cambios' : 'Contraseña por defecto: password123' ?>">
-          </div>
-
-          <div class="form-group">
-            <label>Rol *</label>
-            <select name="rol" required>
-              <?php foreach ($roles as $rol): ?>
-                <option value="<?= $rol ?>"
-                  <?= ($usuarioEdit['rol'] ?? 'paciente') === $rol ? 'selected' : '' ?>>
-                  <?= ucfirst($rol) ?>
-                </option>
-              <?php endforeach; ?>
-            </select>
-          </div>
-
-          <div class="form-actions">
-            <button type="submit" class="btn btn-primary">
-              <?= $action === 'create' ? 'Crear Usuario' : 'Guardar Cambios' ?>
-            </button>
-            <a href="usuarios-crud.php" class="btn btn-secondary">Cancelar</a>
-          </div>
-        </form>
-      </div>
-    <?php endif; ?>
+    <div class="table-container">
+      <table id="tabla-usuarios">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Apellidos</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Fecha Alta</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="usuarios-body">
+          <tr>
+            <td colspan="6" class="loading">
+              <div class="spinner"></div>
+              Cargando...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </main>
-<?php require_once __DIR__ . '/../layout/footer-admin.php'; ?>
+
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modal-titulo">Nuevo Usuario</h2>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+
+      <form id="form-usuario">
+        <input type="hidden" id="usuario-id">
+
+        <div class="form-group">
+          <label for="nombre">Nombre *</label>
+          <input type="text" id="nombre" required>
+        </div>
+
+        <div class="form-group">
+          <label for="apellidos">Apellidos *</label>
+          <input type="text" id="apellidos" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input type="email" id="email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Contraseña *</label>
+          <input type="password" id="password" required>
+          <p id="password-help" class="help-text">Mínimo 6 caracteres</p>
+        </div>
+
+        <div class="form-group">
+          <label for="rol">Rol *</label>
+          <select id="rol" required>
+            <option value="paciente">Paciente</option>
+            <option value="gestor">Gestor</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Guardar</button>
+          <button type="button" class="btn btn-secondary btn-sm modal-close">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <script src="js/admin-usuarios.js"></script>
+</body>
+
+</html>

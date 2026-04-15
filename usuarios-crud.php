@@ -1,17 +1,10 @@
 <?php
 
-require_once __DIR__ . '/controllers/UsuariosController.php';
+session_start();
 
-$controller = new UsuariosController();
-$data = $controller->handleRequest();
-
-$action = $data['action'];
-$id = $data['id'];
-$usuarios = $data['usuarios'];
-$usuarioEdit = $data['usuarioEdit'];
-$roles = $data['roles'];
-$message = $data['message'];
-$messageType = $data['messageType'];
-$active = $data['active'];
+if (!isset($_SESSION['usuario_id']) || !in_array($_SESSION['usuario_rol'], ['admin', 'gestor'])) {
+  header('Location: login.php');
+  exit;
+}
 
 require_once __DIR__ . '/views/admin/usuarios.php';
