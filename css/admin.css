@@ -452,13 +452,6 @@ tr:hover {
 }
 
 /* Toast notifications */
-.toast-container {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 2000;
-}
-
 .toast {
   padding: 15px 25px;
   border-radius: 5px;

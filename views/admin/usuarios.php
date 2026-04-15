@@ -89,8 +89,6 @@
     </div>
   </div>
 
-  <div id="toast-container"></div>
-
   <script src="js/admin-usuarios.js"></script>
 </body>
 

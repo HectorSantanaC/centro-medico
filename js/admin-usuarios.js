@@ -167,11 +167,14 @@ const AdminUsuarios = {
   },
 
   mostrarToast(mensaje, tipo = 'success') {
-    const container = document.getElementById('toast-container');
     const toast = document.createElement('div');
     toast.className = `toast ${tipo}`;
     toast.textContent = mensaje;
-    container.appendChild(toast);
+    toast.style.position = 'fixed';
+    toast.style.bottom = '20px';
+    toast.style.right = '20px';
+    toast.style.zIndex = '2000';
+    document.body.appendChild(toast);
 
     setTimeout(() => {
       toast.remove();
