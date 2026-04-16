@@ -63,7 +63,7 @@
 
         <div class="form-actions">
           <button type="submit" class="btn btn-primary">Guardar</button>
-          <button type="button" class="btn btn-secondary modal-close-btn">Cancelar</button>
+          <button type="button" class="btn btn-secondary btn-sm modal-close">Cancelar</button>
         </div>
       </form>
     </div>
