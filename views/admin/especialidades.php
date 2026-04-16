@@ -6,106 +6,72 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gestión de Especialidades</title>
   <link rel="stylesheet" href="css/admin.css">
-  <?php require_once __DIR__ . '/../../helpers/sanitize.php'; ?>
 </head>
 
 <body>
   <?php require_once __DIR__ . '/../layout/navbar-admin.php'; ?>
-
   <main class="main-content">
-    <?php if ($message): ?>
-      <div class="message <?= $messageType ?>">
-        <?= htmlspecialchars($message) ?>
-      </div>
-    <?php endif; ?>
-
-    <?php if ($action === 'list'): ?>
-      <div class="page-header">
-        <h1>🏥 Gestión de Especialidades</h1>
-        <a href="?action=create" class="btn btn-primary">+ Nueva Especialidad</a>
-      </div>
-
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Descripción</th>
-              <th>Estado</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($especialidades as $esp): ?>
-              <tr>
-                <td><?= htmlspecialchars($esp['nombre']) ?></td>
-                <td><?= htmlspecialchars($esp['descripcion'] ?? '') ?></td>
-                <td>
-                  <?php if ($esp['activo']): ?>
-                    <span class="estado-badge estado-confirmada">Activa</span>
-                  <?php else: ?>
-                    <span class="estado-badge estado-cancelada">Inactiva</span>
-                  <?php endif; ?>
-                </td>
-                <td class="actions">
-                  <a href="?action=edit&id=<?= $esp['id'] ?>" class="btn btn-secondary btn-sm">Editar</a>
-                  <a href="?action=delete&id=<?= $esp['id'] ?>"
-                    class="btn btn-danger btn-sm btn-delete"
-                    data-confirm="¿Eliminar esta especialidad?">Eliminar</a>
-                </td>
-              </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
-      </div>
-
-      <?php if ($totalPages > 1): ?>
-        <div class="pagination">
-          <?php if ($page > 1): ?>
-            <a href="?page=<?= $page - 1 ?>" class="btn btn-secondary">← Anterior</a>
-          <?php endif; ?>
-          
-          <span class="pagination-info">
-            Página <?= $page ?> de <?= $totalPages ?>
-            (<?= $totalItems ?> especialidades)
-          </span>
-          
-          <?php if ($page < $totalPages): ?>
-            <a href="?page=<?= $page + 1 ?>" class="btn btn-secondary">Siguiente →</a>
-          <?php endif; ?>
-        </div>
-      <?php endif; ?>
-
-    <?php elseif ($action === 'create' || $action === 'edit'): ?>
-      <a href="especialidades-crud.php" class="back-link">← Volver al listado</a>
-
-      <div class="form-card">
-        <h2><?= $action === 'create' ? 'Crear' : 'Editar' ?> Especialidad</h2>
-
-        <form method="POST">
-          <?= csrf_field() ?>
-          <div class="form-group">
-            <label>Nombre *</label>
-            <input type="text" name="nombre" required
-              value="<?= htmlspecialchars($especialidadEdit['nombre'] ?? '') ?>">
-          </div>
-
-          <div class="form-group">
-            <label class="checkbox-label">
-              <input type="checkbox" name="activo" value="1" 
-                <?= ($especialidadEdit['activo'] ?? true) ? 'checked' : '' ?>>
-              Especialidad activa
-            </label>
-          </div>
-
-          <div class="form-actions">
-            <button type="submit" class="btn btn-primary">
-              <?= $action === 'create' ? 'Crear Especialidad' : 'Guardar Cambios' ?>
-            </button>
-            <a href="especialidades-crud.php" class="btn btn-secondary">Cancelar</a>
-          </div>
-        </form>
-      </div>
-    <?php endif; ?>
+    <div class="page-header">
+      <h1>Gestion de Especialidades</h1>
+      <button id="btn-crear" class="btn btn-primary">+ Nueva Especialidad</button>
+    </div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Descripcion</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="especialidades-body">
+          <tr>
+            <td colspan="4" class="loading">
+              <div class="spinner"></div>
+              Cargando...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </main>
-<?php require_once __DIR__ . '/../layout/footer-admin.php'; ?>
+
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="modal-close-btn">×</span>
+      <h2 id="modal-titulo">Nueva Especialidad</h2>
+      <form id="form-especialidad">
+        <input type="hidden" id="especialidad-id">
+
+        <div class="form-group">
+          <label for="nombre">Nombre *</label>
+          <input type="text" id="nombre" required>
+        </div>
+
+        <div class="form-group">
+          <label for="descripcion">Descripcion</label>
+          <textarea id="descripcion" rows="3"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="activo" checked>
+            Especialidad activa
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Guardar</button>
+          <button type="button" class="btn btn-secondary modal-close-btn">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <?php require_once __DIR__ . '/../layout/footer-admin.php'; ?>
+
+  <script src="js/admin-especialidades.js"></script>
+</body>
+
+</html>
