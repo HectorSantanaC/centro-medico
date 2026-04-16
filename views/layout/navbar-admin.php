@@ -19,7 +19,7 @@ $active = $active ?? '';
     </a>
 
     <?php if ($es_admin): ?>
-      <a href="usuarios-crud.php" class="<?= $active === 'usuarios' ? 'active' : '' ?>">
+      <a href="views/admin/usuarios.php" class="<?= $active === 'usuarios' ? 'active' : '' ?>">
         <span class="icon">👥</span> Usuarios
       </a>
     <?php endif; ?>
@@ -28,7 +28,7 @@ $active = $active ?? '';
       <span class="icon">📅</span> Agenda
     </a>
 
-    <a href="especialidades-crud.php" class="<?= $active === 'especialidades' ? 'active' : '' ?>">
+    <a href="views/admin/especialidades.php" class="<?= $active === 'especialidades' ? 'active' : '' ?>">
       <span class="icon">🏥</span> Especialidades
     </a>
 
