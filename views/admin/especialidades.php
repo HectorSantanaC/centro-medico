@@ -30,6 +30,7 @@
           <thead>
             <tr>
               <th>Nombre</th>
+              <th>Descripción</th>
               <th>Estado</th>
               <th>Acciones</th>
             </tr>
@@ -38,6 +39,7 @@
             <?php foreach ($especialidades as $esp): ?>
               <tr>
                 <td><?= htmlspecialchars($esp['nombre']) ?></td>
+                <td><?= htmlspecialchars($esp['descripcion'] ?? '') ?></td>
                 <td>
                   <?php if ($esp['activo']): ?>
                     <span class="estado-badge estado-confirmada">Activa</span>
