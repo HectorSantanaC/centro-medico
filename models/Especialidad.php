@@ -33,9 +33,10 @@ class Especialidad
 
   public function create(array $data): int
   {
-    $sql = "INSERT INTO especialidades (nombre, activo) VALUES (?, ?) RETURNING id";
+    $sql = "INSERT INTO especialidades (nombre, descripcion, activo) VALUES (?, ?, ?) RETURNING id";
     return $this->db->insert($sql, [
       $data['nombre'],
+      $data['descripcion'] ?? null,
       $data['activo'] ?? true
     ]);
   }
@@ -43,8 +44,8 @@ class Especialidad
   public function update(int $id, array $data): bool
   {
     $this->db->execute(
-      "UPDATE especialidades SET nombre = ?, activo = ? WHERE id = ?",
-      [$data['nombre'], $data['activo'] ?? true, $id]
+      "UPDATE especialidades SET nombre = ?, descripcion = ?, activo = ? WHERE id = ?",
+      [$data['nombre'], $data['descripcion'] ?? null, $data['activo'] ?? true, $id]
     );
     return true;
   }
