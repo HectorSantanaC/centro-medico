@@ -39,8 +39,11 @@
 
   <div id="modal" class="modal">
     <div class="modal-content">
-      <span class="modal-close-btn">×</span>
-      <h2 id="modal-titulo">Nueva Especialidad</h2>
+      <div class="modal-header">
+        <h2 id="modal-titulo">Nueva Especialidad</h2>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+
       <form id="form-especialidad">
         <input type="hidden" id="especialidad-id">
 

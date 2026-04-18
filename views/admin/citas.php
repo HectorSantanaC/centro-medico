@@ -44,8 +44,11 @@
 
   <div id="modal" class="modal">
     <div class="modal-content">
-      <span class="modal-close-btn">&times;</span>
-      <h2 id="modal-titulo">Nueva Cita</h2>
+      <div class="modal-header">
+        <h2 id="modal-titulo">Nueva Cita</h2>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+
       <form id="formcita">
         <input type="hidden" id="cita-id">
 

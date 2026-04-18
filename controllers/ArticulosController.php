@@ -108,6 +108,7 @@ class ArticulosController extends BaseController
     return [
       'action' => $action,
       'id' => $id,
+      'active' => 'contenidos',
       'articulos' => $articulos,
       'articulo' => $articuloEdit,
       'topicos' => $topicos,
