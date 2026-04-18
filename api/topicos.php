@@ -10,6 +10,9 @@ $method = $_SERVER['REQUEST_METHOD'];
 try {
   switch ($method) {
     case 'GET':
+      $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+      $perPage = isset($_GET['per_page']) ? min((int)$_GET['per_page'], 100) : 10;
+
       if (isset($_GET['id'])) {
         $id = (int) $_GET['id'];
         $topico = $topicoModel->find($id);
@@ -25,9 +28,23 @@ try {
         exit;
       }
 
-      $topicos = $topicoModel->all();
+      $filtros = [
+        'nombre' => $_GET['nombre'] ?? null
+      ];
+
+      $data = $topicoModel->allPaginated($page, $perPage, $filtros);
+      $total = $topicoModel->countAll($filtros);
+
       http_response_code(200);
-      echo json_encode($topicos);
+      echo json_encode([
+        'data' => $data,
+        'pagination' => [
+          'page' => $page,
+          'perPage' => $perPage,
+          'total' => $total,
+          'totalPages' => $total > 0 ? (int)ceil($total / $perPage) : 0
+        ]
+      ]);
       break;
 
     case 'POST':

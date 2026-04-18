@@ -10,6 +10,9 @@ $method = $_SERVER['REQUEST_METHOD'];
 try {
   switch ($method) {
     case 'GET':
+      $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+      $perPage = isset($_GET['per_page']) ? min((int)$_GET['per_page'], 100) : 10;
+
       if (isset($_GET['id'])) {
         $id = (int) $_GET['id'];
         $usuario = $usuarioModel->findSafe($id);
@@ -25,9 +28,26 @@ try {
         exit;
       }
 
-      $usuarios = $usuarioModel->allSafe();
+      $filtros = [
+        'nombre' => $_GET['nombre'] ?? null,
+        'apellidos' => $_GET['apellidos'] ?? null,
+        'email' => $_GET['email'] ?? null,
+        'rol' => $_GET['rol'] ?? null
+      ];
+
+      $data = $usuarioModel->allPaginated($page, $perPage, $filtros);
+      $total = $usuarioModel->countAll($filtros);
+
       http_response_code(200);
-      echo json_encode($usuarios);
+      echo json_encode([
+        'data' => $data,
+        'pagination' => [
+          'page' => $page,
+          'perPage' => $perPage,
+          'total' => $total,
+          'totalPages' => $total > 0 ? (int)ceil($total / $perPage) : 0
+        ]
+      ]);
       break;
 
     case 'POST':

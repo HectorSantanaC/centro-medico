@@ -59,6 +59,9 @@ if ($method === 'OPTIONS') {
 try {
   switch ($method) {
     case 'GET':
+      $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+      $perPage = isset($_GET['per_page']) ? min((int)$_GET['per_page'], 100) : 10;
+
       if (isset($_GET['id'])) {
         $id = (int) $_GET['id'];
         $articulo = $articuloModel->find($id);
@@ -81,13 +84,26 @@ try {
         exit;
       }
 
-      if (isset($_GET['admin']) && $_GET['admin'] === '1') {
-        $articulos = $articuloModel->allAdmin();
-      } else {
-        $articulos = $articuloModel->all();
-      }
+      $filtros = [
+        'titulo' => $_GET['titulo'] ?? null,
+        'topico' => !empty($_GET['topico_id']) ? (int)$_GET['topico_id'] : null,
+        'fecha_desde' => $_GET['fecha_desde'] ?? null,
+        'fecha_hasta' => $_GET['fecha_hasta'] ?? null
+      ];
+
+      $data = $articuloModel->allPaginated($page, $perPage, $filtros);
+      $total = $articuloModel->countAll($filtros);
+
       http_response_code(200);
-      echo json_encode($articulos);
+      echo json_encode([
+        'data' => $data,
+        'pagination' => [
+          'page' => $page,
+          'perPage' => $perPage,
+          'total' => $total,
+          'totalPages' => $total > 0 ? (int)ceil($total / $perPage) : 0
+        ]
+      ]);
       break;
 
     case 'POST':
