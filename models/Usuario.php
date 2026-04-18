@@ -126,4 +126,78 @@ class Usuario
       $data['rol']
     ]);
   }
+
+  public function allPaginated(int $page = 1, int $perPage = 10, array $filtros = []): array
+  {
+    $offset = ($page - 1) * $perPage;
+    $where = [];
+    $params = [];
+
+    if (!empty($filtros['nombre'])) {
+      $where[] = "(u.nombre ILIKE ? OR u.apellidos ILIKE ?)";
+      $params[] = '%' . $filtros['nombre'] . '%';
+      $params[] = '%' . $filtros['nombre'] . '%';
+    }
+
+    if (!empty($filtros['apellidos'])) {
+      $where[] = "u.apellidos ILIKE ?";
+      $params[] = '%' . $filtros['apellidos'] . '%';
+    }
+
+    if (!empty($filtros['email'])) {
+      $where[] = "u.email ILIKE ?";
+      $params[] = '%' . $filtros['email'] . '%';
+    }
+
+    if (!empty($filtros['rol']) && $filtros['rol'] !== '') {
+      $where[] = "u.rol = ?";
+      $params[] = $filtros['rol'];
+    }
+
+    $whereSql = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
+    $params[] = $perPage;
+    $params[] = $offset;
+
+    return $this->db->fetchAll("
+      SELECT u.id, u.nombre, u.apellidos, u.email, u.rol, u.created_at
+      FROM usuarios u
+      $whereSql
+      ORDER BY u.created_at DESC
+      LIMIT ? OFFSET ?
+    ", $params);
+  }
+
+  public function countAll(array $filtros = []): int
+  {
+    $where = [];
+    $params = [];
+
+    if (!empty($filtros['nombre'])) {
+      $where[] = "(nombre ILIKE ? OR apellidos ILIKE ?)";
+      $params[] = '%' . $filtros['nombre'] . '%';
+      $params[] = '%' . $filtros['nombre'] . '%';
+    }
+
+    if (!empty($filtros['apellidos'])) {
+      $where[] = "apellidos ILIKE ?";
+      $params[] = '%' . $filtros['apellidos'] . '%';
+    }
+
+    if (!empty($filtros['email'])) {
+      $where[] = "email ILIKE ?";
+      $params[] = '%' . $filtros['email'] . '%';
+    }
+
+    if (!empty($filtros['rol']) && $filtros['rol'] !== '') {
+      $where[] = "rol = ?";
+      $params[] = $filtros['rol'];
+    }
+
+    $whereSql = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
+
+    return (int) $this->db->fetchAll(
+      "SELECT COUNT(*) as total FROM usuarios u $whereSql",
+      $params
+    )[0]['total'];
+  }
 }

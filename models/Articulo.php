@@ -141,4 +141,79 @@ class Articulo
             ORDER BY a.created_at DESC
         ", [$topicoId]);
   }
+
+  public function allPaginated(int $page = 1, int $perPage = 10, array $filtros = []): array
+  {
+    $offset = ($page - 1) * $perPage;
+    $where = [];
+    $params = [];
+
+    if (!empty($filtros['titulo'])) {
+      $where[] = "(a.titulo ILIKE ? OR a.contenido_completo ILIKE ?)";
+      $params[] = '%' . $filtros['titulo'] . '%';
+      $params[] = '%' . $filtros['titulo'] . '%';
+    }
+
+    if (!empty($filtros['topico']) && $filtros['topico'] > 0) {
+      $where[] = "a.topico = ?";
+      $params[] = (int) $filtros['topico'];
+    }
+
+    if (!empty($filtros['fecha_desde'])) {
+      $where[] = "a.created_at >= ?";
+      $params[] = $filtros['fecha_desde'];
+    }
+
+    if (!empty($filtros['fecha_hasta'])) {
+      $where[] = "a.created_at <= ?";
+      $params[] = $filtros['fecha_hasta'];
+    }
+
+    $whereSql = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
+    $params[] = $perPage;
+    $params[] = $offset;
+
+    return $this->db->fetchAll("
+      SELECT a.*, t.nombre as topico_nombre
+      FROM articulos a
+      LEFT JOIN topicos t ON a.topico = t.id
+      $whereSql
+      ORDER BY a.created_at DESC
+      LIMIT ? OFFSET ?
+    ", $params);
+  }
+
+  public function countAll(array $filtros = []): int
+  {
+    $where = [];
+    $params = [];
+
+    if (!empty($filtros['titulo'])) {
+      $where[] = "(titulo ILIKE ? OR contenido_completo ILIKE ?)";
+      $params[] = '%' . $filtros['titulo'] . '%';
+      $params[] = '%' . $filtros['titulo'] . '%';
+    }
+
+    if (!empty($filtros['topico']) && $filtros['topico'] > 0) {
+      $where[] = "topico = ?";
+      $params[] = (int) $filtros['topico'];
+    }
+
+    if (!empty($filtros['fecha_desde'])) {
+      $where[] = "created_at >= ?";
+      $params[] = $filtros['fecha_desde'];
+    }
+
+    if (!empty($filtros['fecha_hasta'])) {
+      $where[] = "created_at <= ?";
+      $params[] = $filtros['fecha_hasta'];
+    }
+
+    $whereSql = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
+
+    return (int) $this->db->fetchAll(
+      "SELECT COUNT(*) as total FROM articulos a $whereSql",
+      $params
+    )[0]['total'];
+  }
 }

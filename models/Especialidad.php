@@ -56,19 +56,47 @@ class Especialidad
     return true;
   }
 
-  public function allPaginated(int $page = 1, int $perPage = 10): array
+  public function allPaginated(int $page = 1, int $perPage = 10, array $filtros = []): array
   {
     $offset = ($page - 1) * $perPage;
-    return $this->db->fetchAll(
-      "SELECT * FROM especialidades ORDER BY nombre LIMIT ? OFFSET ?",
-      [$perPage, $offset]
-    );
+    $where = [];
+    $params = [];
+
+    if (!empty($filtros['nombre'])) {
+      $where[] = "(e.nombre ILIKE ? OR e.descripcion ILIKE ?)";
+      $params[] = '%' . $filtros['nombre'] . '%';
+      $params[] = '%' . $filtros['nombre'] . '%';
+    }
+
+    $whereSql = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
+    $params[] = $perPage;
+    $params[] = $offset;
+
+    return $this->db->fetchAll("
+      SELECT e.*
+      FROM especialidades e
+      $whereSql
+      ORDER BY e.nombre
+      LIMIT ? OFFSET ?
+    ", $params);
   }
 
-  public function countAll(): int
+  public function countAll(array $filtros = []): int
   {
+    $where = [];
+    $params = [];
+
+    if (!empty($filtros['nombre'])) {
+      $where[] = "(nombre ILIKE ? OR descripcion ILIKE ?)";
+      $params[] = '%' . $filtros['nombre'] . '%';
+      $params[] = '%' . $filtros['nombre'] . '%';
+    }
+
+    $whereSql = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
+
     return (int) $this->db->fetchAll(
-      "SELECT COUNT(*) as total FROM especialidades"
+      "SELECT COUNT(*) as total FROM especialidades $whereSql",
+      $params
     )[0]['total'];
   }
 
@@ -77,5 +105,25 @@ class Especialidad
     return (int) $this->db->fetchAll(
       "SELECT COUNT(*) as total FROM especialidades WHERE activo = true"
     )[0]['total'];
+  }
+
+  public function allFiltered(array $filtros = []): array
+  {
+    $where = [];
+    $params = [];
+
+    if (!empty($filtros['nombre'])) {
+      $where[] = "(nombre ILIKE ? OR descripcion ILIKE ?)";
+      $params[] = '%' . $filtros['nombre'] . '%';
+      $params[] = '%' . $filtros['nombre'] . '%';
+    }
+
+    $whereSql = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
+
+    return $this->db->fetchAll("
+      SELECT * FROM especialidades
+      $whereSql
+      ORDER BY nombre
+    ", $params);
   }
 }

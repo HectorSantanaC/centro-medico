@@ -38,4 +38,46 @@ class Topico {
     $this->db->execute("DELETE FROM topicos WHERE id = ?", [$id]);
     return true;
   }
+
+  public function allPaginated(int $page = 1, int $perPage = 10, array $filtros = []): array
+  {
+    $offset = ($page - 1) * $perPage;
+    $where = [];
+    $params = [];
+
+    if (!empty($filtros['nombre'])) {
+      $where[] = "(t.nombre ILIKE ?)";
+      $params[] = '%' . $filtros['nombre'] . '%';
+    }
+
+    $whereSql = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
+    $params[] = $perPage;
+    $params[] = $offset;
+
+    return $this->db->fetchAll("
+      SELECT t.*
+      FROM topicos t
+      $whereSql
+      ORDER BY t.nombre
+      LIMIT ? OFFSET ?
+    ", $params);
+  }
+
+  public function countAll(array $filtros = []): int
+  {
+    $where = [];
+    $params = [];
+
+    if (!empty($filtros['nombre'])) {
+      $where[] = "nombre ILIKE ?";
+      $params[] = '%' . $filtros['nombre'] . '%';
+    }
+
+    $whereSql = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
+
+    return (int) $this->db->fetchAll(
+      "SELECT COUNT(*) as total FROM topicos t $whereSql",
+      $params
+    )[0]['total'];
+  }
 }
