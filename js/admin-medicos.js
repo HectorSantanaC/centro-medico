@@ -1,0 +1,190 @@
+const AdminMedicos = {
+  apiUrl: 'api/medicos.php',
+  apiEspecialidades: 'api/especialidades.php',
+
+  init() {
+    this.cargarEspecialidades();
+    this.cargarMedicos();
+    this.bindEvents();
+  },
+
+  async cargarEspecialidades() {
+    try {
+      const response = await fetch(this.apiEspecialidades);
+      const especialidades = await response.json();
+      const select = document.getElementById('especialidad_id');
+      select.innerHTML = '<option value="">Sin asignar</option>';
+      select.innerHTML += especialidades.map(e => 
+        `<option value="${e.id}">${this.escapeHtml(e.nombre)}</option>`
+      ).join('');
+    } catch (error) {
+      console.error('Error cargando especialidades:', error);
+    }
+  },
+
+  bindEvents() {
+    document.getElementById('btn-crear').addEventListener('click', () => this.mostrarModalCrear());
+
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('btn-editar')) {
+        this.mostrarModalEditar(e.target.dataset.id);
+      }
+      if (e.target.classList.contains('btn-eliminar')) {
+        this.confirmarEliminar(e.target.dataset.id);
+      }
+      if (e.target.classList.contains('modal-close-btn') || e.target.classList.contains('modal-close')) {
+        this.cerrarModal();
+      }
+    });
+
+    document.getElementById('form-medico').addEventListener('submit', (e) => {
+      e.preventDefault();
+      this.guardarMedico();
+    });
+  },
+
+  async cargarMedicos() {
+    const tbody = document.getElementById('medicos-body');
+    tbody.innerHTML = '<tr><td colspan="4" class="loading"><div class="spinner"></div>Cargando...</td></tr>';
+    try {
+      const response = await fetch(this.apiUrl);
+      const medicos = await response.json();
+      if (medicos.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:30px;">No hay médicos</td></tr>';
+        return;
+      }
+      tbody.innerHTML = medicos.map(med => `
+      <tr>
+        <td>${this.escapeHtml(med.nombre)} ${this.escapeHtml(med.apellidos)}</td>
+        <td>${this.escapeHtml(med.especialidad_nombre || '-')}</td>
+        <td>
+          <span class="estado-badge ${med.activo ? 'estado-confirmada' : 'estado-cancelada'}">
+            ${med.activo ? 'Activo' : 'Inactivo'}
+          </span>
+        </td>
+        <td class="actions">
+          <button class="btn btn-secondary btn-sm btn-editar" data-id="${med.id}">Editar</button>
+          <button class="btn btn-danger btn-sm btn-eliminar" data-id="${med.id}">Eliminar</button>
+        </td>
+      </tr>
+    `).join('');
+    } catch (error) {
+      tbody.innerHTML = '<tr><td colspan="4" class="message error">Error al cargar médicos</td></tr>';
+      this.mostrarToast('Error al conectar con el servidor', 'error');
+    }
+  },
+
+  mostrarModalCrear() {
+    document.getElementById('modal-titulo').textContent = 'Nuevo Médico';
+    document.getElementById('medico-id').value = '';
+    document.getElementById('nombre').value = '';
+    document.getElementById('apellidos').value = '';
+    document.getElementById('especialidad_id').value = '';
+    document.getElementById('activo').checked = true;
+    document.getElementById('modal').style.display = 'block';
+  },
+
+  async mostrarModalEditar(id) {
+    try {
+      const response = await fetch(`${this.apiUrl}?id=${id}`);
+      if (!response.ok) {
+        this.mostrarToast('Médico no encontrado', 'error');
+        return;
+      }
+      const med = await response.json();
+      document.getElementById('modal-titulo').textContent = 'Editar Médico';
+      document.getElementById('medico-id').value = med.id;
+      document.getElementById('nombre').value = med.nombre;
+      document.getElementById('apellidos').value = med.apellidos;
+      document.getElementById('especialidad_id').value = med.especialidad_id || '';
+      document.getElementById('activo').checked = med.activo;
+      document.getElementById('modal').style.display = 'block';
+    } catch (error) {
+      this.mostrarToast('Error al cargar médico', 'error');
+    }
+  },
+
+  async guardarMedico() {
+    const id = document.getElementById('medico-id').value;
+    const datos = {
+      nombre: document.getElementById('nombre').value.trim(),
+      apellidos: document.getElementById('apellidos').value.trim(),
+      especialidad_id: document.getElementById('especialidad_id').value || null,
+      activo: document.getElementById('activo').checked
+    };
+
+    if (!datos.nombre || !datos.apellidos) {
+      this.mostrarToast('El nombre y apellidos son obligatorios', 'error');
+      return;
+    }
+
+    try {
+      const options = {
+        method: id ? 'PUT' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(id ? { ...datos, id } : datos)
+      };
+      const response = await fetch(this.apiUrl, options);
+      const result = await response.json();
+      if (response.ok) {
+        this.cerrarModal();
+        this.cargarMedicos();
+        this.mostrarToast(id ? 'Médico actualizado' : 'Médico creado', 'success');
+      } else {
+        this.mostrarToast(result.error || 'Error al guardar', 'error');
+      }
+    } catch (error) {
+      this.mostrarToast('Error de conexión', 'error');
+    }
+  },
+
+  confirmarEliminar(id) {
+    if (confirm('¿Eliminar este médico?')) {
+      this.eliminarMedico(id);
+    }
+  },
+
+  async eliminarMedico(id) {
+    try {
+      const response = await fetch(this.apiUrl, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id })
+      });
+
+      if (response.ok) {
+        this.cargarMedicos();
+        this.mostrarToast('Médico eliminado', 'success');
+      } else {
+        const result = await response.json();
+        this.mostrarToast(result.error || 'Error al eliminar', 'error');
+      }
+    } catch (error) {
+      this.mostrarToast('Error de conexión', 'error');
+    }
+  },
+
+  cerrarModal() {
+    document.getElementById('modal').style.display = 'none';
+  },
+
+  mostrarToast(mensaje, tipo = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `toast ${tipo}`;
+    toast.textContent = mensaje;
+    toast.style.position = 'fixed';
+    toast.style.bottom = '20px';
+    toast.style.right = '20px';
+    toast.style.zIndex = '2000';
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  },
+
+  escapeHtml(texto) {
+    const div = document.createElement('div');
+    div.textContent = texto;
+    return div.innerHTML;
+  }
+};
+
+document.addEventListener('DOMContentLoaded', () => AdminMedicos.init());

@@ -51,9 +51,12 @@ class Articulo
       seo_titulo, seo_descripcion, seo_palabras_clave
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id";
 
+    $topico = !empty($data['topico']) ? (int)$data['topico'] : null;
+    $publicado = isset($data['publicado']) ? (bool)$data['publicado'] : true;
+
     return $this->db->insert($sql, [
       $data['titulo'],
-      $data['topico'],
+      $topico,
       $data['contenido_completo'] ?? '',
       $data['contenido_reducido'] ?? '',
       $data['fecha_contenido'] ?? null,
@@ -63,7 +66,7 @@ class Articulo
       $data['imagen'] ?? '',
       $data['imagen_url'] ?? '',
       $data['autor'] ?? '',
-      $data['publicado'] ?? true,
+      $publicado,
       $data['seo_titulo'] ?? '',
       $data['seo_descripcion'] ?? '',
       $data['seo_palabras_clave'] ?? ''
