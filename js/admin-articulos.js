@@ -1,9 +1,13 @@
 const AdminArticulos = {
   apiUrl: 'api/articulos.php',
   apiTopicos: 'api/topicos.php',
+  currentPage: 1,
+  perPage: 10,
+  totalItems: 0,
 
   init() {
     this.cargarTopicos();
+    this.cargarFiltros();
     this.cargarArticulos();
     this.bindEvents();
   },
@@ -11,7 +15,8 @@ const AdminArticulos = {
   async cargarTopicos() {
     try {
       const response = await fetch(this.apiTopicos);
-      const topicos = await response.json();
+      const result = await response.json();
+      const topicos = result.data || result;
       const select = document.getElementById('topico');
       select.innerHTML = '<option value="">Sin topico</option>';
       select.innerHTML += topicos.map(t => 
@@ -22,8 +27,61 @@ const AdminArticulos = {
     }
   },
 
+  async cargarFiltros() {
+    try {
+      const response = await fetch(this.apiTopicos);
+      const result = await response.json();
+      const topicos = result.data || result;
+      const select = document.getElementById('filtro-topico');
+      select.innerHTML = '<option value="">Todos</option>';
+      select.innerHTML += topicos.map(t => 
+        `<option value="${t.id}">${this.escapeHtml(t.nombre)}</option>`
+      ).join('');
+    } catch (error) {
+      console.error('Error cargando filtros:', error);
+    }
+  },
+
+  getFiltros() {
+    return {
+      titulo: document.getElementById('filtro-titulo').value || null,
+      topico_id: document.getElementById('filtro-topico').value || null,
+      fecha_desde: document.getElementById('filtro-fecha-desde').value || null,
+      fecha_hasta: document.getElementById('filtro-fecha-hasta').value || null
+    };
+  },
+
+  buildQueryString() {
+    const filtros = this.getFiltros();
+    const params = new URLSearchParams();
+    params.append('page', this.currentPage);
+    params.append('per_page', this.perPage);
+    Object.entries(filtros).forEach(([key, value]) => {
+      if (value) params.append(key, value);
+    });
+    return params.toString();
+  },
+
+  limpiarFiltros() {
+    document.getElementById('filtro-titulo').value = '';
+    document.getElementById('filtro-topico').value = '';
+    document.getElementById('filtro-fecha-desde').value = '';
+    document.getElementById('filtro-fecha-hasta').value = '';
+    this.currentPage = 1;
+  },
+
   bindEvents() {
-    document.getElementById('btn-crear').addEventListener('click', () => this.mostrarModalCrear());
+    document.getElementById('btn-crear')?.addEventListener('click', () => this.mostrarModalCrear());
+
+    document.getElementById('btn-filtrar')?.addEventListener('click', () => {
+      this.currentPage = 1;
+      this.cargarArticulos();
+    });
+
+    document.getElementById('btn-limpiar-filtros')?.addEventListener('click', () => {
+      this.limpiarFiltros();
+      this.cargarArticulos();
+    });
 
     document.addEventListener('click', (e) => {
       if (e.target.classList.contains('btn-editar')) {
@@ -37,7 +95,7 @@ const AdminArticulos = {
       }
     });
 
-    document.getElementById('form-articulo').addEventListener('submit', (e) => {
+    document.getElementById('form-articulo')?.addEventListener('submit', (e) => {
       e.preventDefault();
       this.guardarArticulo();
     });
@@ -47,12 +105,18 @@ const AdminArticulos = {
     const tbody = document.getElementById('articulos-body');
     tbody.innerHTML = '<tr><td colspan="6" class="loading"><div class="spinner"></div>Cargando...</td></tr>';
     try {
-      const response = await fetch(`${this.apiUrl}?admin=1`);
-      const articulos = await response.json();
+      const queryString = this.buildQueryString();
+      const response = await fetch(`${this.apiUrl}?${queryString}`);
+      const result = await response.json();
+      const articulos = result.data || [];
+      this.totalItems = result.pagination?.total || 0;
+      
       if (articulos.length === 0) {
         tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;">No hay articulos</td></tr>';
+        this.renderPagination();
         return;
       }
+      
       tbody.innerHTML = articulos.map(a => `
       <tr>
         <td>${this.escapeHtml(a.titulo)}</td>
@@ -61,7 +125,7 @@ const AdminArticulos = {
         <td>${this.formatFecha(a.fecha_caducidad)}</td>
         <td>
           <span class="estado-badge ${a.publicado ? 'estado-confirmada' : 'estado-cancelada'}">
-            ${a.publicado ? 'Sí' : 'No'}
+            ${a.publicado ? 'Publicado' : 'Borrador'}
           </span>
         </td>
         <td class="actions">
@@ -69,11 +133,43 @@ const AdminArticulos = {
           <button class="btn btn-danger btn-sm btn-eliminar" data-id="${a.id}">Eliminar</button>
         </td>
       </tr>
-    `).join('');
+      `).join('');
+      
+      this.renderPagination();
     } catch (error) {
       tbody.innerHTML = '<tr><td colspan="6" class="message error">Error al cargar articulos</td></tr>';
       this.mostrarToast('Error al conectar con el servidor', 'error');
     }
+  },
+
+  renderPagination() {
+    const pagination = document.getElementById('pagination-info');
+    const controls = document.getElementById('pagination-controls');
+    if (!pagination || !controls) return;
+    
+    const totalPages = Math.ceil(this.totalItems / this.perPage);
+    pagination.textContent = `Página ${this.currentPage} de ${totalPages} (${this.totalItems} resultados)`;
+    
+    let html = '';
+    if (this.currentPage > 1) {
+      html += `<button class="btn btn-sm btn-secondary" onclick="AdminArticulos.goToPage(${this.currentPage - 1})">Anterior</button> `;
+    }
+    
+    for (let i = 1; i <= totalPages && i <= 5; i++) {
+      const active = i === this.currentPage ? 'active' : '';
+      html += `<button class="btn btn-sm ${active}" onclick="AdminArticulos.goToPage(${i})">${i}</button> `;
+    }
+    
+    if (this.currentPage < totalPages) {
+      html += `<button class="btn btn-sm btn-secondary" onclick="AdminArticulos.goToPage(${this.currentPage + 1})">Siguiente</button>`;
+    }
+    
+    controls.innerHTML = html;
+  },
+
+  goToPage(page) {
+    this.currentPage = page;
+    this.cargarArticulos();
   },
 
   mostrarModalCrear() {

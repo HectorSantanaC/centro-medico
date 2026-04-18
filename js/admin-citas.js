@@ -4,9 +4,13 @@ const AdminCitas = {
   apiEspecialidades: 'api/especialidades.php',
   apiMedicos: 'api/medicos.php',
   apiHoras: 'api/horas.php',
+  currentPage: 1,
+  perPage: 10,
+  totalItems: 0,
 
   init() {
     this.cargarDatosIniciales();
+    this.cargarFiltros();
     this.cargarCitas();
     this.bindEvents();
   },
@@ -16,10 +20,59 @@ const AdminCitas = {
     await this.cargarEspecialidades();
   },
 
+  async cargarFiltros() {
+    try {
+      const response = await fetch(this.apiEspecialidades);
+      const result = await response.json();
+      const especialidades = result.data || result;
+      const select = document.getElementById('filtro-especialidad');
+      select.innerHTML = '<option value="">Todas</option>';
+      select.innerHTML += especialidades.map(e => 
+        `<option value="${e.id}">${this.escapeHtml(e.nombre)}</option>`
+      ).join('');
+    } catch (error) {
+      console.error('Error cargando filtros:', error);
+    }
+  },
+
+  getFiltros() {
+    return {
+      fecha_desde: document.getElementById('filtro-fecha-desde').value || null,
+      fecha_hasta: document.getElementById('filtro-fecha-hasta').value || null,
+      estado: document.getElementById('filtro-estado').value || null,
+      especialidad_id: document.getElementById('filtro-especialidad').value || null,
+      medico_id: document.getElementById('filtro-medico').value || null
+    };
+  },
+
+  buildQueryString() {
+    const filtros = this.getFiltros();
+    const params = new URLSearchParams();
+    
+    params.append('page', this.currentPage);
+    params.append('per_page', this.perPage);
+    
+    Object.entries(filtros).forEach(([key, value]) => {
+      if (value) params.append(key, value);
+    });
+    
+    return params.toString();
+  },
+
+  limpiarFiltros() {
+    document.getElementById('filtro-fecha-desde').value = '';
+    document.getElementById('filtro-fecha-hasta').value = '';
+    document.getElementById('filtro-estado').value = '';
+    document.getElementById('filtro-especialidad').value = '';
+    document.getElementById('filtro-medico').value = '';
+    this.currentPage = 1;
+  },
+
   async cargarPacientes() {
     try {
       const response = await fetch(this.apiUsuarios);
-      const usuarios = await response.json();
+      const result = await response.json();
+      const usuarios = result.data || result;
       const pacientes = usuarios.filter(u => u.rol === 'paciente');
       const select = document.getElementById('paciente_id');
       select.innerHTML = '<option value="">Seleccionar paciente</option>';
@@ -34,7 +87,8 @@ const AdminCitas = {
   async cargarEspecialidades() {
     try {
       const response = await fetch(this.apiEspecialidades);
-      const especialidades = await response.json();
+      const result = await response.json();
+      const especialidades = result.data || result;
       const select = document.getElementById('especialidad_id');
       select.innerHTML = '<option value="">Seleccionar especialidad</option>';
       select.innerHTML += especialidades.map(e => 
@@ -48,7 +102,8 @@ const AdminCitas = {
   async cargarMedicosPorEspecialidad(especialidadId) {
     try {
       const response = await fetch(`${this.apiMedicos}?especialidad_id=${especialidadId}`);
-      const medicos = await response.json();
+      const result = await response.json();
+      const medicos = result.data || result;
       const select = document.getElementById('medico_id');
       select.innerHTML = '<option value="">Seleccionar medico</option>';
       select.innerHTML += medicos.map(m => {
@@ -57,6 +112,25 @@ const AdminCitas = {
       }).join('');
     } catch (error) {
       console.error('Error cargando medicos:', error);
+    }
+  },
+
+  async cargarMedicosFiltro(especialidadId = null) {
+    try {
+      const url = especialidadId 
+        ? `${this.apiMedicos}?especialidad_id=${especialidadId}`
+        : this.apiMedicos;
+      const response = await fetch(url);
+      const result = await response.json();
+      const medicos = result.data || result;
+      const select = document.getElementById('filtro-medico');
+      select.innerHTML = '<option value="">Todos</option>';
+      select.innerHTML += medicos.map(m => {
+        const nombreMostrar = m.nombre_completo || `${m.nombre || ''} ${m.apellidos || ''}`.trim();
+        return `<option value="${m.id}">${this.escapeHtml(nombreMostrar)}</option>`;
+      }).join('');
+    } catch (error) {
+      console.error('Error cargando medicos filtro:', error);
     }
   },
 
@@ -71,11 +145,12 @@ const AdminCitas = {
     try {
       const response = await fetch(`${this.apiHoras}?fecha=${fecha}&medico_id=${medicoId}`);
       const data = await response.json();
+      const horas = data.horas || data.data?.horas || [];
       const select = document.getElementById('hora');
       select.innerHTML = '<option value="">Seleccionar hora</option>';
       
-      if (data.horas && data.horas.length > 0) {
-        select.innerHTML += data.horas.map(h => 
+      if (horas.length > 0) {
+        select.innerHTML += horas.map(h => 
           `<option value="${h}">${h}</option>`
         ).join('');
       } else {
@@ -106,6 +181,20 @@ const AdminCitas = {
       this.cargarHorasDisponibles();
     });
 
+    document.getElementById('filtro-especialidad').addEventListener('change', (e) => {
+      this.cargarMedicosFiltro(e.target.value || null);
+    });
+
+    document.getElementById('btn-filtrar').addEventListener('click', () => {
+      this.currentPage = 1;
+      this.cargarCitas();
+    });
+
+    document.getElementById('btn-limpiar-filtros').addEventListener('click', () => {
+      this.limpiarFiltros();
+      this.cargarCitas();
+    });
+
     document.addEventListener('click', (e) => {
       if (e.target.classList.contains('btn-editar')) {
         this.mostrarModalEditar(e.target.dataset.id);
@@ -128,12 +217,18 @@ const AdminCitas = {
     const tbody = document.getElementById('citas-body');
     tbody.innerHTML = '<tr><td colspan="7" class="loading"><div class="spinner"></div>Cargando...</td></tr>';
     try {
-      const response = await fetch(this.apiUrl);
-      const citas = await response.json();
+      const queryString = this.buildQueryString();
+      const response = await fetch(`${this.apiUrl}?${queryString}`);
+      const result = await response.json();
+      const citas = result.data || [];
+      this.totalItems = result.pagination?.total || 0;
+      
       if (citas.length === 0) {
         tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:30px;">No hay citas</td></tr>';
+        this.renderPagination();
         return;
       }
+      
       tbody.innerHTML = citas.map(c => `
       <tr>
         <td>${this.escapeHtml(c.paciente_nombre || '-')} ${this.escapeHtml(c.paciente_apellidos || '')}</td>
@@ -150,10 +245,41 @@ const AdminCitas = {
         </td>
       </tr>
     `).join('');
+      
+      this.renderPagination();
     } catch (error) {
       tbody.innerHTML = '<tr><td colspan="7" class="message error">Error al cargar citas</td></tr>';
       this.mostrarToast('Error al conectar con el servidor', 'error');
     }
+  },
+
+  renderPagination() {
+    const pagination = document.getElementById('pagination-info');
+    const controls = document.getElementById('pagination-controls');
+    const totalPages = Math.ceil(this.totalItems / this.perPage);
+    
+    pagination.textContent = `Página ${this.currentPage} de ${totalPages} (${this.totalItems} resultados)`;
+    
+    let html = '';
+    if (this.currentPage > 1) {
+      html += `<button class="btn btn-sm btn-secondary" onclick="AdminCitas.goToPage(${this.currentPage - 1})">Anterior</button> `;
+    }
+    
+    for (let i = 1; i <= totalPages && i <= 5; i++) {
+      const active = i === this.currentPage ? 'active' : '';
+      html += `<button class="btn btn-sm ${active}" onclick="AdminCitas.goToPage(${i})">${i}</button> `;
+    }
+    
+    if (this.currentPage < totalPages) {
+      html += `<button class="btn btn-sm btn-secondary" onclick="AdminCitas.goToPage(${this.currentPage + 1})">Siguiente</button>`;
+    }
+    
+    controls.innerHTML = html;
+  },
+
+  goToPage(page) {
+    this.currentPage = page;
+    this.cargarCitas();
   },
 
   getFechaMinima() {

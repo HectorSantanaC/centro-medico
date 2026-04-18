@@ -17,6 +17,27 @@
       <button id="btn-crear" class="btn btn-primary">+ Nuevo Usuario</button>
     </div>
 
+    <div class="filtros-container">
+      <div class="filtros-row">
+        <div class="filtro-group">
+          <label>Buscar</label>
+          <input type="text" id="filtro-nombre" placeholder="Nombre o email...">
+        </div>
+        <div class="filtro-group">
+          <label>Rol</label>
+          <select id="filtro-rol">
+            <option value="">Todos</option>
+            <option value="paciente">Paciente</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+      </div>
+      <div class="filtros-actions">
+        <button id="btn-filtrar" class="btn btn-primary btn-sm">Buscar</button>
+        <button id="btn-limpiar-filtros" class="btn btn-secondary btn-sm">Limpiar</button>
+      </div>
+    </div>
+
     <div class="table-container">
       <table id="tabla-usuarios">
         <thead>
@@ -38,6 +59,11 @@
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <div class="pagination-container">
+      <div class="pagination-info" id="pagination-info"></div>
+      <div class="pagination-controls" id="pagination-controls"></div>
     </div>
   </main>
 

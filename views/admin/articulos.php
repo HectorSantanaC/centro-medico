@@ -26,6 +26,33 @@
         <a href="?action=create" class="btn btn-primary">+ Nuevo Artículo</a>
       </div>
 
+      <div class="filtros-container">
+        <div class="filtros-row">
+          <div class="filtro-group">
+            <label>Buscar</label>
+            <input type="text" id="filtro-titulo" placeholder="Título...">
+          </div>
+          <div class="filtro-group">
+            <label>Tópico</label>
+            <select id="filtro-topico">
+              <option value="">Todos</option>
+            </select>
+          </div>
+          <div class="filtro-group">
+            <label>Desde</label>
+            <input type="date" id="filtro-fecha-desde">
+          </div>
+          <div class="filtro-group">
+            <label>Hasta</label>
+            <input type="date" id="filtro-fecha-hasta">
+          </div>
+        </div>
+        <div class="filtros-actions">
+          <button id="btn-filtrar" class="btn btn-primary btn-sm">Buscar</button>
+          <button id="btn-limpiar-filtros" class="btn btn-secondary btn-sm">Limpiar</button>
+        </div>
+      </div>
+
       <div class="table-container">
         <table>
           <thead>

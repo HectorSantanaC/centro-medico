@@ -17,6 +17,45 @@
       <button id="btn-crear" class="btn btn-primary">+ Nueva Cita</button>
     </div>
 
+    <div class="filtros-container">
+      <div class="filtros-row">
+        <div class="filtro-group">
+          <label>Desde</label>
+          <input type="date" id="filtro-fecha-desde">
+        </div>
+        <div class="filtro-group">
+          <label>Hasta</label>
+          <input type="date" id="filtro-fecha-hasta">
+        </div>
+        <div class="filtro-group">
+          <label>Estado</label>
+          <select id="filtro-estado">
+            <option value="">Todos</option>
+            <option value="pendiente">Pendiente</option>
+            <option value="confirmada">Confirmada</option>
+            <option value="cancelada">Cancelada</option>
+            <option value="completada">Completada</option>
+          </select>
+        </div>
+        <div class="filtro-group">
+          <label>Especialidad</label>
+          <select id="filtro-especialidad">
+            <option value="">Todas</option>
+          </select>
+        </div>
+        <div class="filtro-group">
+          <label>Medico</label>
+          <select id="filtro-medico">
+            <option value="">Todos</option>
+          </select>
+        </div>
+      </div>
+      <div class="filtros-actions">
+        <button id="btn-filtrar" class="btn btn-primary btn-sm">Buscar</button>
+        <button id="btn-limpiar-filtros" class="btn btn-secondary btn-sm">Limpiar</button>
+      </div>
+    </div>
+
     <div class="table-container">
       <table>
         <thead>
@@ -39,6 +78,11 @@
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <div class="pagination-container">
+      <div class="pagination-info" id="pagination-info"></div>
+      <div class="pagination-controls" id="pagination-controls"></div>
     </div>
   </main>
 

@@ -17,6 +17,25 @@
       <button id="btn-crear" class="btn btn-primary">+ Nuevo Medico</button>
     </div>
 
+    <div class="filtros-container">
+      <div class="filtros-row">
+        <div class="filtro-group">
+          <label>Buscar</label>
+          <input type="text" id="filtro-nombre" placeholder="Nombre o apellido...">
+        </div>
+        <div class="filtro-group">
+          <label>Especialidad</label>
+          <select id="filtro-especialidad">
+            <option value="">Todas</option>
+          </select>
+        </div>
+      </div>
+      <div class="filtros-actions">
+        <button id="btn-filtrar" class="btn btn-primary btn-sm">Buscar</button>
+        <button id="btn-limpiar-filtros" class="btn btn-secondary btn-sm">Limpiar</button>
+      </div>
+    </div>
+
     <div class="table-container">
       <table>
         <thead>
@@ -36,6 +55,11 @@
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <div class="pagination-container">
+      <div class="pagination-info" id="pagination-info"></div>
+      <div class="pagination-controls" id="pagination-controls"></div>
     </div>
   </main>
 
