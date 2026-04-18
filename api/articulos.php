@@ -3,9 +3,58 @@
 require_once __DIR__ . '/../models/Articulo.php';
 
 header('Content-Type: application/json; charset=utf-8');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
 
-$articuloModel = new Articulo();
+function procesarImagenBase64(?string &$imagen): bool
+{
+  if (empty($imagen) || strpos($imagen, 'data:image/') !== 0) {
+    return false;
+  }
+
+  $matches = [];
+  if (!preg_match('/^data:image\/(\w+);base64,(.+)$/', $imagen, $matches)) {
+    return false;
+  }
+
+  $extension = $matches[1];
+  $datosBase64 = $matches[2];
+  $contenido = base64_decode($datosBase64);
+
+  if ($contenido === false || strlen($contenido) < 100) {
+    return false;
+  }
+
+  $allowedExt = ['jpeg', 'jpg', 'png', 'gif', 'webp'];
+  if (!in_array($extension, $allowedExt)) {
+    return false;
+  }
+
+  $uploadDir = __DIR__ . '/../assets/img/articulos/';
+  if (!is_dir($uploadDir)) {
+    if (!mkdir($uploadDir, 0755, true)) {
+      return false;
+    }
+  }
+
+  $filename = uniqid('articulo_') . '.' . $extension;
+  $ruta = $uploadDir . $filename;
+
+  if (file_put_contents($ruta, $contenido) === false) {
+    return false;
+  }
+
+  $imagen = 'assets/img/articulos/' . $filename;
+  return true;
+}
+
 $method = $_SERVER['REQUEST_METHOD'];
+
+if ($method === 'OPTIONS') {
+  http_response_code(200);
+  exit;
+}
 
 try {
   switch ($method) {
@@ -49,6 +98,8 @@ try {
         exit;
       }
 
+      procesarImagenBase64($data['imagen']);
+
       $id = $articuloModel->create($data);
       http_response_code(201);
       echo json_encode([
@@ -70,6 +121,9 @@ try {
         echo json_encode(['error' => 'Artículo no encontrado']);
         exit;
       }
+
+      procesarImagenBase64($data['imagen']);
+
       $articuloModel->update((int)$data['id'], $data);
       http_response_code(200);
       echo json_encode(['message' => 'Artículo actualizado correctamente']);

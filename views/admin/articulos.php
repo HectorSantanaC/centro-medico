@@ -71,6 +71,8 @@
 
         <form method="POST" enctype="multipart/form-data">
           <?= csrf_field() ?>
+          <input type="hidden" name="id" value="<?= $articulo['id'] ?? '' ?>">
+          
           <div class="form-group">
             <label>Título *</label>
             <input type="text" name="titulo" required
