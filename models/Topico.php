@@ -25,12 +25,12 @@ class Topico {
 
   public function create(array $data): int {
     $sql = "INSERT INTO topicos (nombre) VALUES (?) RETURNING id";
-    return $this->db->insert($sql, [$data['name']]);
+    return $this->db->insert($sql, [$data['nombre'] ?? $data['name']]);
   }
 
   public function update(int $id, array $data): bool {
     $sql = "UPDATE topicos SET nombre = ? WHERE id = ?";
-    $this->db->execute($sql, [$data['name'], $id]);
+    $this->db->execute($sql, [$data['nombre'] ?? $data['name'], $id]);
     return true;
   }
 

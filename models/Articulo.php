@@ -127,4 +127,15 @@ class Articulo
             LIMIT ?
         ", [$limit]);
   }
+
+  public function getByTopico(int $topicoId): array
+  {
+    return $this->db->fetchAll("
+            SELECT a.*, t.nombre as topico_nombre
+            FROM articulos a
+            LEFT JOIN topicos t ON a.topico = t.id
+            WHERE a.topico = ? AND a.publicado = true
+            ORDER BY a.created_at DESC
+        ", [$topicoId]);
+  }
 }
