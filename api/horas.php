@@ -7,6 +7,7 @@ header('Content-Type: application/json');
 
 $fecha = $_GET['fecha'] ?? '';
 $medicoId = (int)($_GET['medico_id'] ?? 0);
+$citaId = (int)($_GET['cita_id'] ?? 0);
 
 if (!$fecha || !$medicoId) {
   echo json_encode(['error' => 'Parámetros inválidos']);
@@ -25,7 +26,7 @@ if ($diaSemana === 0 || $diaSemana === 6) {
 }
 
 $citaModel = new Cita();
-$ocupadas = $citaModel->getOcupadasPorFechaMedico($fecha, $medicoId);
+$ocupadas = $citaModel->getOcupadasPorFechaMedico($fecha, $medicoId, $citaId ?: null);
 
 $horasOcupadas = array_map(function($c) {
   return date('H:i', strtotime($c['hora']));

@@ -200,12 +200,17 @@ class Cita
     return true;
   }
 
-  public function getOcupadasPorFechaMedico(string $fecha, int $medicoId): array
+  public function getOcupadasPorFechaMedico(string $fecha, int $medicoId, ?int $excluirId = null): array
   {
-    return $this->db->fetchAll(
-      "SELECT hora FROM citas 
-       WHERE fecha = ? AND medico_id = ? AND estado != 'cancelada'",
-      [$fecha, $medicoId]
-    );
+    $sql = "SELECT hora FROM citas 
+       WHERE fecha = ? AND medico_id = ? AND estado != 'cancelada'";
+    $params = [$fecha, $medicoId];
+    
+    if ($excluirId !== null) {
+      $sql .= " AND id != ?";
+      $params[] = $excluirId;
+    }
+    
+    return $this->db->fetchAll($sql, $params);
   }
 }

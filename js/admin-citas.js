@@ -134,19 +134,24 @@ const AdminCitas = {
     }
   },
 
-  async cargarHorasDisponibles() {
+  async cargarHorasDisponibles(citaId = null) {
     const fecha = document.getElementById('fecha').value;
     const medicoId = document.getElementById('medico_id').value;
+    const select = document.getElementById('hora');
 
     if (!fecha || !medicoId) {
       return;
     }
 
     try {
-      const response = await fetch(`${this.apiHoras}?fecha=${fecha}&medico_id=${medicoId}`);
+      let url = `${this.apiHoras}?fecha=${fecha}&medico_id=${medicoId}`;
+      if (citaId) {
+        url += `&cita_id=${citaId}`;
+      }
+      const response = await fetch(url);
       const data = await response.json();
       const horas = data.horas || data.data?.horas || [];
-      const select = document.getElementById('hora');
+      
       select.innerHTML = '<option value="">Seleccionar hora</option>';
       
       if (horas.length > 0) {
@@ -321,7 +326,7 @@ const AdminCitas = {
       document.getElementById('medico_id').value = c.medico_id;
       document.getElementById('fecha').value = c.fecha;
       document.getElementById('fecha').min = this.getFechaMinima();
-      await this.cargarHorasDisponibles();
+      await this.cargarHorasDisponibles(c.id);
       document.getElementById('hora').value = c.hora ? c.hora.substring(0, 5) : '';
       document.getElementById('estado').value = c.estado;
       document.getElementById('notas').value = c.notas || '';
