@@ -74,6 +74,8 @@ class Database
 define('APP_URL', '/');
 define('APP_NOMBRE', 'Centro Médico TAC7');
 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
 
 date_default_timezone_set('Europe/Madrid');
