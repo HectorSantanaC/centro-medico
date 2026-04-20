@@ -88,6 +88,18 @@ body {
   font-size: 28px;
   margin: 0;
 }
+.page-header p {
+  color: #4a5568;
+  font-size: 16px;
+  margin: 0;
+}
+.page-header:has(p) {
+  flex-direction: column;
+  align-items: flex-start;
+}
+.page-header:has(p) h1 {
+  margin-bottom: 4px;
+}
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
