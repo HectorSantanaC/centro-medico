@@ -12,6 +12,7 @@ $topicos = $data['topicos'];
 $message = $data['message'];
 $messageType = $data['messageType'];
 $canManage = $data['canManage'];
+$active = $data['active'];
 
 if (!$canManage) {
   header('Location: blog.php');
