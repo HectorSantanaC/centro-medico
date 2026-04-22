@@ -121,6 +121,31 @@ class Articulo
     return true;
   }
 
+  public function existsByTitulo(string $titulo, ?int $excludeId = null): bool
+  {
+    $sql = "SELECT id FROM articulos WHERE titulo = ?";
+    $params = [$titulo];
+    if ($excludeId !== null) {
+      $sql .= " AND id != ?";
+      $params[] = $excludeId;
+    }
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute($params);
+    return (bool) $stmt->fetch();
+  }
+
+  public function deleteWithImage(int $id): bool
+  {
+    $articulo = $this->find($id);
+    if ($articulo && !empty($articulo['imagen'])) {
+      $ruta = __DIR__ . '/../' . $articulo['imagen'];
+      if (file_exists($ruta)) {
+        unlink($ruta);
+      }
+    }
+    return $this->delete($id);
+  }
+
   public function getRecientes(int $limit = 3): array
   {
     return $this->db->fetchAll("

@@ -7,23 +7,18 @@
   <title>Gestión de Artículos</title>
   <link rel="stylesheet" href="css/admin.css">
   <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
-  <?php require_once __DIR__ . '/../../helpers/sanitize.php'; ?>
 </head>
 
 <body>
   <?php require_once __DIR__ . '/../layout/navbar-admin.php'; ?>
 
   <main class="main-content">
-    <?php if ($message): ?>
-      <div class="message <?= $messageType ?>">
-        <?= htmlspecialchars($message) ?>
-      </div>
-    <?php endif; ?>
+    <div id="message-container"></div>
 
-    <?php if ($action === 'list'): ?>
+    <div id="seccion-lista">
       <div class="page-header">
         <h1>📰 Gestión de Artículos</h1>
-        <a href="?action=create" class="btn btn-primary">+ Nuevo Artículo</a>
+        <button id="btn-crear" class="btn btn-primary">+ Nuevo Artículo</button>
       </div>
 
       <div class="filtros-container">
@@ -65,145 +60,112 @@
               <th>Acciones</th>
             </tr>
           </thead>
-          <tbody>
-            <?php foreach ($articulos as $articulo): ?>
-              <tr>
-                <td><?= htmlspecialchars($articulo['titulo']) ?></td>
-                <td><?= htmlspecialchars($articulo['topico_nombre'] ?? '-') ?></td>
-                <td><?= !empty($articulo['fecha_contenido']) ? date('d/m/Y', strtotime($articulo['fecha_contenido'])) : '-' ?></td>
-                <td><?= !empty($articulo['fecha_caducidad']) ? date('d/m/Y', strtotime($articulo['fecha_caducidad'])) : '-' ?></td>
-                <td>
-                  <span class="rol-badge rol-<?= $articulo['publicado'] ? 'admin' : 'paciente' ?>">
-                    <?= $articulo['publicado'] ? 'Sí' : 'No' ?>
-                  </span>
-                </td>
-
-                <td class="actions">
-                  <a href="?action=edit&id=<?= $articulo['id'] ?>" class="btn btn-secondary btn-sm">Editar</a>
-                  <a href="?action=delete&id=<?= $articulo['id'] ?>"
-                    class="btn btn-danger btn-sm btn-delete"
-                    data-confirm="¿Eliminar este artículo?">Eliminar</a>
-                </td>
-              </tr>
-            <?php endforeach; ?>
+          <tbody id="tabla-articulos">
+            <tr><td colspan="6" class="loading">Cargando...</td></tr>
           </tbody>
         </table>
       </div>
 
-    <?php elseif ($action === 'create' || $action === 'edit'): ?>
-      <a href="articulos-crud.php" class="back-link">← Volver al listado</a>
+      <div class="pagination-container">
+        <div class="pagination-info" id="pagination-info"></div>
+        <div class="pagination-controls" id="pagination-controls"></div>
+      </div>
+    </div>
+
+    <div id="seccion-form" class="hidden">
+      <a href="#" id="btn-volver-lista" class="back-link">← Volver al listado</a>
 
       <div class="form-card">
-        <h2><?= $action === 'create' ? 'Crear' : 'Editar' ?> Artículo</h2>
+        <h2 id="form-titulo">Crear Artículo</h2>
 
-        <form method="POST" enctype="multipart/form-data">
-          <?= csrf_field() ?>
-          <input type="hidden" name="id" value="<?= $articulo['id'] ?? '' ?>">
-          
+        <form id="form-articulo" enctype="multipart/form-data">
+          <input type="hidden" id="articulo-id" value="">
+
           <div class="form-group">
             <label>Título *</label>
-            <input type="text" name="titulo" required
-              value="<?= htmlspecialchars($articulo['titulo'] ?? '') ?>">
+            <input type="text" id="articulo-titulo" required>
           </div>
 
           <div class="form-group">
             <label>Tópico</label>
-            <select name="topico">
+            <select id="articulo-topico">
               <option value="">Sin tópico</option>
-              <?php foreach ($topicos as $top): ?>
-                <option value="<?= $top['id'] ?>"
-                  <?= ($articulo['topico'] ?? '') == $top['id'] ? 'selected' : '' ?>>
-                  <?= htmlspecialchars($top['nombre']) ?>
-                </option>
-              <?php endforeach; ?>
             </select>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label>Fecha contenido</label>
-              <input type="date" name="fecha_contenido"
-                value="<?= htmlspecialchars($articulo['fecha_contenido'] ?? '') ?>">
+              <input type="date" id="articulo-fecha-contenido">
             </div>
 
             <div class="form-group">
               <label>Fecha caducidad</label>
-              <input type="date" name="fecha_caducidad"
-                value="<?= htmlspecialchars($articulo['fecha_caducidad'] ?? '') ?>">
+              <input type="date" id="articulo-fecha-caducidad">
             </div>
+          </div>
 
-            <div class="form-group">
-              <label>Contenido reducido</label>
-              <textarea name="contenido_reducido" id="contenido_reducido" class="editor-html" rows="5"><?= $articulo['contenido_reducido'] ?? $articulo['resumen'] ?? '' ?></textarea>
-            </div>
+          <div class="form-group">
+            <label>Contenido reducido</label>
+            <textarea id="articulo-contenido-reducido" class="editor-html" rows="5"></textarea>
+          </div>
 
-            <div class="form-group">
-              <label>Contenido completo</label>
-              <textarea name="contenido_completo" id="contenido_completo" class="editor-html" rows="10"><?= $articulo['contenido_completo'] ?? $articulo['contenido'] ?? '' ?></textarea>
-            </div>
+          <div class="form-group">
+            <label>Contenido completo</label>
+            <textarea id="articulo-contenido-completo" class="editor-html" rows="10"></textarea>
+          </div>
 
-            <div class="form-group">
-              <label class="checkbox-label">
-                Publicar
-                <input type="checkbox" name="publicado"
-                  <?= !isset($articulo['publicado']) || $articulo['publicado'] ? 'checked' : '' ?>>
-              </label>
-            </div>
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="articulo-publicado" checked>
+              Publicar
+            </label>
+          </div>
 
-            <div class="form-group">
-              <label>Notas</label>
-              <textarea name="notas" rows="2"
-                placeholder="Notas privadas solo visibles en admin"><?= htmlspecialchars($articulo['notas'] ?? '') ?></textarea>
-            </div>
+          <div class="form-group">
+            <label>Notas</label>
+            <textarea id="articulo-notas" rows="2" placeholder="Notas privadas solo visibles en admin"></textarea>
+          </div>
 
-            <div class="form-group">
-              <label>Fotografía principal</label>
-              <input type="file" name="imagen_file" accept="image/*">
-              <?php if (!empty($articulo['imagen'])): ?>
-                <p class="help-text">Imagen actual: <?= htmlspecialchars($articulo['imagen']) ?></p>
-                <input type="hidden" name="imagen" value="<?= htmlspecialchars($articulo['imagen']) ?>">
-              <?php endif; ?>
-            </div>
+          <div class="form-group">
+            <label>Fotografía principal</label>
+            <input type="file" id="articulo-imagen-file" accept="image/*">
+            <p id="imagen-actual" class="help-text hidden"></p>
+            <input type="hidden" id="articulo-imagen" value="">
+          </div>
 
-            <div class="form-group">
-              <label>URL</label>
-              <input type="text" name="imagen_url"
-                value="<?= htmlspecialchars($articulo['imagen_url'] ?? '') ?>"
-                placeholder="https://ejemplo.com/imagen.jpg">
-            </div>
+          <div class="form-group">
+            <label>URL imagen externa</label>
+            <input type="text" id="articulo-imagen-url" placeholder="https://ejemplo.com/imagen.jpg">
+          </div>
 
-            <h3 class="info-seo">Información SEO</h3>
+          <h3 class="info-seo">Información SEO</h3>
 
-            <div class="form-group">
-              <label>Título</label>
-              <input type="text" name="seo_titulo"
-                value="<?= htmlspecialchars($articulo['seo_titulo'] ?? '') ?>">
-            </div>
+          <div class="form-group">
+            <label>Título SEO</label>
+            <input type="text" id="articulo-seo-titulo">
+          </div>
 
-            <div class="form-group">
-              <label>Descripción</label>
-              <textarea name="seo_descripcion" rows="2"><?= htmlspecialchars($articulo['seo_descripcion'] ?? '') ?></textarea>
-            </div>
+          <div class="form-group">
+            <label>Descripción SEO</label>
+            <textarea id="articulo-seo-descripcion" rows="2"></textarea>
+          </div>
 
-            <div class="form-group">
-              <label>Palabras clave (separadas por comas)</label>
-              <input type="text" name="seo_palabras_clave"
-                value="<?= htmlspecialchars($articulo['seo_palabras_clave'] ?? '') ?>"
-                placeholder="salud, medicina, consejos">
-            </div>
+          <div class="form-group">
+            <label>Palabras clave (separadas por comas)</label>
+            <input type="text" id="articulo-seo-palabras" placeholder="salud, medicina, consejos">
+          </div>
 
-            <div class="form-actions">
-              <button type="submit" class="btn btn-primary">
-                <?= $action === 'create' ? 'Crear Artículo' : 'Guardar Cambios' ?>
-              </button>
-              <a href="articulos-crud.php" class="btn btn-secondary">Cancelar</a>
-            </div>
+          <div class="form-actions">
+            <button type="submit" id="btn-guardar" class="btn btn-primary">Crear Artículo</button>
+            <button type="button" id="btn-cancelar" class="btn btn-secondary">Cancelar</button>
           </div>
         </form>
       </div>
-    <?php endif; ?>
+    </div>
   </main>
 
+  <script src="js/admin-articulos.js"></script>
   <script>
     CKEDITOR.replaceAll(function(textarea, config) {
       if (textarea.className.indexOf('editor-html') !== -1) {
@@ -215,8 +177,5 @@
       return false;
     });
   </script>
-  <script src="js/scripts.js"></script>
-
 </body>
-
 </html>

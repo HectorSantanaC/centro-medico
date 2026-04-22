@@ -7,7 +7,6 @@ const AdminArticulos = {
 
   init() {
     this.cargarTopicos();
-    this.cargarFiltros();
     this.cargarArticulos();
     this.bindEvents();
   },
@@ -17,28 +16,20 @@ const AdminArticulos = {
       const response = await fetch(this.apiTopicos);
       const result = await response.json();
       const topicos = result.data || result;
-      const select = document.getElementById('topico');
-      select.innerHTML = '<option value="">Sin topico</option>';
-      select.innerHTML += topicos.map(t => 
-        `<option value="${t.id}">${this.escapeHtml(t.nombre)}</option>`
-      ).join('');
+      
+      const selects = ['articulo-topico', 'filtro-topico'];
+      selects.forEach(id => {
+        const select = document.getElementById(id);
+        if (!select) return;
+        const defaultOpt = id === 'articulo-topico' 
+          ? '<option value="">Sin tópico</option>' 
+          : '<option value="">Todos</option>';
+        select.innerHTML = defaultOpt + topicos.map(t => 
+          `<option value="${t.id}">${this.escapeHtml(t.nombre)}</option>`
+        ).join('');
+      });
     } catch (error) {
-      console.error('Error cargando topicos:', error);
-    }
-  },
-
-  async cargarFiltros() {
-    try {
-      const response = await fetch(this.apiTopicos);
-      const result = await response.json();
-      const topicos = result.data || result;
-      const select = document.getElementById('filtro-topico');
-      select.innerHTML = '<option value="">Todos</option>';
-      select.innerHTML += topicos.map(t => 
-        `<option value="${t.id}">${this.escapeHtml(t.nombre)}</option>`
-      ).join('');
-    } catch (error) {
-      console.error('Error cargando filtros:', error);
+      console.error('Error cargando tópicos:', error);
     }
   },
 
@@ -62,16 +53,15 @@ const AdminArticulos = {
     return params.toString();
   },
 
-  limpiarFiltros() {
-    document.getElementById('filtro-titulo').value = '';
-    document.getElementById('filtro-topico').value = '';
-    document.getElementById('filtro-fecha-desde').value = '';
-    document.getElementById('filtro-fecha-hasta').value = '';
-    this.currentPage = 1;
-  },
-
   bindEvents() {
-    document.getElementById('btn-crear')?.addEventListener('click', () => this.mostrarModalCrear());
+    document.getElementById('btn-crear')?.addEventListener('click', () => this.mostrarFormulario());
+    
+    document.getElementById('btn-volver-lista')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      this.mostrarLista();
+    });
+
+    document.getElementById('btn-cancelar')?.addEventListener('click', () => this.mostrarLista());
 
     document.getElementById('btn-filtrar')?.addEventListener('click', () => {
       this.currentPage = 1;
@@ -85,13 +75,10 @@ const AdminArticulos = {
 
     document.addEventListener('click', (e) => {
       if (e.target.classList.contains('btn-editar')) {
-        this.mostrarModalEditar(e.target.dataset.id);
+        this.mostrarFormulario(e.target.dataset.id);
       }
       if (e.target.classList.contains('btn-eliminar')) {
         this.confirmarEliminar(e.target.dataset.id);
-      }
-      if (e.target.classList.contains('modal-close-btn') || e.target.classList.contains('modal-close')) {
-        this.cerrarModal();
       }
     });
 
@@ -101,9 +88,103 @@ const AdminArticulos = {
     });
   },
 
+  mostrarLista() {
+    document.getElementById('seccion-lista').classList.remove('hidden');
+    document.getElementById('seccion-form').classList.add('hidden');
+    this.cargarArticulos();
+  },
+
+  mostrarFormulario(id = null) {
+    document.getElementById('seccion-lista').classList.add('hidden');
+    document.getElementById('seccion-form').classList.remove('hidden');
+    
+    document.getElementById('form-titulo').textContent = id ? 'Editar Artículo' : 'Crear Artículo';
+    document.getElementById('btn-guardar').textContent = id ? 'Guardar Cambios' : 'Crear Artículo';
+    document.getElementById('articulo-id').value = id || '';
+    
+    this.limpiarFormulario();
+
+    if (id) {
+      this.cargarArticulo(id);
+    } else {
+      if (CKEDITOR.instances['articulo-contenido-reducido']) {
+        CKEDITOR.instances['articulo-contenido-reducido'].setData('');
+      }
+      if (CKEDITOR.instances['articulo-contenido-completo']) {
+        CKEDITOR.instances['articulo-contenido-completo'].setData('');
+      }
+    }
+  },
+
+  limpiarFormulario() {
+    document.getElementById('articulo-titulo').value = '';
+    document.getElementById('articulo-topico').value = '';
+    document.getElementById('articulo-fecha-contenido').value = '';
+    document.getElementById('articulo-fecha-caducidad').value = '';
+    document.getElementById('articulo-publicado').checked = true;
+    document.getElementById('articulo-notas').value = '';
+    document.getElementById('articulo-imagen-file').value = '';
+    document.getElementById('articulo-imagen').value = '';
+    document.getElementById('articulo-imagen-url').value = '';
+    document.getElementById('articulo-seo-titulo').value = '';
+    document.getElementById('articulo-seo-descripcion').value = '';
+    document.getElementById('articulo-seo-palabras').value = '';
+    
+    if (CKEDITOR.instances['articulo-contenido-reducido']) {
+      CKEDITOR.instances['articulo-contenido-reducido'].setData('');
+    }
+    if (CKEDITOR.instances['articulo-contenido-completo']) {
+      CKEDITOR.instances['articulo-contenido-completo'].setData('');
+    }
+    
+    const imgActual = document.getElementById('imagen-actual');
+    imgActual.classList.add('hidden');
+    imgActual.textContent = '';
+  },
+
+  async cargarArticulo(id) {
+    try {
+      const response = await fetch(`${this.apiUrl}?id=${id}`);
+      if (!response.ok) {
+        this.mostrarMensaje('Artículo no encontrado', 'error');
+        return;
+      }
+      const a = await response.json();
+      
+      document.getElementById('articulo-id').value = a.id || id;
+      document.getElementById('articulo-titulo').value = a.titulo || '';
+      document.getElementById('articulo-topico').value = a.topico || '';
+      document.getElementById('articulo-fecha-contenido').value = a.fecha_contenido || '';
+      document.getElementById('articulo-fecha-caducidad').value = a.fecha_caducidad || '';
+      document.getElementById('articulo-publicado').checked = a.publicado !== false;
+      document.getElementById('articulo-notas').value = a.notas || '';
+      document.getElementById('articulo-imagen').value = a.imagen || '';
+      document.getElementById('articulo-imagen-url').value = a.imagen_url || '';
+      document.getElementById('articulo-seo-titulo').value = a.seo_titulo || '';
+      document.getElementById('articulo-seo-descripcion').value = a.seo_descripcion || '';
+      document.getElementById('articulo-seo-palabras').value = a.seo_palabras_clave || '';
+
+      if (CKEDITOR.instances['articulo-contenido-reducido']) {
+        CKEDITOR.instances['articulo-contenido-reducido'].setData(a.contenido_reducido || '');
+      }
+      if (CKEDITOR.instances['articulo-contenido-completo']) {
+        CKEDITOR.instances['articulo-contenido-completo'].setData(a.contenido_completo || '');
+      }
+
+      if (a.imagen) {
+        const imgActual = document.getElementById('imagen-actual');
+        imgActual.classList.remove('hidden');
+        imgActual.textContent = `Imagen actual: ${a.imagen}`;
+      }
+    } catch (error) {
+      this.mostrarMensaje('Error al cargar artículo', 'error');
+    }
+  },
+
   async cargarArticulos() {
-    const tbody = document.getElementById('articulos-body');
-    tbody.innerHTML = '<tr><td colspan="6" class="loading"><div class="spinner"></div>Cargando...</td></tr>';
+    const tbody = document.getElementById('tabla-articulos');
+    tbody.innerHTML = '<tr><td colspan="6" class="loading">Cargando...</td></tr>';
+    
     try {
       const queryString = this.buildQueryString();
       const response = await fetch(`${this.apiUrl}?${queryString}`);
@@ -112,33 +193,33 @@ const AdminArticulos = {
       this.totalItems = result.pagination?.total || 0;
       
       if (articulos.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;">No hay articulos</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;">No hay artículos</td></tr>';
         this.renderPagination();
         return;
       }
       
       tbody.innerHTML = articulos.map(a => `
-      <tr>
-        <td>${this.escapeHtml(a.titulo)}</td>
-        <td>${this.escapeHtml(a.topico_nombre || '-')}</td>
-        <td>${this.formatFecha(a.fecha_contenido)}</td>
-        <td>${this.formatFecha(a.fecha_caducidad)}</td>
-        <td>
-          <span class="estado-badge ${a.publicado ? 'estado-confirmada' : 'estado-cancelada'}">
-            ${a.publicado ? 'Publicado' : 'Borrador'}
-          </span>
-        </td>
-        <td class="actions">
-          <button class="btn btn-secondary btn-sm btn-editar" data-id="${a.id}">Editar</button>
-          <button class="btn btn-danger btn-sm btn-eliminar" data-id="${a.id}">Eliminar</button>
-        </td>
-      </tr>
+        <tr>
+          <td>${this.escapeHtml(a.titulo)}</td>
+          <td>${this.escapeHtml(a.topico_nombre || '-')}</td>
+          <td>${this.formatFecha(a.fecha_contenido)}</td>
+          <td>${this.formatFecha(a.fecha_caducidad)}</td>
+          <td>
+            <span class="rol-badge rol-${a.publicado ? 'admin' : 'paciente'}">
+              ${a.publicado ? 'Sí' : 'No'}
+            </span>
+          </td>
+          <td class="actions">
+            <button class="btn btn-secondary btn-sm btn-editar" data-id="${a.id}">Editar</button>
+            <button class="btn btn-danger btn-sm btn-eliminar" data-id="${a.id}">Eliminar</button>
+          </td>
+        </tr>
       `).join('');
       
       this.renderPagination();
     } catch (error) {
-      tbody.innerHTML = '<tr><td colspan="6" class="message error">Error al cargar articulos</td></tr>';
-      this.mostrarToast('Error al conectar con el servidor', 'error');
+      tbody.innerHTML = '<tr><td colspan="6" class="message error">Error al cargar artículos</td></tr>';
+      this.mostrarMensaje('Error al conectar con el servidor', 'error');
     }
   },
 
@@ -147,7 +228,8 @@ const AdminArticulos = {
     const controls = document.getElementById('pagination-controls');
     if (!pagination || !controls) return;
     
-    const totalPages = Math.ceil(this.totalItems / this.perPage);
+    const totalPages = this.totalItems > 0 ? Math.ceil(this.totalItems / this.perPage) : 0;
+    
     pagination.textContent = `Página ${this.currentPage} de ${totalPages} (${this.totalItems} resultados)`;
     
     let html = '';
@@ -172,102 +254,75 @@ const AdminArticulos = {
     this.cargarArticulos();
   },
 
-  mostrarModalCrear() {
-    document.getElementById('modal-titulo').textContent = 'Nuevo Articulo';
-    document.getElementById('articulo-id').value = '';
-    document.getElementById('titulo').value = '';
-    document.getElementById('topico').value = '';
-    document.getElementById('contenido_reducido').value = '';
-    document.getElementById('contenido_completo').value = '';
-    document.getElementById('fecha_contenido').value = '';
-    document.getElementById('fecha_caducidad').value = '';
-    document.getElementById('publicado').checked = true;
-    document.getElementById('imagen').value = '';
-    document.getElementById('imagen_url').value = '';
-    document.getElementById('autor').value = '';
-    document.getElementById('notas').value = '';
-    document.getElementById('seo_titulo').value = '';
-    document.getElementById('seo_descripcion').value = '';
-    document.getElementById('seo_palabras_clave').value = '';
-    document.getElementById('modal').style.display = 'block';
-  },
-
-  async mostrarModalEditar(id) {
-    try {
-      const response = await fetch(`${this.apiUrl}?id=${id}`);
-      if (!response.ok) {
-        this.mostrarToast('Articulo no encontrado', 'error');
-        return;
-      }
-      const a = await response.json();
-      document.getElementById('modal-titulo').textContent = 'Editar Articulo';
-      document.getElementById('articulo-id').value = a.id;
-      document.getElementById('titulo').value = a.titulo || '';
-      document.getElementById('topico').value = a.topico || '';
-      document.getElementById('contenido_reducido').value = a.contenido_reducido || '';
-      document.getElementById('contenido_completo').value = a.contenido_completo || '';
-      document.getElementById('fecha_contenido').value = a.fecha_contenido || '';
-      document.getElementById('fecha_caducidad').value = a.fecha_caducidad || '';
-      document.getElementById('publicado').checked = a.publicado;
-      document.getElementById('imagen').value = a.imagen || '';
-      document.getElementById('imagen_url').value = a.imagen_url || '';
-      document.getElementById('autor').value = a.autor || '';
-      document.getElementById('notas').value = a.notas || '';
-      document.getElementById('seo_titulo').value = a.seo_titulo || '';
-      document.getElementById('seo_descripcion').value = a.seo_descripcion || '';
-      document.getElementById('seo_palabras_clave').value = a.seo_palabras_clave || '';
-      document.getElementById('modal').style.display = 'block';
-    } catch (error) {
-      this.mostrarToast('Error al cargar articulo', 'error');
-    }
-  },
-
   async guardarArticulo() {
     const id = document.getElementById('articulo-id').value;
-    const datos = {
-      titulo: document.getElementById('titulo').value.trim(),
-      topico: document.getElementById('topico').value || null,
-      contenido_reducido: document.getElementById('contenido_reducido').value.trim(),
-      contenido_completo: document.getElementById('contenido_completo').value.trim(),
-      fecha_contenido: document.getElementById('fecha_contenido').value || null,
-      fecha_caducidad: document.getElementById('fecha_caducidad').value || null,
-      publicado: document.getElementById('publicado').checked,
-      imagen: document.getElementById('imagen').value.trim(),
-      imagen_url: document.getElementById('imagen_url').value.trim(),
-      autor: document.getElementById('autor').value.trim(),
-      notas: document.getElementById('notas').value.trim(),
-      seo_titulo: document.getElementById('seo_titulo').value.trim(),
-      seo_descripcion: document.getElementById('seo_descripcion').value.trim(),
-      seo_palabras_clave: document.getElementById('seo_palabras_clave').value.trim()
-    };
-
-    if (!datos.titulo) {
-      this.mostrarToast('El titulo es obligatorio', 'error');
+    const titulo = document.getElementById('articulo-titulo').value.trim();
+    
+    if (!titulo) {
+      this.mostrarMensaje('El título es obligatorio', 'error');
       return;
     }
 
+    if (CKEDITOR.instances['articulo-contenido-reducido']) {
+      CKEDITOR.instances['articulo-contenido-reducido'].updateElement();
+    }
+    if (CKEDITOR.instances['articulo-contenido-completo']) {
+      CKEDITOR.instances['articulo-contenido-completo'].updateElement();
+    }
+
+    const formData = new FormData();
+    formData.append('titulo', titulo);
+    
+    const topico = document.getElementById('articulo-topico').value;
+    if (topico) formData.append('topico', topico);
+    
+    formData.append('contenido_reducido', document.getElementById('articulo-contenido-reducido').value);
+    formData.append('contenido_completo', document.getElementById('articulo-contenido-completo').value);
+    
+    const fechaContenido = document.getElementById('articulo-fecha-contenido').value;
+    if (fechaContenido) formData.append('fecha_contenido', fechaContenido);
+    
+    const fechaCaducidad = document.getElementById('articulo-fecha-caducidad').value;
+    if (fechaCaducidad) formData.append('fecha_caducidad', fechaCaducidad);
+    
+    formData.append('publicado', document.getElementById('articulo-publicado').checked);
+    formData.append('notas', document.getElementById('articulo-notas').value);
+    formData.append('imagen_url', document.getElementById('articulo-imagen-url').value);
+    formData.append('seo_titulo', document.getElementById('articulo-seo-titulo').value);
+    formData.append('seo_descripcion', document.getElementById('articulo-seo-descripcion').value);
+    formData.append('seo_palabras_clave', document.getElementById('articulo-seo-palabras').value);
+
+    const imagenFile = document.getElementById('articulo-imagen-file').files[0];
+    if (imagenFile) {
+      formData.append('imagen', imagenFile);
+    } else {
+      const imagenActual = document.getElementById('articulo-imagen').value;
+      if (imagenActual) formData.append('imagen', imagenActual);
+    }
+
+    if (id) formData.append('id', id);
+
     try {
-      const options = {
+      const response = await fetch(this.apiUrl, {
         method: id ? 'PUT' : 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(id ? { ...datos, id } : datos)
-      };
-      const response = await fetch(this.apiUrl, options);
+        body: formData
+      });
+      
       const result = await response.json();
+      
       if (response.ok) {
-        this.cerrarModal();
-        this.cargarArticulos();
-        this.mostrarToast(id ? 'Articulo actualizado' : 'Articulo creado', 'success');
+        this.mostrarMensaje(id ? 'Artículo actualizado' : 'Artículo creado', 'success');
+        this.mostrarLista();
       } else {
-        this.mostrarToast(result.error || 'Error al guardar', 'error');
+        this.mostrarMensaje(result.error || 'Error al guardar', 'error');
       }
     } catch (error) {
-      this.mostrarToast('Error de conexión', 'error');
+      this.mostrarMensaje('Error de conexión', 'error');
     }
   },
 
   confirmarEliminar(id) {
-    if (confirm('¿Eliminar este articulo?')) {
+    if (confirm('¿Eliminar este artículo?')) {
       this.eliminarArticulo(id);
     }
   },
@@ -281,31 +336,31 @@ const AdminArticulos = {
       });
 
       if (response.ok) {
+        this.mostrarMensaje('Artículo eliminado', 'success');
         this.cargarArticulos();
-        this.mostrarToast('Articulo eliminado', 'success');
       } else {
         const result = await response.json();
-        this.mostrarToast(result.error || 'Error al eliminar', 'error');
+        this.mostrarMensaje(result.error || 'Error al eliminar', 'error');
       }
     } catch (error) {
-      this.mostrarToast('Error de conexión', 'error');
+      this.mostrarMensaje('Error de conexión', 'error');
     }
   },
 
-  cerrarModal() {
-    document.getElementById('modal').style.display = 'none';
+  limpiarFiltros() {
+    document.getElementById('filtro-titulo').value = '';
+    document.getElementById('filtro-topico').value = '';
+    document.getElementById('filtro-fecha-desde').value = '';
+    document.getElementById('filtro-fecha-hasta').value = '';
+    this.currentPage = 1;
   },
 
-  mostrarToast(mensaje, tipo = 'success') {
-    const toast = document.createElement('div');
-    toast.className = `toast ${tipo}`;
-    toast.textContent = mensaje;
-    toast.style.position = 'fixed';
-    toast.style.bottom = '20px';
-    toast.style.right = '20px';
-    toast.style.zIndex = '2000';
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
+  mostrarMensaje(mensaje, tipo = 'success') {
+    const container = document.getElementById('message-container');
+    container.innerHTML = `<div class="message ${tipo}">${mensaje}</div>`;
+    setTimeout(() => {
+      container.innerHTML = '';
+    }, 5000);
   },
 
   escapeHtml(texto) {
@@ -321,4 +376,6 @@ const AdminArticulos = {
   }
 };
 
-document.addEventListener('DOMContentLoaded', () => AdminArticulos.init());
+document.addEventListener('DOMContentLoaded', () => {
+  AdminArticulos.init();
+});

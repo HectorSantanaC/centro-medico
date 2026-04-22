@@ -1,22 +1,20 @@
 <?php
 
-require_once __DIR__ . '/controllers/ArticulosController.php';
+session_start();
 
-$controller = new ArticulosController();
-$data = $controller->handleRequest();
+if (!isset($_SESSION['usuario_id'])) {
+  header('Location: login.php');
+  exit;
+}
 
-$action = $data['action'];
-$articulos = $data['articulos'];
-$articulo = $data['articulo'];
-$topicos = $data['topicos'];
-$message = $data['message'];
-$messageType = $data['messageType'];
-$canManage = $data['canManage'];
-$active = $data['active'];
+$canManage = isset($_SESSION['usuario_rol']) && 
+  in_array($_SESSION['usuario_rol'], ['admin', 'gestor']);
 
 if (!$canManage) {
   header('Location: blog.php');
   exit;
 }
+
+$active = 'contenidos';
 
 require_once __DIR__ . '/views/admin/articulos.php';
