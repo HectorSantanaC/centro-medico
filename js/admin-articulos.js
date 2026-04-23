@@ -294,30 +294,60 @@ const AdminArticulos = {
 
     const imagenFile = document.getElementById('articulo-imagen-file').files[0];
     if (imagenFile) {
-      formData.append('imagen', imagenFile);
-    } else {
-      const imagenActual = document.getElementById('articulo-imagen').value;
-      if (imagenActual) formData.append('imagen', imagenActual);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        formData.set('imagen', reader.result);
+        formData.set('id', id);
+        this.enviarArticulo(id, formData);
+      };
+      reader.readAsDataURL(imagenFile);
+      return;
     }
 
+    const imagenActual = document.getElementById('articulo-imagen').value;
+    if (imagenActual) formData.append('imagen', imagenActual);
     if (id) formData.append('id', id);
+    this.enviarArticulo(id, formData);
+  },
 
-    try {
-      const response = await fetch(this.apiUrl, {
-        method: id ? 'PUT' : 'POST',
-        body: formData
-      });
-      
-      const result = await response.json();
-      
-      if (response.ok) {
-        this.mostrarMensaje(id ? 'Artículo actualizado' : 'Artículo creado', 'success');
-        this.mostrarLista();
-      } else {
-        this.mostrarMensaje(result.error || 'Error al guardar', 'error');
+  async enviarArticulo(id, formData) {
+    if (id) {
+      try {
+        const response = await fetch(this.apiUrl, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(Object.fromEntries(formData))
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+          this.mostrarMensaje('Artículo actualizado', 'success');
+          this.mostrarLista();
+        } else {
+          this.mostrarMensaje(result.error || 'Error al guardar', 'error');
+        }
+      } catch (error) {
+        this.mostrarMensaje('Error de conexión', 'error');
       }
-    } catch (error) {
-      this.mostrarMensaje('Error de conexión', 'error');
+    } else {
+      try {
+        const response = await fetch(this.apiUrl, {
+          method: 'POST',
+          body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+          this.mostrarMensaje('Artículo creado', 'success');
+          this.mostrarLista();
+        } else {
+          this.mostrarMensaje(result.error || 'Error al guardar', 'error');
+        }
+      } catch (error) {
+        this.mostrarMensaje('Error de conexión', 'error');
+      }
     }
   },
 

@@ -128,9 +128,9 @@
           </div>
 
           <div class="form-group">
-            <label>Fotografía principal</label>
+            <label>Imagen</label>
+            <p id="imagen-actual" class="help-text"></p>
             <input type="file" id="articulo-imagen-file" accept="image/*">
-            <p id="imagen-actual" class="help-text hidden"></p>
             <input type="hidden" id="articulo-imagen" value="">
           </div>
 

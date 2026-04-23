@@ -227,13 +227,10 @@ try {
       break;
 
     case 'PUT':
-      $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
-      $isJson = strpos($contentType, 'application/json') !== false;
-      
-      if ($isJson) {
-        $data = json_decode(file_get_contents('php://input'), true);
-      } else {
-        $data = !empty($_POST) ? $_POST : json_decode(file_get_contents('php://input'), true);
+      $rawInput = file_get_contents('php://input');
+      $data = json_decode($rawInput, true);
+      if (!$data) {
+        $data = $_POST;
       }
       
       if (!$data || empty($data['id']) || empty($data['titulo'])) {
@@ -281,18 +278,15 @@ try {
       $data['titulo'] = htmlspecialchars(trim($data['titulo']), ENT_QUOTES, 'UTF-8');
 
       $imagen = '';
-      if ($isJson) {
-        $errorImagen = procesarImagenBase64($imagen);
-      } else {
-        $errorImagen = procesarImagenUpload($imagen);
-      }
-      if ($errorImagen) {
-        http_response_code(400);
-        echo json_encode(['error' => $errorImagen]);
-        exit;
-      }
-      if ($imagen) {
-        $data['imagen'] = $imagen;
+      if (!empty($data['imagen'])) {
+        if (strpos($data['imagen'], 'data:image/') === 0) {
+          $errorImagen = procesarImagenBase64($data['imagen']);
+          if ($errorImagen) {
+            http_response_code(400);
+            echo json_encode(['error' => $errorImagen]);
+            exit;
+          }
+        }
       }
 
       $articuloModel->update((int)$data['id'], $data);
