@@ -1,7 +1,11 @@
 <?php
 
+session_start();
+require_once __DIR__ . '/../helpers/api_auth.php';
 require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../models/Cita.php';
+
+requireApiAuthPaciente();
 
 header('Content-Type: application/json');
 

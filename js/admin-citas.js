@@ -22,7 +22,7 @@ const AdminCitas = {
 
   async cargarFiltros() {
     try {
-      const response = await fetch(this.apiEspecialidades);
+      const response = await fetch(this.apiEspecialidades, { credentials: 'same-origin' });
       const result = await response.json();
       const especialidades = result.data || result;
       const select = document.getElementById('filtro-especialidad');
@@ -70,7 +70,7 @@ const AdminCitas = {
 
   async cargarPacientes() {
     try {
-      const response = await fetch(this.apiUsuarios);
+      const response = await fetch(this.apiUsuarios, { credentials: 'same-origin' });
       const result = await response.json();
       const usuarios = result.data || result;
       const pacientes = usuarios.filter(u => u.rol === 'paciente');
@@ -86,7 +86,7 @@ const AdminCitas = {
 
   async cargarEspecialidades() {
     try {
-      const response = await fetch(this.apiEspecialidades);
+      const response = await fetch(this.apiEspecialidades, { credentials: 'same-origin' });
       const result = await response.json();
       const especialidades = result.data || result;
       const select = document.getElementById('especialidad_id');
@@ -101,7 +101,7 @@ const AdminCitas = {
 
   async cargarMedicosPorEspecialidad(especialidadId) {
     try {
-      const response = await fetch(`${this.apiMedicos}?especialidad_id=${especialidadId}`);
+      const response = await fetch(`${this.apiMedicos}?especialidad_id=${especialidadId}`, { credentials: 'same-origin' });
       const result = await response.json();
       const medicos = result.data || result;
       const select = document.getElementById('medico_id');
@@ -120,7 +120,7 @@ const AdminCitas = {
       const url = especialidadId 
         ? `${this.apiMedicos}?especialidad_id=${especialidadId}`
         : this.apiMedicos;
-      const response = await fetch(url);
+      const response = await fetch(url, { credentials: 'same-origin' });
       const result = await response.json();
       const medicos = result.data || result;
       const select = document.getElementById('filtro-medico');
@@ -148,7 +148,7 @@ const AdminCitas = {
       if (citaId) {
         url += `&cita_id=${citaId}`;
       }
-      const response = await fetch(url);
+      const response = await fetch(url, { credentials: 'same-origin' });
       const data = await response.json();
       const horas = data.horas || data.data?.horas || [];
       
@@ -223,7 +223,7 @@ const AdminCitas = {
     tbody.innerHTML = '<tr><td colspan="7" class="loading"><div class="spinner"></div>Cargando...</td></tr>';
     try {
       const queryString = this.buildQueryString();
-      const response = await fetch(`${this.apiUrl}?${queryString}`);
+      const response = await fetch(`${this.apiUrl}?${queryString}`, { credentials: 'same-origin' });
       const result = await response.json();
       const citas = result.data || [];
       this.totalItems = result.pagination?.total || 0;
@@ -312,7 +312,7 @@ const AdminCitas = {
 
   async mostrarModalEditar(id) {
     try {
-      const response = await fetch(`${this.apiUrl}?id=${id}`);
+      const response = await fetch(`${this.apiUrl}?id=${id}`, { credentials: 'same-origin' });
       if (!response.ok) {
         this.mostrarToast('Cita no encontrada', 'error');
         return;
@@ -373,7 +373,8 @@ const AdminCitas = {
       const options = {
         method: id ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(id ? { ...datos, id } : datos)
+        body: JSON.stringify(id ? { ...datos, id } : datos),
+        credentials: 'same-origin'
       };
       const response = await fetch(this.apiUrl, options);
       const result = await response.json();
@@ -400,7 +401,8 @@ const AdminCitas = {
       const response = await fetch(this.apiUrl, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id })
+        body: JSON.stringify({ id }),
+        credentials: 'same-origin'
       });
 
       if (response.ok) {

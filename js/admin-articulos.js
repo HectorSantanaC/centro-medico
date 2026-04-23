@@ -13,7 +13,7 @@ const AdminArticulos = {
 
   async cargarTopicos() {
     try {
-      const response = await fetch(this.apiTopicos);
+      const response = await fetch(this.apiTopicos, { credentials: 'same-origin' });
       const result = await response.json();
       const topicos = result.data || result;
       
@@ -144,7 +144,7 @@ const AdminArticulos = {
 
   async cargarArticulo(id) {
     try {
-      const response = await fetch(`${this.apiUrl}?id=${id}`);
+      const response = await fetch(`${this.apiUrl}?id=${id}`, { credentials: 'same-origin' });
       if (!response.ok) {
         this.mostrarMensaje('Artículo no encontrado', 'error');
         return;
@@ -187,7 +187,7 @@ const AdminArticulos = {
     
     try {
       const queryString = this.buildQueryString();
-      const response = await fetch(`${this.apiUrl}?${queryString}`);
+      const response = await fetch(`${this.apiUrl}?${queryString}`, { credentials: 'same-origin' });
       const result = await response.json();
       const articulos = result.data || [];
       this.totalItems = result.pagination?.total || 0;
@@ -316,7 +316,8 @@ const AdminArticulos = {
         const response = await fetch(this.apiUrl, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(Object.fromEntries(formData))
+          body: JSON.stringify(Object.fromEntries(formData)),
+          credentials: 'same-origin'
         });
         
         const result = await response.json();
@@ -334,7 +335,8 @@ const AdminArticulos = {
       try {
         const response = await fetch(this.apiUrl, {
           method: 'POST',
-          body: formData
+          body: formData,
+          credentials: 'same-origin'
         });
         
         const result = await response.json();
@@ -362,7 +364,8 @@ const AdminArticulos = {
       const response = await fetch(this.apiUrl, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id })
+        body: JSON.stringify({ id }),
+        credentials: 'same-origin'
       });
 
       if (response.ok) {

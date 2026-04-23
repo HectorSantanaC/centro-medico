@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+require_once __DIR__ . '/../helpers/api_auth.php';
 require_once __DIR__ . '/../models/Cita.php';
 
 header('Content-Type: application/json; charset=utf-8');
@@ -60,6 +62,7 @@ try {
       break;
 
     case 'POST':
+      requireApiAuth(['admin', 'gestor']);
       $data = json_decode(file_get_contents('php://input'), true);
       if (!$data || empty($data['paciente_id']) || empty($data['medico_id']) 
           || empty($data['especialidad_id']) || empty($data['fecha']) || empty($data['hora'])) {
@@ -89,6 +92,7 @@ try {
       break;
 
     case 'PUT':
+      requireApiAuth(['admin', 'gestor']);
       $data = json_decode(file_get_contents('php://input'), true);
       if (!$data || empty($data['id']) || empty($data['paciente_id']) || empty($data['medico_id']) 
           || empty($data['especialidad_id']) || empty($data['fecha']) || empty($data['hora'])) {
@@ -108,6 +112,7 @@ try {
       break;
 
     case 'DELETE':
+      requireApiAuth(['admin', 'gestor']);
       $data = json_decode(file_get_contents('php://input'), true);
       if (!$data || empty($data['id'])) {
         http_response_code(400);

@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+require_once __DIR__ . '/../helpers/api_auth.php';
 require_once __DIR__ . '/../models/Usuario.php';
 
 header('Content-Type: application/json; charset=utf-8');
@@ -10,6 +12,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 try {
   switch ($method) {
     case 'GET':
+      requireApiAuth(['admin']);
       $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
       $perPage = isset($_GET['per_page']) ? min((int)$_GET['per_page'], 100) : 10;
 
@@ -51,6 +54,7 @@ try {
       break;
 
     case 'POST':
+      requireApiAuth(['admin']);
       $data = json_decode(file_get_contents('php://input'), true);
 
       if (!$data || empty($data['nombre']) || empty($data['apellidos']) || empty($data['email']) || empty($data['password'])) {
@@ -93,6 +97,7 @@ try {
       break;
 
     case 'PUT':
+      requireApiAuth(['admin']);
       $data = json_decode(file_get_contents('php://input'), true);
 
       if (!$data || empty($data['id']) || empty($data['nombre']) || empty($data['apellidos']) || empty($data['email']) || empty($data['rol'])) {
@@ -115,6 +120,7 @@ try {
       break;
 
     case 'DELETE':
+      requireApiAuth(['admin']);
       $data = json_decode(file_get_contents('php://input'), true);
 
       if (!$data || empty($data['id'])) {

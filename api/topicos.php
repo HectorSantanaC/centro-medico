@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+require_once __DIR__ . '/../helpers/api_auth.php';
 require_once __DIR__ . '/../models/Topico.php';
 
 header('Content-Type: application/json; charset=utf-8');
@@ -48,6 +50,7 @@ try {
       break;
 
     case 'POST':
+      requireApiAuth(['admin', 'gestor']);
       $data = json_decode(file_get_contents('php://input'), true);
       if (!$data || empty($data['nombre'])) {
         http_response_code(400);
@@ -64,6 +67,7 @@ try {
       break;
 
     case 'PUT':
+      requireApiAuth(['admin', 'gestor']);
       $data = json_decode(file_get_contents('php://input'), true);
       if (!$data || empty($data['id']) || empty($data['nombre'])) {
         http_response_code(400);
@@ -82,6 +86,7 @@ try {
       break;
 
     case 'DELETE':
+      requireApiAuth(['admin', 'gestor']);
       $data = json_decode(file_get_contents('php://input'), true);
       if (!$data || empty($data['id'])) {
         http_response_code(400);

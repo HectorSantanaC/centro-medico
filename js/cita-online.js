@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     horaSelect.innerHTML = '<option value="">Cargando horas...</option>';
 
-    fetch('api/horas.php?fecha=' + fecha + '&medico_id=' + medicoId)
+    fetch('api/horas.php?fecha=' + fecha + '&medico_id=' + medicoId, { credentials: 'same-origin' })
       .then(r => r.json())
       .then(data => {
         if (data.error) {
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    fetch('api/medicos.php?especialidad_id=' + espId)
+    fetch('api/medicos.php?especialidad_id=' + espId, { credentials: 'same-origin' })
       .then(r => r.json())
       .then(data => {
         let options = '<option value="">Selecciona médico...</option>';

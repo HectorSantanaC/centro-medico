@@ -67,7 +67,7 @@ const AdminTopicos = {
     tbody.innerHTML = '<tr><td colspan="2" class="loading"><div class="spinner"></div>Cargando...</td></tr>';
     try {
       const queryString = this.buildQueryString();
-      const response = await fetch(`${this.apiUrl}?${queryString}`);
+      const response = await fetch(`${this.apiUrl}?${queryString}`, { credentials: 'same-origin' });
       const result = await response.json();
       const topicos = result.data || [];
       this.totalItems = result.pagination?.total || 0;
@@ -133,7 +133,7 @@ const AdminTopicos = {
 
   async mostrarModalEditar(id) {
     try {
-      const response = await fetch(`${this.apiUrl}?id=${id}`);
+      const response = await fetch(`${this.apiUrl}?id=${id}`, { credentials: 'same-origin' });
       if (!response.ok) {
         this.mostrarToast('Topico no encontrado', 'error');
         return;
@@ -163,7 +163,8 @@ const AdminTopicos = {
       const options = {
         method: id ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(id ? { ...datos, id } : datos)
+        body: JSON.stringify(id ? { ...datos, id } : datos),
+        credentials: 'same-origin'
       };
       const response = await fetch(this.apiUrl, options);
       const result = await response.json();
@@ -190,7 +191,8 @@ const AdminTopicos = {
       const response = await fetch(this.apiUrl, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id })
+        body: JSON.stringify({ id }),
+        credentials: 'same-origin'
       });
 
       if (response.ok) {

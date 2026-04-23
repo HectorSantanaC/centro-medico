@@ -69,7 +69,7 @@ const AdminUsuarios = {
 
     try {
       const queryString = this.buildQueryString();
-      const response = await fetch(`${this.apiUrl}?${queryString}`);
+      const response = await fetch(`${this.apiUrl}?${queryString}`, { credentials: 'same-origin' });
       const result = await response.json();
       const usuarios = result.data || [];
       this.totalItems = result.pagination?.total || 0;
@@ -145,7 +145,7 @@ const AdminUsuarios = {
 
   async mostrarModalEditar(id) {
     try {
-      const response = await fetch(`${this.apiUrl}?id=${id}`);
+      const response = await fetch(`${this.apiUrl}?id=${id}`, { credentials: 'same-origin' });
       if (!response.ok) {
         this.mostrarToast('Usuario no encontrado', 'error');
         return;
@@ -191,7 +191,8 @@ const AdminUsuarios = {
       const options = {
         method: id ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(id ? { ...datos, id } : datos)
+        body: JSON.stringify(id ? { ...datos, id } : datos),
+        credentials: 'same-origin'
       };
 
       const response = await fetch(this.apiUrl, options);
@@ -220,7 +221,8 @@ const AdminUsuarios = {
       const response = await fetch(this.apiUrl, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id })
+        body: JSON.stringify({ id }),
+        credentials: 'same-origin'
       });
 
       if (response.ok) {

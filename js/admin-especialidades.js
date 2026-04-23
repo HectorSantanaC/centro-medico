@@ -67,7 +67,7 @@ const AdminEspecialidades = {
     tbody.innerHTML = '<tr><td colspan="4" class="loading"><div class="spinner"></div>Cargando...</td></tr>';
     try {
       const queryString = this.buildQueryString();
-      const response = await fetch(`${this.apiUrl}?${queryString}`);
+      const response = await fetch(`${this.apiUrl}?${queryString}`, { credentials: 'same-origin' });
       const result = await response.json();
       const especialidades = result.data || [];
       this.totalItems = result.pagination?.total || 0;
@@ -141,7 +141,7 @@ const AdminEspecialidades = {
 
   async mostrarModalEditar(id) {
     try {
-      const response = await fetch(`${this.apiUrl}?id=${id}`);
+      const response = await fetch(`${this.apiUrl}?id=${id}`, { credentials: 'same-origin' });
       if (!response.ok) {
         this.mostrarToast('Especialidad no encontrada', 'error');
         return;
@@ -175,7 +175,8 @@ const AdminEspecialidades = {
       const options = {
         method: id ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(id ? { ...datos, id } : datos)
+        body: JSON.stringify(id ? { ...datos, id } : datos),
+        credentials: 'same-origin'
       };
       const response = await fetch(this.apiUrl, options);
       const result = await response.json();
@@ -202,7 +203,8 @@ const AdminEspecialidades = {
       const response = await fetch(this.apiUrl, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id })
+        body: JSON.stringify({ id }),
+        credentials: 'same-origin'
       });
 
       if (response.ok) {

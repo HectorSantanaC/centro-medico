@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+require_once __DIR__ . '/../helpers/api_auth.php';
 require_once __DIR__ . '/../models/Articulo.php';
 require_once __DIR__ . '/../models/Topico.php';
 
@@ -156,6 +158,7 @@ try {
       break;
 
     case 'POST':
+      requireApiAuth(['admin', 'gestor']);
       $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
       $isJson = strpos($contentType, 'application/json') !== false;
       
@@ -227,6 +230,7 @@ try {
       break;
 
     case 'PUT':
+      requireApiAuth(['admin', 'gestor']);
       $rawInput = file_get_contents('php://input');
       $data = json_decode($rawInput, true);
       if (!$data) {
@@ -295,6 +299,7 @@ try {
       break;
 
     case 'DELETE':
+      requireApiAuth(['admin', 'gestor']);
       $data = json_decode(file_get_contents('php://input'), true);
       if (!$data || empty($data['id'])) {
         http_response_code(400);
