@@ -48,9 +48,10 @@ class AuthController
     $_SESSION['usuario_id'] = $usuario['id'];
     $_SESSION['usuario_nombre'] = $usuario['nombre'];
     $_SESSION['usuario_email'] = $usuario['email'];
-    $_SESSION['usuario_rol'] = $usuario['rol'];
-
-    if (in_array($usuario['rol'], ['admin', 'gestor'])) {
+    $_SESSION['usuario_roles'] = $usuario['roles'];
+    
+    $userRoles = array_column($usuario['roles'], 'rol_nombre');
+    if (array_intersect(['admin', 'gestor'], $userRoles)) {
       header('Location: admin.php');
     } else {
       header('Location: index.php');

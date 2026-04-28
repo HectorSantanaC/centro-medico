@@ -43,17 +43,27 @@
       </ul>
 
       <ul class="menu menu-auth">
+        <?php 
+        $tieneAdminOGestor = false;
+        $esPaciente = false;
+        if (isset($_SESSION['usuario_roles'])) {
+          foreach ($_SESSION['usuario_roles'] as $role) {
+            if (in_array($role['rol_nombre'], ['admin', 'gestor'])) { $tieneAdminOGestor = true; }
+            if ($role['rol_nombre'] === 'paciente') { $esPaciente = true; }
+          }
+        }
+        ?>
         <?php if (isset($_SESSION['usuario_id'])): ?>
           <li>
             <a href="#" class="btn-usuario">
               👤 <?= htmlspecialchars($_SESSION['usuario_nombre']) ?>
             </a>
             <ul class="submenu submenu-derecha">
-              <?php if ($_SESSION['usuario_rol'] === 'admin' || $_SESSION['usuario_rol'] === 'gestor'): ?>
+              <?php if ($tieneAdminOGestor): ?>
                 <li><a href="admin.php">⚙️ Panel Admin</a></li>
                 <li><a href="citas-crud.php">📋 Citas</a></li>
               <?php endif; ?>
-              <?php if ($_SESSION['usuario_rol'] === 'paciente'): ?>
+              <?php if ($esPaciente): ?>
                 <li><a href="mis-citas.php">📅 Mis Citas</a></li>
               <?php endif; ?>
               <li><a href="logout.php">🚪 Cerrar Sesión</a></li>

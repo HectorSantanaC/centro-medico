@@ -73,7 +73,10 @@ const AdminCitas = {
       const response = await fetch(this.apiUsuarios, { credentials: 'same-origin' });
       const result = await response.json();
       const usuarios = result.data || result;
-      const pacientes = usuarios.filter(u => u.rol === 'paciente');
+      const pacientes = usuarios.filter(u => {
+        if (!u.roles) return false;
+        return u.roles.split(', ').some(rol => rol.includes('paciente'));
+      });
       const select = document.getElementById('paciente_id');
       select.innerHTML = '<option value="">Seleccionar paciente</option>';
       select.innerHTML += pacientes.map(p => 

@@ -7,8 +7,12 @@ if (!isset($_SESSION['usuario_id'])) {
   exit;
 }
 
-$canManage = isset($_SESSION['usuario_rol']) && 
-  in_array($_SESSION['usuario_rol'], ['admin', 'gestor']);
+$canManage = false;
+if (isset($_SESSION['usuario_roles'])) {
+  foreach ($_SESSION['usuario_roles'] as $role) {
+    if (in_array($role['rol_nombre'], ['admin', 'gestor'])) { $canManage = true; break; }
+  }
+}
 
 if (!$canManage) {
   header('Location: blog.php');

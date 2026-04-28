@@ -16,6 +16,12 @@ const AdminUsuarios = {
     };
   },
 
+  formatRoles(roles) {
+    if (!roles) return '-';
+    // roles viene como string: "admin (Dirección Médica), paciente (Pacientes)"
+    return roles;
+  },
+
   buildQueryString() {
     const filtros = this.getFiltros();
     const params = new URLSearchParams();
@@ -47,13 +53,17 @@ const AdminUsuarios = {
     });
 
     document.addEventListener('click', (e) => {
-      if (e.target.classList.contains('btn-editar')) {
-        this.mostrarModalEditar(e.target.dataset.id);
+      const editBtn = e.target.closest('.btn-editar');
+      const deleteBtn = e.target.closest('.btn-eliminar');
+      const closeBtn = e.target.closest('.modal-close-btn, .modal-close');
+      
+      if (editBtn) {
+        this.mostrarModalEditar(editBtn.dataset.id);
       }
-      if (e.target.classList.contains('btn-eliminar')) {
-        this.confirmarEliminar(e.target.dataset.id);
+      if (deleteBtn) {
+        this.confirmarEliminar(deleteBtn.dataset.id);
       }
-      if (e.target.classList.contains('modal-close-btn') || e.target.classList.contains('modal-close')) {
+      if (closeBtn) {
         this.cerrarModal();
       }
     });
@@ -85,7 +95,7 @@ const AdminUsuarios = {
           <td>${this.escapeHtml(u.nombre)}</td>
           <td>${this.escapeHtml(u.apellidos)}</td>
           <td>${this.escapeHtml(u.email)}</td>
-          <td><span class="rol-badge rol-${u.rol}">${u.rol}</span></td>
+          <td>${this.formatRoles(u.roles)}</td>
           <td>${this.formatearFecha(u.created_at)}</td>
           <td class="actions">
             <button class="btn btn-secondary btn-sm btn-editar" data-id="${u.id}">Editar</button>
@@ -138,7 +148,6 @@ const AdminUsuarios = {
     document.getElementById('email').value = '';
     document.getElementById('password').value = '';
     document.getElementById('password').required = true;
-    document.getElementById('rol').value = 'paciente';
     document.getElementById('password-help').style.display = 'block';
     document.getElementById('modal').style.display = 'block';
   },
@@ -159,7 +168,17 @@ const AdminUsuarios = {
       document.getElementById('email').value = usuario.email;
       document.getElementById('password').value = '';
       document.getElementById('password').required = false;
-      document.getElementById('rol').value = usuario.rol;
+      
+      // Mostrar roles en el display
+      const rolesDisplay = document.getElementById('roles-display');
+      if (usuario.roles && Array.isArray(usuario.roles) && usuario.roles.length > 0) {
+        rolesDisplay.innerHTML = usuario.roles.map(r => 
+          `<span class="rol-badge rol-${r.rol_nombre}">${r.rol_nombre} (${r.departamento_nombre || 'Sin depto'})</span>`
+        ).join(' ');
+      } else {
+        rolesDisplay.textContent = 'Sin roles asignados';
+      }
+      
       document.getElementById('password-help').textContent = 'Dejar vacío para mantener la actual';
       document.getElementById('modal').style.display = 'block';
     } catch (error) {
@@ -173,8 +192,7 @@ const AdminUsuarios = {
       nombre: document.getElementById('nombre').value.trim(),
       apellidos: document.getElementById('apellidos').value.trim(),
       email: document.getElementById('email').value.trim(),
-      password: document.getElementById('password').value,
-      rol: document.getElementById('rol').value
+      password: document.getElementById('password').value
     };
 
     if (!datos.nombre || !datos.apellidos || !datos.email) {

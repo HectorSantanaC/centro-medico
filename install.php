@@ -123,7 +123,8 @@ $pdo->exec("INSERT INTO departamentos (nombre, descripcion) VALUES
     ('Enfermería', 'Cuidados y atención de enfermería'),
     ('Atención al Paciente', 'Recepción y atención directa a pacientes'),
     ('Facturación', 'Gestión de cobros y facturación'),
-    ('Recursos Humanos', 'Contratación y gestión de personal')
+    ('Recursos Humanos', 'Contratación y gestión de personal'),
+    ('Pacientes', 'Departamento virtual para usuarios pacientes')
     ON CONFLICT DO NOTHING");
 echo "✅ Departamentos insertados (6)<br>";
 
@@ -227,67 +228,67 @@ $pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, r
   WHERE u.email = 'gestor@tac7.com' AND d.nombre = 'Administración' AND r.nombre = 'gestor'");
 $pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
   SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'juan.garcia@email.com' AND d.nombre = 'Atención al Paciente' AND r.nombre = 'paciente'");
+  WHERE u.email = 'juan.garcia@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
 $pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
   SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'pedro.martinez@email.com' AND d.nombre = 'Atención al Paciente' AND r.nombre = 'paciente'");
+  WHERE u.email = 'pedro.martinez@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
 $pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
   SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'maria.lopez@email.com' AND d.nombre = 'Atención al Paciente' AND r.nombre = 'paciente'");
+  WHERE u.email = 'maria.lopez@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
 $pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
   SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'carlos.gonzalez@email.com' AND d.nombre = 'Atención al Paciente' AND r.nombre = 'paciente'");
+  WHERE u.email = 'carlos.gonzalez@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
 $pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
   SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'ana.fernandez@email.com' AND d.nombre = 'Atención al Paciente' AND r.nombre = 'paciente'");
+  WHERE u.email = 'ana.fernandez@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
 $pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
   SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'jose.rodriguez@email.com' AND d.nombre = 'Atención al Paciente' AND r.nombre = 'paciente'");
+  WHERE u.email = 'jose.rodriguez@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
 $pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
   SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'luisa.sanchez@email.com' AND d.nombre = 'Atención al Paciente' AND r.nombre = 'paciente'");
+  WHERE u.email = 'luisa.sanchez@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
 $pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
   SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'antonio.perez@email.com' AND d.nombre = 'Atención al Paciente' AND r.nombre = 'paciente'");
+  WHERE u.email = 'antonio.perez@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
 $pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
   SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'carmen.gomez@email.com' AND d.nombre = 'Atención al Paciente' AND r.nombre = 'paciente'");
+  WHERE u.email = 'carmen.gomez@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
 $pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
   SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'francisco.diaz@email.com' AND d.nombre = 'Atención al Paciente' AND r.nombre = 'paciente'");
+  WHERE u.email = 'francisco.diaz@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
 $pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
   SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'isabel.hernandez@email.com' AND d.nombre = 'Atención al Paciente' AND r.nombre = 'paciente'");
+  WHERE u.email = 'isabel.hernandez@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
 $pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
   SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'manuel.jimenez@email.com' AND d.nombre = 'Atención al Paciente' AND r.nombre = 'paciente'");
+  WHERE u.email = 'manuel.jimenez@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
 $pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
   SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'elena.ruiz@email.com' AND d.nombre = 'Atención al Paciente' AND r.nombre = 'paciente'");
+  WHERE u.email = 'elena.ruiz@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
 $pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
   SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'jorge.torres@email.com' AND d.nombre = 'Atención al Paciente' AND r.nombre = 'paciente'");
+  WHERE u.email = 'jorge.torres@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
 $pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
   SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'sonia.navarro@email.com' AND d.nombre = 'Atención al Paciente' AND r.nombre = 'paciente'");
+  WHERE u.email = 'sonia.navarro@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
 $pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
   SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'roberto.vargas@email.com' AND d.nombre = 'Atención al Paciente' AND r.nombre = 'paciente'");
+  WHERE u.email = 'roberto.vargas@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
 $pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
   SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'patricia.sanz@email.com' AND d.nombre = 'Atención al Paciente' AND r.nombre = 'paciente'");
+  WHERE u.email = 'patricia.sanz@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
 $pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
   SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'alejandro.vega@email.com' AND d.nombre = 'Atención al Paciente' AND r.nombre = 'paciente'");
+  WHERE u.email = 'alejandro.vega@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
 $pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
   SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'cristina.gil@email.com' AND d.nombre = 'Atención al Paciente' AND r.nombre = 'paciente'");
+  WHERE u.email = 'cristina.gil@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
 $pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
   SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'sergio.rubio@email.com' AND d.nombre = 'Atención al Paciente' AND r.nombre = 'paciente'");
+  WHERE u.email = 'sergio.rubio@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
 $pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
   SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'beatriz.adrian@email.com' AND d.nombre = 'Atención al Paciente' AND r.nombre = 'paciente'");
+  WHERE u.email = 'beatriz.adrian@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
 $pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
   SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
   WHERE u.email = 'miguel.santos@email.com' AND d.nombre = 'Enfermería' AND r.nombre = 'enfermero'");

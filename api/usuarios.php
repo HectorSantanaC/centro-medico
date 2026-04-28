@@ -86,7 +86,8 @@ try {
         'apellidos' => $data['apellidos'],
         'email' => $data['email'],
         'password' => $data['password'],
-        'rol' => $data['rol'] ?? 'paciente'
+        'rol_id' => $data['rol_id'] ?? null,
+        'departamento_id' => $data['departamento_id'] ?? null
       ]);
 
       http_response_code(201);
@@ -99,22 +100,41 @@ try {
     case 'PUT':
       requireApiAuth(['admin']);
       $data = json_decode(file_get_contents('php://input'), true);
-
-      if (!$data || empty($data['id']) || empty($data['nombre']) || empty($data['apellidos']) || empty($data['email']) || empty($data['rol'])) {
+ 
+      if (!$data || empty($data['id']) || empty($data['nombre']) || empty($data['apellidos']) || empty($data['email'])) {
         http_response_code(400);
         echo json_encode(['error' => 'Faltan campos obligatorios']);
         exit;
       }
-
+ 
       $usuario = $usuarioModel->find((int)$data['id']);
       if (!$usuario) {
         http_response_code(404);
         echo json_encode(['error' => 'Usuario no encontrado']);
         exit;
       }
-
+ 
       $usuarioModel->update((int)$data['id'], $data);
-
+      
+      // Actualizar roles si se proporcionan
+      if (isset($data['roles']) && is_array($data['roles'])) {
+        // Eliminar roles actuales
+        $pdo = Database::getInstance()->getConnection();
+        $stmt = $pdo->prepare("DELETE FROM usuario_departamento_rol WHERE usuario_id = ?");
+        $stmt->execute([(int)$data['id']]);
+        
+        // Insertar nuevos roles
+        $stmt = $pdo->prepare("
+          INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id) 
+          VALUES (?, ?, ?)
+        ");
+        foreach ($data['roles'] as $role) {
+          if (isset($role['departamento_id']) && isset($role['rol_id'])) {
+            $stmt->execute([(int)$data['id'], $role['departamento_id'], $role['rol_id']]);
+          }
+        }
+      }
+ 
       http_response_code(200);
       echo json_encode(['message' => 'Usuario actualizado correctamente']);
       break;

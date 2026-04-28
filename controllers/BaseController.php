@@ -24,7 +24,12 @@ class BaseController
 
   protected function requireRole(array $roles): void
   {
-    if (!isset($_SESSION['usuario_id']) || !in_array($_SESSION['usuario_rol'], $roles)) {
+    if (!isset($_SESSION['usuario_id']) || !isset($_SESSION['usuario_roles'])) {
+      header('Location: login.php');
+      exit;
+    }
+    $userRoles = array_column($_SESSION['usuario_roles'], 'rol_nombre');
+    if (!array_intersect($roles, $userRoles)) {
       header('Location: login.php');
       exit;
     }
@@ -59,24 +64,36 @@ class BaseController
     return $_SESSION['usuario_id'] ?? null;
   }
 
-  protected function getCurrentUserRole(): ?string
+  protected function getCurrentUserRole(): ?array
   {
-    return $_SESSION['usuario_rol'] ?? null;
+    return $_SESSION['usuario_roles'] ?? null;
   }
 
   protected function isAdmin(): bool
   {
-    return ($_SESSION['usuario_rol'] ?? '') === 'admin';
+    if (!isset($_SESSION['usuario_roles'])) return false;
+    foreach ($_SESSION['usuario_roles'] as $role) {
+      if ($role['rol_nombre'] === 'admin') return true;
+    }
+    return false;
   }
 
   protected function isGestor(): bool
   {
-    return ($_SESSION['usuario_rol'] ?? '') === 'gestor';
+    if (!isset($_SESSION['usuario_roles'])) return false;
+    foreach ($_SESSION['usuario_roles'] as $role) {
+      if ($role['rol_nombre'] === 'gestor') return true;
+    }
+    return false;
   }
 
   protected function isPaciente(): bool
   {
-    return ($_SESSION['usuario_rol'] ?? '') === 'paciente';
+    if (!isset($_SESSION['usuario_roles'])) return false;
+    foreach ($_SESSION['usuario_roles'] as $role) {
+      if ($role['rol_nombre'] === 'paciente') return true;
+    }
+    return false;
   }
 
   protected function generateCsrfToken(): string

@@ -6,7 +6,12 @@ if (!isset($_SESSION['usuario_id'])) {
   header('Location: ../login.php');
   exit;
 }
-$isAdmin = isset($_SESSION['usuario_rol']) && $_SESSION['usuario_rol'] === 'admin';
+$isAdmin = false;
+if (isset($_SESSION['usuario_roles'])) {
+  foreach ($_SESSION['usuario_roles'] as $role) {
+    if ($role['rol_nombre'] === 'admin') { $isAdmin = true; break; }
+  }
+}
 ?>
 
 <!DOCTYPE html>

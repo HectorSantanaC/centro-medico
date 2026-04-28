@@ -99,12 +99,11 @@
         </div>
 
         <div class="form-group">
-          <label for="rol">Rol *</label>
-          <select id="rol" required>
-            <option value="paciente">Paciente</option>
-            <option value="gestor">Gestor</option>
-            <option value="admin">Admin</option>
-          </select>
+          <label>Roles</label>
+          <div id="roles-display" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; min-height: 40px; background: #f9f9f9;">
+            Cargando roles...
+          </div>
+          <small class="help-text">Los roles se gestionan mediante la API</small>
         </div>
 
         <div class="form-actions">

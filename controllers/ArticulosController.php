@@ -20,8 +20,13 @@ class ArticulosController extends BaseController
     $message = '';
     $messageType = '';
 
-    $canManage = isset($_SESSION['usuario_id']) &&
-      in_array($_SESSION['usuario_rol'], ['admin', 'gestor']);
+    $canManage = false;
+    if (isset($_SESSION['usuario_roles'])) {
+      $userRoles = array_column($_SESSION['usuario_roles'], 'rol_nombre');
+      if (array_intersect(['admin', 'gestor'], $userRoles)) {
+        $canManage = true;
+      }
+    }
 
     if (!$canManage && $action !== 'list' && $action !== 'view') {
       $this->redirect('login.php');

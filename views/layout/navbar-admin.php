@@ -1,5 +1,10 @@
 <?php
-$es_admin = isset($_SESSION['usuario_rol']) && $_SESSION['usuario_rol'] === 'admin';
+$es_admin = false;
+if (isset($_SESSION['usuario_roles'])) {
+  foreach ($_SESSION['usuario_roles'] as $role) {
+    if ($role['rol_nombre'] === 'admin') { $es_admin = true; break; }
+  }
+}
 $active = $active ?? '';
 ?>
 <nav class="sidebar">
@@ -10,7 +15,17 @@ $active = $active ?? '';
 
   <div class="user-info">
     <strong><?= htmlspecialchars($_SESSION['usuario_nombre']) ?></strong>
-    <span><?= ucfirst($_SESSION['usuario_rol']) ?></span>
+    <span>
+      <?php 
+      if (isset($_SESSION['usuario_roles'])) {
+        $roleNames = array_column($_SESSION['usuario_roles'], 'rol_nombre');
+        $uniqueRoles = array_unique($roleNames);
+        echo ucfirst(implode(', ', $uniqueRoles));
+      } else {
+        echo 'Sin rol';
+      }
+      ?>
+    </span>
   </div>
 
   <div class="sidebar-menu">

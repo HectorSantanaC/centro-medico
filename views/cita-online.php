@@ -13,7 +13,14 @@
       <h2>Reserva tu cita en línea</h2>
       <p>Selecciona especialidad, médico, fecha y hora que se ajuste a tu disponibilidad</p>
 
-      <?php if ($user_role === 'admin'): ?>
+      <?php 
+      $esAdmin = false;
+      if (isset($user_role) && is_array($user_role)) {
+        foreach ($user_role as $role) {
+          if ($role['rol_nombre'] === 'admin') { $esAdmin = true; break; }
+        }
+      }
+      if ($esAdmin): ?>
         <a href="citas-crud.php" class="btn-ver-citas" style="margin-top: 10px; display: inline-block; background: #2c5282; color: white; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-size: 0.9rem;">
           📋 Gestionar Citas
         </a>
