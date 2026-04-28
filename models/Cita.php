@@ -213,4 +213,11 @@ class Cita
     
     return $this->db->fetchAll($sql, $params);
   }
+
+  public function getStatsPorEstado(): array
+  {
+    return $this->db->fetchAll(
+      "SELECT estado, COUNT(*) as total FROM citas GROUP BY estado"
+    );
+  }
 }

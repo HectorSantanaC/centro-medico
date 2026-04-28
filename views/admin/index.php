@@ -1,3 +1,14 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+if (!isset($_SESSION['usuario_id'])) {
+  header('Location: ../login.php');
+  exit;
+}
+$isAdmin = isset($_SESSION['usuario_rol']) && $_SESSION['usuario_rol'] === 'admin';
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -19,24 +30,14 @@
 
     <?php if ($isAdmin): ?>
       <h2 class="section-title">Estadisticas</h2>
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="number"><?= $stats['patients'] ?></div>
-          <div class="label">Pacientes registrados</div>
-        </div>
-        <div class="stat-card">
-          <div class="number"><?= $stats['citas'] ?></div>
-          <div class="label">Citas totales</div>
-        </div>
-        <div class="stat-card">
-          <div class="number"><?= $stats['especialidades'] ?></div>
-          <div class="label">Especialidades</div>
-        </div>
-        <div class="stat-card">
-          <div class="number"><?= $stats['medicos'] ?></div>
-          <div class="label">Medicos</div>
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card loading">
+          <div class="spinner"></div>
+          <div>Cargando...</div>
         </div>
       </div>
     <?php endif; ?>
   </main>
-<?php require_once __DIR__ . '/../layout/footer-admin.php'; ?>
+
+  <script src="js/admin-dashboard.js"></script>
+  <?php require_once __DIR__ . '/../layout/footer-admin.php'; ?>
