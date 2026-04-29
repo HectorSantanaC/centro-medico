@@ -37,6 +37,10 @@ $active = $active ?? '';
       <a href="admin-usuarios.php" class="<?= $active === 'usuarios' ? 'active' : '' ?>">
         <span class="icon">👥</span> Usuarios
       </a>
+
+      <a href="admin-roles.php" class="<?= $active === 'roles' ? 'active' : '' ?>">
+        <span class="icon">🔐</span> Roles
+      </a>
     <?php endif; ?>
 
     <a href="citas-crud.php" class="<?= $active === 'citas' ? 'active' : '' ?>">
