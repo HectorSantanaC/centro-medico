@@ -5,7 +5,11 @@ require_once __DIR__ . '/../helpers/api_auth.php';
 require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../models/Cita.php';
 
-requireApiAuthPaciente();
+if (!isset($_SESSION['usuario_id'])) {
+  http_response_code(401);
+  echo json_encode(['error' => 'No autenticado']);
+  exit;
+}
 
 header('Content-Type: application/json');
 
