@@ -1,8 +1,10 @@
 <?php
 $es_admin = false;
+$es_administracion = false;
 if (isset($_SESSION['usuario_roles'])) {
   foreach ($_SESSION['usuario_roles'] as $role) {
-    if ($role['rol_nombre'] === 'admin') { $es_admin = true; break; }
+    if ($role['rol_nombre'] === 'admin') { $es_admin = true; }
+    if ($role['rol_nombre'] === 'administracion') { $es_administracion = true; }
   }
 }
 $active = $active ?? '';
@@ -47,6 +49,8 @@ $active = $active ?? '';
       <span class="icon">📅</span> Agenda
     </a>
 
+    <?php if (!$es_administracion): ?>
+
     <a href="admin-especialidades.php" class="<?= $active === 'especialidades' ? 'active' : '' ?>">
       <span class="icon">🏥</span> Especialidades
     </a>
@@ -62,6 +66,7 @@ $active = $active ?? '';
     <a href="topicos-crud.php" class="<?= $active === 'topicos' ? 'active' : '' ?>">
       <span class="icon">📚</span> Tópicos
     </a>
+    <?php endif; ?>
   </div>
 
   <div class="sidebar-footer">

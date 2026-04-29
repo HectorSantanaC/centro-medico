@@ -19,7 +19,7 @@ class CitasController extends BaseController
 
   public function handleRequest(): array
   {
-    $this->requireRole(['admin', 'gestor']);
+    $this->requireRole(['admin', 'gestor', 'administracion']);
 
     $action = $_REQUEST['action'] ?? 'list';
     $id = isset($_REQUEST['id']) ? (int) $_REQUEST['id'] : null;
