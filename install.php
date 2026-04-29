@@ -7,9 +7,8 @@ $pdo = $db->getConnection();
 echo "<h1>🔨 Instalando base de datos...</h1>";
 
 // 0. BORRAR TABLAS EXISTENTES (reset completo)
-$pdo->exec("DROP TABLE IF EXISTS usuario_departamento_rol CASCADE");
+$pdo->exec("DROP TABLE IF EXISTS usuario_rol CASCADE");
 $pdo->exec("DROP TABLE IF EXISTS roles CASCADE");
-$pdo->exec("DROP TABLE IF EXISTS departamentos CASCADE");
 $pdo->exec("DROP TABLE IF EXISTS citas CASCADE");
 $pdo->exec("DROP TABLE IF EXISTS medicos CASCADE");
 $pdo->exec("DROP TABLE IF EXISTS especialidades CASCADE");
@@ -20,13 +19,6 @@ echo "✅ Tablas anteriores eliminadas<br>";
 
 // 1. TABLAS
 $tables = [
-  "CREATE TABLE IF NOT EXISTS departamentos (
-    id SERIAL PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL UNIQUE,
-    descripcion TEXT,
-    activo BOOLEAN DEFAULT true
-  )",
-
   "CREATE TABLE IF NOT EXISTS roles (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL UNIQUE,
@@ -44,11 +36,10 @@ $tables = [
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   )",
 
-  "CREATE TABLE IF NOT EXISTS usuario_departamento_rol (
+  "CREATE TABLE IF NOT EXISTS usuario_rol (
     usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
-    departamento_id INTEGER NOT NULL REFERENCES departamentos(id) ON DELETE CASCADE,
     rol_id INTEGER NOT NULL REFERENCES roles(id) ON DELETE CASCADE,
-    PRIMARY KEY (usuario_id, departamento_id, rol_id)
+    PRIMARY KEY (usuario_id, rol_id)
   )",
 
   "CREATE TABLE IF NOT EXISTS especialidades (
@@ -116,25 +107,13 @@ foreach ($tables as $sql) {
   }
 }
 
-// 2. DATOS DE PRUEBA - DEPARTAMENTOS
-$pdo->exec("INSERT INTO departamentos (nombre, descripcion) VALUES
-    ('Dirección Médica', 'Gestión y dirección del centro médico'),
-    ('Administración', 'Tareas administrativas y gestión de personal'),
-    ('Enfermería', 'Cuidados y atención de enfermería'),
-    ('Atención al Paciente', 'Recepción y atención directa a pacientes'),
-    ('Facturación', 'Gestión de cobros y facturación'),
-    ('Recursos Humanos', 'Contratación y gestión de personal'),
-    ('Pacientes', 'Departamento virtual para usuarios pacientes')
-    ON CONFLICT DO NOTHING");
-echo "✅ Departamentos insertados (6)<br>";
-
-// 3. DATOS DE PRUEBA - ROLES
+// 2. DATOS DE PRUEBA - ROLES
 $pdo->exec("INSERT INTO roles (nombre, descripcion) VALUES
     ('admin', 'Administrador con acceso total al sistema'),
     ('gestor', 'Gestor de contenidos y artículos médicos'),
-    ('médico', 'Personal médico con acceso a citas y pacientes'),
+    ('medico', 'Personal médico con acceso a citas y pacientes'),
     ('paciente', 'Usuario paciente para citas online'),
-    ('enfermero', 'Personal de enfermería')
+    ('administracion', 'Personal administrativo encargado de la gestión de citas, agenda y atención al paciente')
     ON CONFLICT DO NOTHING");
 echo "✅ Roles insertados (5)<br>";
 
@@ -185,7 +164,7 @@ echo "✅ Médicos insertados (23)<br>";
 $adminPassword = password_hash('admin123', PASSWORD_DEFAULT);
 $gestorPassword = password_hash('gestor123', PASSWORD_DEFAULT);
 $pacientePassword = password_hash('paciente123', PASSWORD_DEFAULT);
-$enfermeroPassword = password_hash('enfermero123', PASSWORD_DEFAULT);
+$administracionPassword = password_hash('administracion123', PASSWORD_DEFAULT);
 
 $pdo->exec("INSERT INTO usuarios (nombre, apellidos, email, password, created_at) VALUES 
     ('Admin', 'TAC7', 'admin@tac7.com', '$adminPassword', '2025-05-01'),
@@ -211,97 +190,87 @@ $pdo->exec("INSERT INTO usuarios (nombre, apellidos, email, password, created_at
     ('Cristina', 'Gil Torres', 'cristina.gil@email.com', '$pacientePassword', '2026-03-01'),
     ('Sergio', 'Rubio Navarro', 'sergio.rubio@email.com', '$pacientePassword', '2026-03-15'),
     ('Beatriz', 'Adrián Soto', 'beatriz.adrian@email.com', '$pacientePassword', '2026-04-01'),
-    ('Miguel', 'Santos López', 'miguel.santos@email.com', '$enfermeroPassword', '2025-06-01'),
-    ('Laura', 'Jiménez García', 'laura.jimenez@email.com', '$enfermeroPassword', '2025-06-15')
+    ('Administración', 'Administración', 'administracion@tac7.com', '$administracionPassword', '2025-06-01')
     ON CONFLICT DO NOTHING");
 echo "✅ Usuarios insertados (25)<br>";
 
-// 7. DATOS DE PRUEBA - ASIGNACIONES USUARIO-DEPARTAMENTO-ROL (30 asignaciones)
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'admin@tac7.com' AND d.nombre = 'Dirección Médica' AND r.nombre = 'admin'");
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'admin@tac7.com' AND d.nombre = 'Administración' AND r.nombre = 'admin'");
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'gestor@tac7.com' AND d.nombre = 'Administración' AND r.nombre = 'gestor'");
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'juan.garcia@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'pedro.martinez@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'maria.lopez@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'carlos.gonzalez@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'ana.fernandez@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'jose.rodriguez@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'luisa.sanchez@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'antonio.perez@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'carmen.gomez@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'francisco.diaz@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'isabel.hernandez@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'manuel.jimenez@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'elena.ruiz@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'jorge.torres@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'sonia.navarro@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'roberto.vargas@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'patricia.sanz@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'alejandro.vega@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'cristina.gil@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'sergio.rubio@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'beatriz.adrian@email.com' AND d.nombre = 'Pacientes' AND r.nombre = 'paciente'");
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'miguel.santos@email.com' AND d.nombre = 'Enfermería' AND r.nombre = 'enfermero'");
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'laura.jimenez@email.com' AND d.nombre = 'Enfermería' AND r.nombre = 'enfermero'");
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'miguel.santos@email.com' AND d.nombre = 'Atención al Paciente' AND r.nombre = 'enfermero'");
-$pdo->exec("INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id)
-  SELECT u.id, d.id, r.id FROM usuarios u, departamentos d, roles r
-  WHERE u.email = 'laura.jimenez@email.com' AND d.nombre = 'Atención al Paciente' AND r.nombre = 'enfermero'");
-echo "✅ Asignaciones usuario-departamento-rol insertadas (30)<br>";
+// 7. DATOS DE PRUEBA - ASIGNACIONES USUARIO-ROL (25 asignaciones)
+$pdo->exec("INSERT INTO usuario_rol (usuario_id, rol_id)
+  SELECT u.id, r.id FROM usuarios u, roles r
+  WHERE u.email = 'admin@tac7.com' AND r.nombre = 'admin'");
+$pdo->exec("INSERT INTO usuario_rol (usuario_id, rol_id)
+  SELECT u.id, r.id FROM usuarios u, roles r
+  WHERE u.email = 'gestor@tac7.com' AND r.nombre = 'gestor'");
+$pdo->exec("INSERT INTO usuario_rol (usuario_id, rol_id)
+  SELECT u.id, r.id FROM usuarios u, roles r
+  WHERE u.email = 'juan.garcia@email.com' AND r.nombre = 'paciente'");
+$pdo->exec("INSERT INTO usuario_rol (usuario_id, rol_id)
+  SELECT u.id, r.id FROM usuarios u, roles r
+  WHERE u.email = 'pedro.martinez@email.com' AND r.nombre = 'paciente'");
+$pdo->exec("INSERT INTO usuario_rol (usuario_id, rol_id)
+  SELECT u.id, r.id FROM usuarios u, roles r
+  WHERE u.email = 'maria.lopez@email.com' AND r.nombre = 'paciente'");
+$pdo->exec("INSERT INTO usuario_rol (usuario_id, rol_id)
+  SELECT u.id, r.id FROM usuarios u, roles r
+  WHERE u.email = 'carlos.gonzalez@email.com' AND r.nombre = 'paciente'");
+$pdo->exec("INSERT INTO usuario_rol (usuario_id, rol_id)
+  SELECT u.id, r.id FROM usuarios u, roles r
+  WHERE u.email = 'ana.fernandez@email.com' AND r.nombre = 'paciente'");
+$pdo->exec("INSERT INTO usuario_rol (usuario_id, rol_id)
+  SELECT u.id, r.id FROM usuarios u, roles r
+  WHERE u.email = 'jose.rodriguez@email.com' AND r.nombre = 'paciente'");
+$pdo->exec("INSERT INTO usuario_rol (usuario_id, rol_id)
+  SELECT u.id, r.id FROM usuarios u, roles r
+  WHERE u.email = 'luisa.sanchez@email.com' AND r.nombre = 'paciente'");
+$pdo->exec("INSERT INTO usuario_rol (usuario_id, rol_id)
+  SELECT u.id, r.id FROM usuarios u, roles r
+  WHERE u.email = 'antonio.perez@email.com' AND r.nombre = 'paciente'");
+$pdo->exec("INSERT INTO usuario_rol (usuario_id, rol_id)
+  SELECT u.id, r.id FROM usuarios u, roles r
+  WHERE u.email = 'carmen.gomez@email.com' AND r.nombre = 'paciente'");
+$pdo->exec("INSERT INTO usuario_rol (usuario_id, rol_id)
+  SELECT u.id, r.id FROM usuarios u, roles r
+  WHERE u.email = 'francisco.diaz@email.com' AND r.nombre = 'paciente'");
+$pdo->exec("INSERT INTO usuario_rol (usuario_id, rol_id)
+  SELECT u.id, r.id FROM usuarios u, roles r
+  WHERE u.email = 'isabel.hernandez@email.com' AND r.nombre = 'paciente'");
+$pdo->exec("INSERT INTO usuario_rol (usuario_id, rol_id)
+  SELECT u.id, r.id FROM usuarios u, roles r
+  WHERE u.email = 'manuel.jimenez@email.com' AND r.nombre = 'paciente'");
+$pdo->exec("INSERT INTO usuario_rol (usuario_id, rol_id)
+  SELECT u.id, r.id FROM usuarios u, roles r
+  WHERE u.email = 'elena.ruiz@email.com' AND r.nombre = 'paciente'");
+$pdo->exec("INSERT INTO usuario_rol (usuario_id, rol_id)
+  SELECT u.id, r.id FROM usuarios u, roles r
+  WHERE u.email = 'jorge.torres@email.com' AND r.nombre = 'paciente'");
+$pdo->exec("INSERT INTO usuario_rol (usuario_id, rol_id)
+  SELECT u.id, r.id FROM usuarios u, roles r
+  WHERE u.email = 'sonia.navarro@email.com' AND r.nombre = 'paciente'");
+$pdo->exec("INSERT INTO usuario_rol (usuario_id, rol_id)
+  SELECT u.id, r.id FROM usuarios u, roles r
+  WHERE u.email = 'roberto.vargas@email.com' AND r.nombre = 'paciente'");
+$pdo->exec("INSERT INTO usuario_rol (usuario_id, rol_id)
+  SELECT u.id, r.id FROM usuarios u, roles r
+  WHERE u.email = 'patricia.sanz@email.com' AND r.nombre = 'paciente'");
+$pdo->exec("INSERT INTO usuario_rol (usuario_id, rol_id)
+  SELECT u.id, r.id FROM usuarios u, roles r
+  WHERE u.email = 'alejandro.vega@email.com' AND r.nombre = 'paciente'");
+$pdo->exec("INSERT INTO usuario_rol (usuario_id, rol_id)
+  SELECT u.id, r.id FROM usuarios u, roles r
+  WHERE u.email = 'cristina.gil@email.com' AND r.nombre = 'paciente'");
+$pdo->exec("INSERT INTO usuario_rol (usuario_id, rol_id)
+  SELECT u.id, r.id FROM usuarios u, roles r
+  WHERE u.email = 'sergio.rubio@email.com' AND r.nombre = 'paciente'");
+$pdo->exec("INSERT INTO usuario_rol (usuario_id, rol_id)
+  SELECT u.id, r.id FROM usuarios u, roles r
+  WHERE u.email = 'beatriz.adrian@email.com' AND r.nombre = 'paciente'");
+$pdo->exec("INSERT INTO usuario_rol (usuario_id, rol_id)
+  SELECT u.id, r.id FROM usuarios u, roles r
+  WHERE u.email = 'miguel.santos@email.com' AND r.nombre = 'paciente'");
+$pdo->exec("INSERT INTO usuario_rol (usuario_id, rol_id)
+  SELECT u.id, r.id FROM usuarios u, roles r
+  WHERE u.email = 'administracion@tac7.com' AND r.nombre = 'administracion'");
+echo "✅ Asignaciones usuario-rol insertadas (25)<br>";
 
 // 8. DATOS DE PRUEBA - CITAS (120+ para CMI)
 $pdo->exec("INSERT INTO citas (paciente_id, medico_id, especialidad_id, fecha, hora, estado, notas, created_at) VALUES
@@ -477,53 +446,49 @@ $pdo->exec("INSERT INTO citas (paciente_id, medico_id, especialidad_id, fecha, h
     ON CONFLICT DO NOTHING");
 echo "✅ Citas insertadas (170+)<br>";
 
-// 9. DATOS DE PRUEBA - TÓPICOS (8 total)
+// 9. DATOS DE PRUEBA - TÓPICOS (4 total)
 $pdo->exec("INSERT INTO topicos (nombre, created_at) VALUES
-    ('Cardiología', '2025-05-01'),
-    ('Dermatología', '2025-05-15'),
-    ('Traumatología', '2025-06-01'),
-    ('Pediatría', '2025-06-15'),
-    ('Oftalmología', '2025-07-01'),
-    ('Nutrición', '2025-07-15'),
-    ('Neurología', '2025-08-01'),
-    ('Salud Mental', '2025-08-15')
+    ('Noticias', '2025-05-01'),
+    ('Consejos de salud', '2025-05-15'),
+    ('Novedades médicas', '2025-06-01'),
+    ('Eventos', '2025-06-15')
     ON CONFLICT DO NOTHING");
-echo "✅ Tópicos insertados (8)<br>";
+echo "✅ Tópicos insertados (4)<br>";
 
 // 10. DATOS DE PRUEBA - ARTÍCULOS (25 total)
 $pdo->exec("INSERT INTO articulos (titulo, topico, contenido_reducido, contenido_completo, fecha_contenido, autor, publicado) VALUES
-    ('Cómo cuidar tu corazón', 1, 'Tips para la salud cardíaca', 'El corazón es un órgano vital...', '2025-06-01', 'Dr. Juan Pérez', true),
-    ('Cuidados de la piel en verano', 2, 'Protección solar básica', 'La exposición solar excesiva...', '2025-06-15', 'Dra. Ana López', true),
-    ('Ejercicios para rodilla', 3, 'Rehabilitación de rodilla', 'Los ejercicios de fortalecimiento...', '2025-07-01', 'Dr. Carlos Martínez', true),
-    ('Vacunación infantil 2025', 4, 'Calendario de vacunas', 'Es fundamental mantener al día...', '2025-07-15', 'Dra. Lucía Navarro', true),
-    ('Cuidados de la vista', 5, 'Salud visual tips', 'La fatiga visual es común...', '2025-08-01', 'Dra. Elena Molina', true),
-    ('Dieta equilibrada', 6, 'Alimentación saludable', 'Una dieta balanceada incluye...', '2025-08-15', 'Dr. Francisco Gil', true),
-    ('Manejo del estrés', 7, 'Técnicas de relajación', 'El estrés crónico afecta...', '2025-09-01', 'Dra. María Jesús Fuentes', true),
-    ('Primeros auxilios básicos', 8, 'Qué hacer en emergencias', 'Ante una emergencia médica...', '2025-09-15', 'Dr. Antonio Vargas', true),
-    ('Hipertensión arterial', 1, 'Control de la presión', 'La hipertensión es silenciosa...', '2025-10-01', 'Dr. Juan Pérez', true),
-    ('Cáncer de piel', 2, 'Detección temprana', 'Los lunares atípicos pueden...', '2025-10-15', 'Dra. Ana López', true),
-    ('Dolor de espalda', 3, 'Prevención y tratamiento', 'El dolor lumbar afecta a...', '2025-11-01', 'Dr. Carlos Martínez', true),
-    ('Desarrollo infantil', 4, 'Hitos importantes', 'Los niños alcanzan hitos...', '2025-11-15', 'Dra. Lucía Navarro', true),
-    ('Miopía en niños', 5, 'Detección y corrección', 'El uso excesivo de pantallas...', '2025-12-01', 'Dra. Elena Molina', true),
-    ('Suplementos nutricionales', 6, 'Qué debes saber', 'Los suplementos no reemplazan...', '2025-12-15', 'Dr. Francisco Gil', true),
-    ('Trastornos del sueño', 7, 'Insomnio y soluciones', 'Dormir mal afecta la salud...', '2026-01-01', 'Dra. María Jesús Fuentes', true),
-    ('RCP básico', 8, 'Cómo salvar vidas', 'La reanimación cardiopulmonar...', '2026-01-15', 'Dr. Antonio Vargas', true),
-    ('Alimentación del deportista', 1, 'Nutrición y ejercicio', 'Los atletas requieren una...', '2026-02-01', 'Dr. Juan Pérez', true),
-    ('Acné adulto', 2, 'Tratamientos efectivos', 'El acné no es solo juvenil...', '2026-02-15', 'Dra. Ana López', true),
-    ('Artroscopia de rodilla', 3, 'Cirugía mínimamente invasiva', 'La artroscopia permite...', '2026-03-01', 'Dr. Carlos Martínez', true),
-    ('Lactancia materna', 4, 'Beneficios para el bebé', 'La leche materna es el...', '2026-03-15', 'Dra. Lucía Navarro', true),
-    ('Glaucoma: la ladrona de visión', 5, 'Detección temprana', 'El glaucoma no presenta...', '2026-04-01', 'Dra. Elena Molina', true),
-    ('Ayuno intermitente', 6, 'Beneficios y riesgos', 'El ayuno intermitente ha...', '2026-04-08', 'Dr. Francisco Gil', true),
-    ('Depresión en adolescentes', 7, 'Señales de alerta', 'La salud mental en adolescentes...', '2026-04-15', 'Dra. María Jesús Fuentes', true),
-    ('Urgencias cardiovasculares', 8, 'Cuándo acudir al médico', 'Dolor en el pecho puede...', '2026-04-18', 'Dr. Antonio Vargas', true),
-    ('Bienestar integral', 6, 'Salud física y mental', 'El bienestar integral requiere...', '2026-04-22', 'Dr. Francisco Gil', true)
+    ('Nueva sede inaugurated', 1, 'Abrió nuestro nuevo centro médico', 'Nos complace announce la inauguración de nuestra nueva sede...', '2025-06-01', 'Dirección TAC7', true),
+    ('Campaña de vacunación 2025', 1, 'Calendario de vacunas disponibles', 'Participa en nuestra campaña de vacunación...', '2025-06-15', 'Dra. Lucía Navarro', true),
+    ('Cómo cuidar tu corazón', 2, 'Tips para la salud cardíaca', 'El corazón es un órgano vital...', '2025-07-01', 'Dr. Juan Pérez', true),
+    ('Cuidados de la piel en verano', 2, 'Protección solar básica', 'La exposición solar excesiva...', '2025-07-15', 'Dra. Ana López', true),
+    ('Ejercicios para rodilla', 2, 'Rehabilitación de rodilla', 'Los ejercicios de fortalecimiento...', '2025-08-01', 'Dr. Carlos Martínez', true),
+    ('Cuidados de la vista', 2, 'Salud visual tips', 'La fatiga visual es común...', '2025-08-15', 'Dra. Elena Molina', true),
+    ('Dieta equilibrada', 2, 'Alimentación saludable', 'Una dieta balanceada incluye...', '2025-09-01', 'Dr. Francisco Gil', true),
+    ('Manejo del estrés', 2, 'Técnicas de relajación', 'El estrés crónico afecta...', '2025-09-15', 'Dra. María Jesús Fuentes', true),
+    ('Nuevos equipos de diagnóstico', 3, 'Tecnología de vanguardia', 'Hemos incorporado equipos de última generación...', '2025-10-01', 'Dirección TAC7', true),
+    ('Premio的最佳医疗中心', 3, 'Reconocimiento excelencia', 'Nuestro centro ha recibido el premio...', '2025-10-15', 'Dirección TAC7', true),
+    ('Jornada de puertas abiertas', 4, 'Ven a conocernos', 'Te invitamos a nuestra jornada de puertas abiertas...', '2025-11-01', 'Dirección TAC7', true),
+    ('Charla sobre salud cardiovascular', 4, 'Información y consejos', 'Únete a nuestra charla gratuita sobre salud cardiovascular...', '2025-11-15', 'Dr. Juan Pérez', true),
+    ('Hipertensión arterial', 2, 'Control de la presión', 'La hipertensión es silenciosa...', '2025-12-01', 'Dr. Juan Pérez', true),
+    ('Cáncer de piel', 2, 'Detección temprana', 'Los lunares atípicos pueden...', '2025-12-15', 'Dra. Ana López', true),
+    ('Dolor de espalda', 2, 'Prevención y tratamiento', 'El dolor lumbar afecta a...', '2026-01-01', 'Dr. Carlos Martínez', true),
+    ('Desarrollo infantil', 2, 'Hitos importantes', 'Los niños alcanzan hitos...', '2026-01-15', 'Dra. Lucía Navarro', true),
+    ('Miopía en niños', 2, 'Detección y corrección', 'El uso excesivo de pantallas...', '2026-02-01', 'Dra. Elena Molina', true),
+    ('Suplementos nutricionales', 2, 'Qué debes saber', 'Los suplementos no reemplazan...', '2026-02-15', 'Dr. Francisco Gil', true),
+    ('Trastornos del sueño', 2, 'Insomnio y soluciones', 'Dormir mal afecta la salud...', '2026-03-01', 'Dra. María Jesús Fuentes', true),
+    ('RCP básico', 2, 'Cómo salvar vidas', 'La reanimación cardiopulmonar...', '2026-03-15', 'Dr. Antonio Vargas', true),
+    ('Alimentación del deportista', 2, 'Nutrición y ejercicio', 'Los atletas requieren una...', '2026-04-01', 'Dr. Juan Pérez', true),
+    ('Acné adulto', 2, 'Tratamientos efectivos', 'El acné no es solo juvenil...', '2026-04-08', 'Dra. Ana López', true),
+    ('Glaucoma: la ladrona de visión', 2, 'Detección temprana', 'El glaucoma no presenta...', '2026-04-15', 'Dra. Elena Molina', true),
+    ('Ayuno intermitente', 2, 'Beneficios y riesgos', 'El ayuno intermitente ha...', '2026-04-18', 'Dr. Francisco Gil', true),
+    ('Bienestar integral', 2, 'Salud física y mental', 'El bienestar integral requiere...', '2026-04-22', 'Dr. Francisco Gil', true)
     ON CONFLICT DO NOTHING");
 echo "✅ Artículos insertados (25)<br>";
 
 // 11. RESUMEN FINAL
 echo "<h2 style='color:green'>🎉 ¡BASE DE DATOS LISTA!</h2>
-      <p><strong>Tablas:</strong> usuarios, departamentos, roles, usuario_departamento_rol, especialidades, medicos, citas, topicos, articulos</p>
-      <p><strong>Datos:</strong> 6 departamentos, 5 roles, 25 usuarios, 30 asignaciones, 10 especialidades, 23 médicos, 170+ citas, 8 tópicos, 25 artículos</p>
+      <p><strong>Tablas:</strong> usuarios, roles, usuario_rol, especialidades, medicos, citas, topicos, articulos</p>
+      <p><strong>Datos:</strong> 5 roles, 25 usuarios, 25 asignaciones, 10 especialidades, 23 médicos, 170+ citas, 4 tópicos, 25 artículos</p>
       <a href='cita-online.php' class='btn'>→ Probar formulario citas</a>
       <a href='index.php' class='btn'>→ Página principal</a>
       <hr><small><strong>INFO:</strong> Ejecuta este archivo cuando quieras resetear la BD.</small>";

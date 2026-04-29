@@ -1,6 +1,7 @@
 <?php
 
 session_start();
+require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../helpers/api_auth.php';
 require_once __DIR__ . '/../models/Usuario.php';
 
@@ -86,8 +87,7 @@ try {
         'apellidos' => $data['apellidos'],
         'email' => $data['email'],
         'password' => $data['password'],
-        'rol_id' => $data['rol_id'] ?? null,
-        'departamento_id' => $data['departamento_id'] ?? null
+        'rol_id' => $data['rol_id'] ?? null
       ]);
 
       http_response_code(201);
@@ -118,19 +118,14 @@ try {
       
       // Actualizar roles si se proporcionan
       if (isset($data['roles']) && is_array($data['roles'])) {
-        // Eliminar roles actuales
         $pdo = Database::getInstance()->getConnection();
-        $stmt = $pdo->prepare("DELETE FROM usuario_departamento_rol WHERE usuario_id = ?");
+        $stmt = $pdo->prepare("DELETE FROM usuario_rol WHERE usuario_id = ?");
         $stmt->execute([(int)$data['id']]);
         
-        // Insertar nuevos roles
-        $stmt = $pdo->prepare("
-          INSERT INTO usuario_departamento_rol (usuario_id, departamento_id, rol_id) 
-          VALUES (?, ?, ?)
-        ");
+        $stmt = $pdo->prepare("INSERT INTO usuario_rol (usuario_id, rol_id) VALUES (?, ?)");
         foreach ($data['roles'] as $role) {
-          if (isset($role['departamento_id']) && isset($role['rol_id'])) {
-            $stmt->execute([(int)$data['id'], $role['departamento_id'], $role['rol_id']]);
+          if (isset($role['rol_id'])) {
+            $stmt->execute([(int)$data['id'], (int)$role['rol_id']]);
           }
         }
       }
