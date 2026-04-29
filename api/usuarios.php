@@ -13,7 +13,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 try {
   switch ($method) {
     case 'GET':
-      requireApiAuth(['admin']);
+      requireApiAuth(['admin', 'gestor', 'administracion']);
       $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
       $perPage = isset($_GET['per_page']) ? min((int)$_GET['per_page'], 100) : 10;
 
