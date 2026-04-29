@@ -62,7 +62,7 @@ try {
       break;
 
     case 'POST':
-      requireApiAuth(['admin', 'gestor']);
+      requireApiAuth(['admin', 'gestor', 'administracion']);
       $data = json_decode(file_get_contents('php://input'), true);
       if (!$data || empty($data['paciente_id']) || empty($data['medico_id']) 
           || empty($data['especialidad_id']) || empty($data['fecha']) || empty($data['hora'])) {
@@ -92,7 +92,7 @@ try {
       break;
 
     case 'PUT':
-      requireApiAuth(['admin', 'gestor']);
+      requireApiAuth(['admin', 'gestor', 'administracion']);
       $data = json_decode(file_get_contents('php://input'), true);
       if (!$data || empty($data['id']) || empty($data['paciente_id']) || empty($data['medico_id']) 
           || empty($data['especialidad_id']) || empty($data['fecha']) || empty($data['hora'])) {
@@ -112,7 +112,7 @@ try {
       break;
 
     case 'DELETE':
-      requireApiAuth(['admin', 'gestor']);
+      requireApiAuth(['admin', 'gestor', 'administracion']);
       $data = json_decode(file_get_contents('php://input'), true);
       if (!$data || empty($data['id'])) {
         http_response_code(400);
