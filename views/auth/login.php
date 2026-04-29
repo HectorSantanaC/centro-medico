@@ -3,13 +3,13 @@
 <section class="section" style="max-width: 400px; margin: 50px auto;">
   <h1 style="text-align: center; margin-bottom: 30px;">Accede a tu cuenta</h1>
   
-  <?php if ($registro_ok === 'ok'): ?>
+  <?php if (isset($registro_ok) && $registro_ok === 'ok'): ?>
     <div style="background: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
       ¡Registro completado! Ahora puedes iniciar sesión con tus credenciales.
     </div>
   <?php endif; ?>
   
-  <?php if (!empty($error)): ?>
+  <?php if (isset($error) && !empty($error)): ?>
     <div style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
       <?= htmlspecialchars($error) ?>
     </div>
@@ -45,7 +45,8 @@
     <p style="margin: 5px 0;">
       Admin: admin@tac7.com / admin123<br>
       Gestor: gestor@tac7.com / gestor123<br>
-      Paciente: juan.garcia@email.com / paciente123
+      Paciente: juan.garcia@email.com / paciente123<br>
+      Administración: administracion@tac7.com / administracion123
     </p>
   </div>
 </section>
