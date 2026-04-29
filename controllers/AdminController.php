@@ -17,7 +17,7 @@ class AdminController extends BaseController
 
   public function handleRequest(): array
   {
-    $this->requireRole(['admin', 'gestor']);
+    $this->requireRole(['admin', 'gestor', 'administracion']);
 
     $isAdmin = $this->isAdmin();
     $stats = $this->getStats($isAdmin);
