@@ -162,17 +162,45 @@ const AdminUsuarios = {
     document.getElementById('password').value = '';
     document.getElementById('password').required = true;
     document.getElementById('password-help').style.display = 'block';
-    document.getElementById('roles-editar-group').style.display = 'none';
     
-    const select = document.getElementById('rol-select');
-    select.innerHTML = '<option value="">Seleccionar rol...</option>';
-    this.roles.forEach(rol => {
-      const option = document.createElement('option');
-      option.value = rol.id;
-      option.textContent = rol.nombre.charAt(0).toUpperCase() + rol.nombre.slice(1);
-      select.appendChild(option);
+    const tagsContainer = document.getElementById('roles-tags');
+    tagsContainer.innerHTML = this.roles.map(rol => `
+      <span class="rol-chip" data-rol-id="${rol.id}" style="
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border-radius: 20px;
+        border: 1px solid #ddd;
+        background: #f0f0f0;
+        color: #333;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        user-select: none;
+      ">
+        <span class="rol-icon">+</span>
+        ${rol.nombre.charAt(0).toUpperCase() + rol.nombre.slice(1)}
+      </span>
+    `).join('');
+    
+    tagsContainer.querySelectorAll('.rol-chip').forEach(chip => {
+      chip.addEventListener('click', function() {
+        const isSelected = this.style.background === 'rgb(74, 144, 217)';
+        
+        if (isSelected) {
+          this.style.background = '#f0f0f0';
+          this.style.color = '#333';
+          this.style.borderColor = '#ddd';
+          this.querySelector('.rol-icon').textContent = '+';
+        } else {
+          this.style.background = '#4a90d9';
+          this.style.color = '#fff';
+          this.style.borderColor = '#4a90d9';
+          this.querySelector('.rol-icon').textContent = '✓';
+        }
+      });
     });
-    document.getElementById('rol-select').parentElement.style.display = 'block';
     
     document.getElementById('modal').style.display = 'block';
   },
@@ -196,21 +224,53 @@ const AdminUsuarios = {
       
       document.getElementById('password-help').textContent = 'Dejar vacío para mantener la actual';
       
-      document.getElementById('rol-select').parentElement.style.display = 'none';
-      document.getElementById('roles-editar-group').style.display = 'block';
+      const tagsContainer = document.getElementById('roles-tags');
+      const selectedRoles = usuario.roles ? usuario.roles.map(r => r.rol_id) : [];
       
-      const checkboxesContainer = document.getElementById('roles-checkboxes');
-      const usuarioRoles = usuario.roles ? usuario.roles.map(r => r.rol_id) : [];
-      
-      checkboxesContainer.innerHTML = this.roles.map(rol => {
-        const checked = usuarioRoles.includes(rol.id) ? 'checked' : '';
+      tagsContainer.innerHTML = this.roles.map(rol => {
+        const isSelected = selectedRoles.includes(rol.id);
+        const bgColor = isSelected ? '#4a90d9' : '#f0f0f0';
+        const textColor = isSelected ? '#fff' : '#333';
+        const borderColor = isSelected ? '#4a90d9' : '#ddd';
         return `
-          <label style="display: block; margin-bottom: 8px;">
-            <input type="checkbox" name="roles" value="${rol.id}" ${checked}>
+          <span class="rol-chip" data-rol-id="${rol.id}" style="
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: 1px solid ${borderColor};
+            background: ${bgColor};
+            color: ${textColor};
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+          ">
+            <span class="rol-icon">${isSelected ? '✓' : '+'}</span>
             ${rol.nombre.charAt(0).toUpperCase() + rol.nombre.slice(1)}
-          </label>
+          </span>
         `;
       }).join('');
+      
+      tagsContainer.querySelectorAll('.rol-chip').forEach(chip => {
+        chip.addEventListener('click', function() {
+          const rolId = parseInt(this.dataset.rolId);
+          const isSelected = this.style.background === 'rgb(74, 144, 217)';
+          
+          if (isSelected) {
+            this.style.background = '#f0f0f0';
+            this.style.color = '#333';
+            this.style.borderColor = '#ddd';
+            this.querySelector('.rol-icon').textContent = '+';
+          } else {
+            this.style.background = '#4a90d9';
+            this.style.color = '#fff';
+            this.style.borderColor = '#4a90d9';
+            this.querySelector('.rol-icon').textContent = '✓';
+          }
+        });
+      });
       
       document.getElementById('modal').style.display = 'block';
     } catch (error) {
@@ -237,17 +297,17 @@ const AdminUsuarios = {
       return;
     }
 
-    if (!id) {
-      const rolId = document.getElementById('rol-select').value;
-      if (!rolId) {
-        this.mostrarToast('Debe seleccionar un rol', 'error');
-        return;
-      }
-      datos.rol_id = parseInt(rolId);
-    } else {
-      const checkboxes = document.querySelectorAll('#roles-checkboxes input[name="roles"]:checked');
-      datos.roles = Array.from(checkboxes).map(cb => ({ rol_id: parseInt(cb.value) }));
+    const selectedChips = document.querySelectorAll('#roles-tags .rol-chip');
+    const rolesSeleccionados = Array.from(selectedChips)
+      .filter(chip => chip.style.background === 'rgb(74, 144, 217)')
+      .map(chip => ({ rol_id: parseInt(chip.dataset.rolId) }));
+    
+    if (rolesSeleccionados.length === 0) {
+      this.mostrarToast('Debe seleccionar al menos un rol', 'error');
+      return;
     }
+    
+    datos.roles = rolesSeleccionados;
 
     try {
       const options = {

@@ -183,7 +183,17 @@ class Usuario
       $passwordHash
     ]);
     
-    if (isset($data['rol_id'])) {
+    if (isset($data['roles']) && is_array($data['roles'])) {
+      $stmt = $this->pdo->prepare("
+        INSERT INTO usuario_rol (usuario_id, rol_id) 
+        VALUES (?, ?)
+      ");
+      foreach ($data['roles'] as $role) {
+        if (isset($role['rol_id'])) {
+          $stmt->execute([$usuario_id, $role['rol_id']]);
+        }
+      }
+    } elseif (isset($data['rol_id'])) {
       $stmt = $this->pdo->prepare("
         INSERT INTO usuario_rol (usuario_id, rol_id) 
         VALUES (?, ?)

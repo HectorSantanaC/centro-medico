@@ -87,7 +87,7 @@ try {
         'apellidos' => $data['apellidos'],
         'email' => $data['email'],
         'password' => $data['password'],
-        'rol_id' => $data['rol_id'] ?? null
+        'roles' => $data['roles'] ?? null
       ]);
 
       http_response_code(201);
