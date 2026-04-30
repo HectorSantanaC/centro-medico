@@ -95,6 +95,27 @@ const AdminMedicos = {
       e.preventDefault();
       this.guardarMedico();
     });
+
+    document.getElementById('medico-imagen-file').addEventListener('change', (e) => {
+      this.previewImagen(e.target);
+    });
+  },
+
+  previewImagen(input) {
+    const preview = document.getElementById('imagen-preview');
+    const hiddenInput = document.getElementById('medico-imagen');
+    
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        preview.innerHTML = `<img src="${e.target.result}" alt="Previsualización">`;
+        hiddenInput.value = e.target.result;
+      };
+      reader.readAsDataURL(input.files[0]);
+    } else {
+      preview.innerHTML = '';
+      hiddenInput.value = '';
+    }
   },
 
   async cargarMedicos() {
@@ -172,6 +193,10 @@ const AdminMedicos = {
     document.getElementById('apellidos').value = '';
     document.getElementById('especialidad_id').value = '';
     document.getElementById('activo').checked = true;
+    document.getElementById('medico-imagen').value = '';
+    document.getElementById('medico-imagen-url').value = '';
+    document.getElementById('medico-imagen-file').value = '';
+    document.getElementById('imagen-preview').innerHTML = '';
     document.getElementById('modal').style.display = 'block';
   },
 
@@ -189,6 +214,20 @@ const AdminMedicos = {
       document.getElementById('apellidos').value = med.apellidos;
       document.getElementById('especialidad_id').value = med.especialidad_id || '';
       document.getElementById('activo').checked = med.activo;
+      
+      document.getElementById('medico-imagen').value = med.imagen || '';
+      document.getElementById('medico-imagen-url').value = med.imagen_url || '';
+      document.getElementById('medico-imagen-file').value = '';
+      
+      const preview = document.getElementById('imagen-preview');
+      if (med.imagen) {
+        preview.innerHTML = `<img src="./${med.imagen}" alt="Imagen actual">`;
+      } else if (med.imagen_url) {
+        preview.innerHTML = `<img src="${med.imagen_url}" alt="Imagen actual">`;
+      } else {
+        preview.innerHTML = '';
+      }
+      
       document.getElementById('modal').style.display = 'block';
     } catch (error) {
       this.mostrarToast('Error al cargar médico', 'error');
@@ -201,7 +240,9 @@ const AdminMedicos = {
       nombre: document.getElementById('nombre').value.trim(),
       apellidos: document.getElementById('apellidos').value.trim(),
       especialidad_id: document.getElementById('especialidad_id').value || null,
-      activo: document.getElementById('activo').checked
+      activo: document.getElementById('activo').checked,
+      imagen: document.getElementById('medico-imagen').value,
+      imagen_url: document.getElementById('medico-imagen-url').value.trim()
     };
 
     if (!datos.nombre || !datos.apellidos) {

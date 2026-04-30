@@ -45,25 +45,29 @@ class Medico
 
   public function create(array $data): int
   {
-    $sql = "INSERT INTO medicos (nombre, apellidos, especialidad_id, activo) 
-             VALUES (?, ?, ?, ?) RETURNING id";
+    $sql = "INSERT INTO medicos (nombre, apellidos, especialidad_id, activo, imagen, imagen_url) 
+             VALUES (?, ?, ?, ?, ?, ?) RETURNING id";
     return $this->db->insert($sql, [
       $data['nombre'],
       $data['apellidos'],
       $data['especialidad_id'] ?? null,
-      $data['activo'] ?? true
+      $data['activo'] ?? true,
+      $data['imagen'] ?? '',
+      $data['imagen_url'] ?? ''
     ]);
   }
 
   public function update(int $id, array $data): bool
   {
     $this->db->execute(
-      "UPDATE medicos SET nombre = ?, apellidos = ?, especialidad_id = ?, activo = ? WHERE id = ?",
+      "UPDATE medicos SET nombre = ?, apellidos = ?, especialidad_id = ?, activo = ?, imagen = ?, imagen_url = ? WHERE id = ?",
       [
         $data['nombre'],
         $data['apellidos'],
         $data['especialidad_id'] ?? null,
         $data['activo'] ?? true,
+        $data['imagen'] ?? '',
+        $data['imagen_url'] ?? '',
         $id
       ]
     );
@@ -138,7 +142,7 @@ class Medico
     }
     
     return $this->db->fetchAll(
-      "SELECT id, nombre || ' ' || apellidos as nombre_completo
+      "SELECT id, nombre, apellidos, nombre || ' ' || apellidos as nombre_completo, imagen, imagen_url
       FROM medicos 
       WHERE especialidad_id = ? AND activo = true 
       ORDER BY apellidos",

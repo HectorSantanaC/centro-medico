@@ -54,7 +54,9 @@ $tables = [
     nombre VARCHAR(100) NOT NULL,
     apellidos VARCHAR(100) NOT NULL,
     especialidad_id INTEGER REFERENCES especialidades(id),
-    activo BOOLEAN DEFAULT true
+    activo BOOLEAN DEFAULT true,
+    imagen VARCHAR(255),
+    imagen_url VARCHAR(255)
   )",
 
   "CREATE TABLE IF NOT EXISTS citas (

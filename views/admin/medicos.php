@@ -97,6 +97,19 @@
           </label>
         </div>
 
+        <div class="form-group">
+          <label for="medico-imagen">Imagen</label>
+          <div id="imagen-preview" class="imagen-preview"></div>
+          <input type="file" id="medico-imagen-file" accept="image/*">
+          <input type="hidden" id="medico-imagen" value="">
+          <p class="help-text">Sube una imagen o usa una URL externa</p>
+        </div>
+
+        <div class="form-group">
+          <label for="medico-imagen-url">URL imagen externa</label>
+          <input type="text" id="medico-imagen-url" placeholder="https://ejemplo.com/imagen.jpg">
+        </div>
+
         <div class="form-actions">
           <button type="submit" class="btn btn-primary">Guardar</button>
           <button type="button" class="btn btn-secondary btn-sm modal-close">Cancelar</button>

@@ -39,12 +39,23 @@ require_once './views/layout/header.php';
   <a href="cita-online.php" class="btn-nueva-cita">Solicita una cita</a>
 </section>
 
+<?php 
+function getMedicoImagenEspecialidad($medico) {
+  if (!empty($medico['imagen'])) {
+    return './' . htmlspecialchars($medico['imagen']);
+  }
+  if (!empty($medico['imagen_url'])) {
+    return htmlspecialchars($medico['imagen_url']);
+  }
+  return './assets/img/medico.jpg';
+}
+?>
 <?php if (!empty($medicos)): ?>
 <section class="seccion-equipo">
   <div class="grid-especialidad">
     <?php foreach ($medicos as $medico): ?>
       <div class="card-doctor">
-        <img src="./assets/img/medico.jpg" alt="Dr. <?= htmlspecialchars($medico['nombre_completo']) ?>">
+        <img src="<?= getMedicoImagenEspecialidad($medico) ?>" alt="Dr. <?= htmlspecialchars($medico['nombre_completo']) ?>">
         <div class="doctor">
           <h3><?= htmlspecialchars($medico['nombre_completo']) ?></h3>
         </div>

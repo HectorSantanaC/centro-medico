@@ -64,9 +64,20 @@ require_once './views/layout/header.php';
     </button>
     <div class="carousel" id="carousel-equipo">
 
+      <?php 
+        function getMedicoImagen($medico) {
+          if (!empty($medico['imagen'])) {
+            return './' . htmlspecialchars($medico['imagen']);
+          }
+          if (!empty($medico['imagen_url'])) {
+            return htmlspecialchars($medico['imagen_url']);
+          }
+          return './assets/img/medico.jpg';
+        }
+      ?>
       <?php foreach ($medicos as $medico): ?>
         <div class="card-doctor">
-          <img src="./assets/img/medico.jpg" alt="Dr. <?= htmlspecialchars($medico['nombre'] . ' ' . $medico['apellidos']) ?> - <?= htmlspecialchars($medico['especialidad_nombre']) ?>">
+          <img src="<?= getMedicoImagen($medico) ?>" alt="Dr. <?= htmlspecialchars($medico['nombre'] . ' ' . $medico['apellidos']) ?> - <?= htmlspecialchars($medico['especialidad_nombre']) ?>">
           <div class="doctor">
             <h3><?= htmlspecialchars($medico['nombre'] . ' ' . $medico['apellidos']) ?></h3>
             <p><?= htmlspecialchars($medico['especialidad_nombre']) ?></p>
