@@ -50,14 +50,37 @@ if (isset($_SESSION['usuario_roles'])) {
         </div>
         <div class="chart-card">
           <h3>Citas por Especialidad</h3>
+          <div class="chart-filter">
+            <select id="filtro-especialidad">
+              <option value="">Todos los años</option>
+              <option value="2026">2026</option>
+              <option value="2025">2025</option>
+              <option value="2024">2024</option>
+            </select>
+          </div>
           <div id="chart-especialidad" class="chart-container"></div>
         </div>
         <div class="chart-card">
           <h3>Evolución de Citas</h3>
+          <div class="chart-filter">
+            <select id="filtro-evolucion">
+              <option value="3">Últimos 3 meses</option>
+              <option value="6">Últimos 6 meses</option>
+              <option value="12" selected>Últimos 12 meses</option>
+            </select>
+          </div>
           <div id="chart-evolucion" class="chart-container"></div>
         </div>
         <div class="chart-card">
           <h3>Top Médicos</h3>
+          <div class="chart-filter">
+            <select id="filtro-medicos">
+              <option value="">Todos los años</option>
+              <option value="2026">2026</option>
+              <option value="2025">2025</option>
+              <option value="2024">2024</option>
+            </select>
+          </div>
           <div id="chart-medicos" class="chart-container"></div>
         </div>
         <div class="chart-card">

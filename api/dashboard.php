@@ -26,13 +26,16 @@ try {
       $stats['medicos'] = $medicoModel->count();
 
       $citaModel = new Cita();
-      $citasPorEstado = $citaModel->getStatsPorEstado();
+      
+      $anio = isset($_GET['año']) ? (int)$_GET['año'] : null;
+      $meses = isset($_GET['meses']) ? (int)$_GET['meses'] : 12;
+      
       $stats['citas'] = [
-        'total' => array_sum(array_column($citasPorEstado, 'total')),
-        'por_estado' => $citasPorEstado,
-        'por_especialidad' => $citaModel->getCitasPorEspecialidad(),
-        'evolucion_mensual' => $citaModel->getCitasPorMes(12),
-        'por_medico' => $citaModel->getCitasPorMedico(),
+        'total' => array_sum(array_column($citaModel->getStatsPorEstado(), 'total')),
+        'por_estado' => $citaModel->getStatsPorEstado(),
+        'por_especialidad' => $citaModel->getCitasPorEspecialidad($anio),
+        'evolucion_mensual' => $anio ? $citaModel->getCitasPorAnio($anio) : $citaModel->getCitasPorMes($meses),
+        'por_medico' => $citaModel->getCitasPorMedico($anio),
         'por_dia_semana' => $citaModel->getCitasPorDiaSemana(),
         'citas_hoy' => $citaModel->getCitasHoy(),
         'tasa_cancelacion' => $citaModel->getTasaCancelacion()

@@ -1,6 +1,11 @@
 const AdminDashboard = {
   apiUrl: 'api/dashboard.php',
   charts: {},
+  filtros: {
+    evolucion: '12',
+    especialidad: '',
+    medicos: ''
+  },
   colors: {
     primary: '#2c5282',
     success: '#38a169',
@@ -11,8 +16,50 @@ const AdminDashboard = {
   },
 
   init() {
+    this.bindEvents();
     this.cargarStats();
-    this.cargarGraficos();
+    this.cargarTodosGraficos();
+  },
+
+  bindEvents() {
+    document.getElementById('filtro-evolucion')?.addEventListener('change', (e) => {
+      this.filtros.evolucion = e.target.value;
+      this.cargarGrafico('evolucion');
+    });
+    document.getElementById('filtro-especialidad')?.addEventListener('change', (e) => {
+      this.filtros.especialidad = e.target.value;
+      this.cargarGrafico('especialidad');
+    });
+    document.getElementById('filtro-medicos')?.addEventListener('change', (e) => {
+      this.filtros.medicos = e.target.value;
+      this.cargarGrafico('medicos');
+    });
+  },
+
+  async cargarTodosGraficos() {
+    try {
+      const url = `${this.apiUrl}?meses=12`;
+      const response = await fetch(url, { credentials: 'same-origin' });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      const stats = await response.json();
+
+      if (!stats.citas) {
+        return;
+      }
+
+      this.renderChartEstado(stats.citas.por_estado || []);
+      this.renderChartEspecialidad(stats.citas.por_especialidad || []);
+      this.renderChartEvolucion(stats.citas.evolucion_mensual || []);
+      this.renderChartMedicos(stats.citas.por_medico || []);
+      this.renderChartDias(stats.citas.por_dia_semana || []);
+    } catch (error) {
+      console.error('Error cargando gráficos:', error);
+      document.querySelectorAll('.chart-container').forEach(el => {
+        el.innerHTML = '<p style="text-align:center;padding:50px;color:#e53e3e;">Error al cargar datos</p>';
+      });
+    }
   },
 
   async cargarStats() {
@@ -60,30 +107,50 @@ const AdminDashboard = {
     }
   },
 
-  async cargarGraficos() {
+  async cargarGrafico(tipo) {
     try {
-      const response = await fetch(this.apiUrl, { credentials: 'same-origin' });
+      let url = this.apiUrl;
+      if (tipo === 'evolucion') {
+        url += `?meses=${this.filtros.evolucion}`;
+      } else if (tipo === 'especialidad' && this.filtros.especialidad) {
+        url += `?año=${this.filtros.especialidad}`;
+      } else if (tipo === 'medicos' && this.filtros.medicos) {
+        url += `?año=${this.filtros.medicos}`;
+      } else if (tipo === 'especialidad' || tipo === 'medicos') {
+        url += `?meses=12`;
+      }
+      
+      const response = await fetch(url, { credentials: 'same-origin' });
       const stats = await response.json();
 
-      this.renderChartEstado(stats.citas?.por_estado || []);
-      this.renderChartEspecialidad(stats.citas?.por_especialidad || []);
-      this.renderChartEvolucion(stats.citas?.evolucion_mensual || []);
-      this.renderChartMedicos(stats.citas?.por_medico || []);
-      this.renderChartDias(stats.citas?.por_dia_semana || []);
+      if (tipo === 'evolucion') {
+        this.renderChartEvolucion(stats.citas?.evolucion_mensual || []);
+      } else if (tipo === 'especialidad') {
+        this.renderChartEspecialidad(stats.citas?.por_especialidad || []);
+      } else if (tipo === 'medicos') {
+        this.renderChartMedicos(stats.citas?.por_medico || []);
+      }
     } catch (error) {
-      console.error('Error cargando gráficos:', error);
+      console.error(`Error cargando gráfico ${tipo}:`, error);
     }
   },
 
   initChart(id) {
     const el = document.getElementById(id);
-    if (!el) return null;
-    return echarts.init(el);
+    if (!el) {
+      return null;
+    }
+    const chart = echarts.init(el);
+    this.charts[id] = chart;
+    return chart;
   },
 
   renderChartEstado(data) {
     const chart = this.initChart('chart-estado');
-    if (!chart) return;
+    if (!chart) {
+      document.getElementById('chart-estado').innerHTML = '<p style="text-align:center;padding:50px;">Gráfico no disponible</p>';
+      return;
+    }
 
     const labels = data.map(d => this.getLabelEstado(d.estado));
     const values = data.map(d => parseInt(d.total));
@@ -231,10 +298,19 @@ const AdminDashboard = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-  const script = document.createElement('script');
-  script.src = 'https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js';
-  script.onload = () => AdminDashboard.init();
-  document.head.appendChild(script);
+  if (typeof echarts !== 'undefined') {
+    AdminDashboard.init();
+  } else {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js';
+    script.onload = () => AdminDashboard.init();
+    script.onerror = () => {
+      document.querySelectorAll('.chart-container').forEach(el => {
+        el.innerHTML = '<p style="text-align:center;padding:50px;color:#e53e3e;">Error al cargar gráfico</p>';
+      });
+    };
+    document.head.appendChild(script);
+  }
 });
 
 window.addEventListener('resize', () => {

@@ -228,15 +228,35 @@ class Cita
     );
   }
 
-  public function getCitasPorEspecialidad(): array
+  public function getCitasPorEspecialidad(int $anio = null): array
   {
+    $where = $anio ? "WHERE EXTRACT(YEAR FROM c.fecha) = ?" : "";
+    $params = $anio ? [$anio] : [];
+    
     return $this->db->fetchAll("
       SELECT e.nombre as especialidad, COUNT(c.id) as total
       FROM citas c
       INNER JOIN especialidades e ON c.especialidad_id = e.id
+      {$where}
       GROUP BY e.id, e.nombre
       ORDER BY total DESC
-    ");
+    ", $params);
+  }
+
+  public function getCitasPorMedico(int $anio = null): array
+  {
+    $where = $anio ? "WHERE EXTRACT(YEAR FROM c.fecha) = ?" : "";
+    $params = $anio ? [$anio] : [];
+    
+    return $this->db->fetchAll("
+      SELECT m.nombre, m.apellidos, COUNT(c.id) as total
+      FROM citas c
+      INNER JOIN medicos m ON c.medico_id = m.id
+      {$where}
+      GROUP BY m.id, m.nombre, m.apellidos
+      ORDER BY total DESC
+      LIMIT 10
+    ", $params);
   }
 
   public function getCitasPorMes(int $meses = 6): array
@@ -250,16 +270,15 @@ class Cita
     ");
   }
 
-  public function getCitasPorMedico(): array
+  public function getCitasPorAnio(int $anio): array
   {
     return $this->db->fetchAll("
-      SELECT m.nombre, m.apellidos, COUNT(c.id) as total
-      FROM citas c
-      INNER JOIN medicos m ON c.medico_id = m.id
-      GROUP BY m.id, m.nombre, m.apellidos
-      ORDER BY total DESC
-      LIMIT 10
-    ");
+      SELECT TO_CHAR(fecha, 'YYYY-MM') as mes, COUNT(*) as total
+      FROM citas
+      WHERE EXTRACT(YEAR FROM fecha) = ?
+      GROUP BY TO_CHAR(fecha, 'YYYY-MM')
+      ORDER BY mes
+    ", [$anio]);
   }
 
   public function getCitasPorDiaSemana(): array
