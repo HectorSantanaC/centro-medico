@@ -1,11 +1,12 @@
 <?php
 $es_admin = false;
+$es_gestor = false;
 $es_administracion = false;
 if (isset($_SESSION['usuario_roles'])) {
-  foreach ($_SESSION['usuario_roles'] as $role) {
-    if ($role['rol_nombre'] === 'admin') { $es_admin = true; }
-    if ($role['rol_nombre'] === 'administracion') { $es_administracion = true; }
-  }
+  $roles = array_column($_SESSION['usuario_roles'], 'rol_nombre');
+  $es_admin = in_array('admin', $roles);
+  $es_gestor = in_array('gestor', $roles);
+  $es_administracion = in_array('administracion', $roles);
 }
 $active = $active ?? '';
 ?>
@@ -45,9 +46,11 @@ $active = $active ?? '';
       </a>
     <?php endif; ?>
 
-    <a href="citas-crud.php" class="<?= $active === 'citas' ? 'active' : '' ?>">
-      <span class="icon">📅</span> Agenda
-    </a>
+    <?php if ($es_admin || $es_administracion): ?>
+      <a href="citas-crud.php" class="<?= $active === 'citas' ? 'active' : '' ?>">
+        <span class="icon">📅</span> Agenda
+      </a>
+    <?php endif; ?>
 
     <?php if (!$es_administracion): ?>
 
