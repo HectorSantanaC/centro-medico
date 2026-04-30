@@ -29,7 +29,13 @@ try {
       $citasPorEstado = $citaModel->getStatsPorEstado();
       $stats['citas'] = [
         'total' => array_sum(array_column($citasPorEstado, 'total')),
-        'por_estado' => $citasPorEstado
+        'por_estado' => $citasPorEstado,
+        'por_especialidad' => $citaModel->getCitasPorEspecialidad(),
+        'evolucion_mensual' => $citaModel->getCitasPorMes(12),
+        'por_medico' => $citaModel->getCitasPorMedico(),
+        'por_dia_semana' => $citaModel->getCitasPorDiaSemana(),
+        'citas_hoy' => $citaModel->getCitasHoy(),
+        'tasa_cancelacion' => $citaModel->getTasaCancelacion()
       ];
 
       http_response_code(200);

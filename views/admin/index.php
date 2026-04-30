@@ -41,6 +41,30 @@ if (isset($_SESSION['usuario_roles'])) {
           <div>Cargando...</div>
         </div>
       </div>
+
+      <h2 class="section-title">Gráficos</h2>
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h3>Citas por Estado</h3>
+          <div id="chart-estado" class="chart-container"></div>
+        </div>
+        <div class="chart-card">
+          <h3>Citas por Especialidad</h3>
+          <div id="chart-especialidad" class="chart-container"></div>
+        </div>
+        <div class="chart-card">
+          <h3>Evolución de Citas</h3>
+          <div id="chart-evolucion" class="chart-container"></div>
+        </div>
+        <div class="chart-card">
+          <h3>Top Médicos</h3>
+          <div id="chart-medicos" class="chart-container"></div>
+        </div>
+        <div class="chart-card">
+          <h3>Citas por Día</h3>
+          <div id="chart-dias" class="chart-container"></div>
+        </div>
+      </div>
     <?php endif; ?>
   </main>
 

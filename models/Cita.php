@@ -227,4 +227,69 @@ class Cita
       "SELECT estado, COUNT(*) as total FROM citas GROUP BY estado"
     );
   }
+
+  public function getCitasPorEspecialidad(): array
+  {
+    return $this->db->fetchAll("
+      SELECT e.nombre as especialidad, COUNT(c.id) as total
+      FROM citas c
+      INNER JOIN especialidades e ON c.especialidad_id = e.id
+      GROUP BY e.id, e.nombre
+      ORDER BY total DESC
+    ");
+  }
+
+  public function getCitasPorMes(int $meses = 6): array
+  {
+    return $this->db->fetchAll("
+      SELECT TO_CHAR(fecha, 'YYYY-MM') as mes, COUNT(*) as total
+      FROM citas
+      WHERE fecha >= DATE_TRUNC('month', CURRENT_DATE) - INTERVAL '{$meses} months'
+      GROUP BY TO_CHAR(fecha, 'YYYY-MM')
+      ORDER BY mes
+    ");
+  }
+
+  public function getCitasPorMedico(): array
+  {
+    return $this->db->fetchAll("
+      SELECT m.nombre, m.apellidos, COUNT(c.id) as total
+      FROM citas c
+      INNER JOIN medicos m ON c.medico_id = m.id
+      GROUP BY m.id, m.nombre, m.apellidos
+      ORDER BY total DESC
+      LIMIT 10
+    ");
+  }
+
+  public function getCitasPorDiaSemana(): array
+  {
+    return $this->db->fetchAll("
+      SELECT EXTRACT(DOW FROM fecha)::int as dia, COUNT(*) as total
+      FROM citas
+      WHERE EXTRACT(DOW FROM fecha)::int BETWEEN 1 AND 5
+      GROUP BY EXTRACT(DOW FROM fecha)::int
+      ORDER BY dia
+    ");
+  }
+
+  public function getCitasHoy(): int
+  {
+    $result = $this->db->fetchAll(
+      "SELECT COUNT(*) as total FROM citas WHERE fecha = CURRENT_DATE"
+    );
+    return (int) ($result[0]['total'] ?? 0);
+  }
+
+  public function getTasaCancelacion(): float
+  {
+    $total = $this->db->fetchAll("SELECT COUNT(*) as total FROM citas")[0]['total'] ?? 0;
+    if ($total === 0) return 0;
+    
+    $canceladas = $this->db->fetchAll(
+      "SELECT COUNT(*) as total FROM citas WHERE estado = 'cancelada'"
+    )[0]['total'] ?? 0;
+    
+    return round(($canceladas / $total) * 100, 1);
+  }
 }
