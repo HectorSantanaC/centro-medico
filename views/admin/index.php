@@ -91,12 +91,6 @@ if (isset($_SESSION['usuario_roles'])) {
           </div>
           <div id="chart-medicos" class="chart-container"></div>
         </div>
-        <div class="chart-card">
-          <div class="chart-header">
-            <h3>Citas por Día</h3>
-          </div>
-          <div id="chart-dias" class="chart-container"></div>
-        </div>
       </div>
     <?php endif; ?>
   </main>

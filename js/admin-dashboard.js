@@ -53,7 +53,6 @@ const AdminDashboard = {
       this.renderChartEspecialidad(stats.citas.por_especialidad || []);
       this.renderChartEvolucion(stats.citas.evolucion_mensual || []);
       this.renderChartMedicos(stats.citas.por_medico || []);
-      this.renderChartDias(stats.citas.por_dia_semana || []);
     } catch (error) {
       console.error('Error cargando gráficos:', error);
       document.querySelectorAll('.chart-container').forEach(el => {
@@ -203,17 +202,15 @@ const AdminDashboard = {
 
     this.charts.evolucion = chart;
     chart.setOption({
-      tooltip: { trigger: 'axis' },
+      tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
       grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
-      xAxis: { type: 'category', data: labels, boundaryGap: false },
+      xAxis: { type: 'category', data: labels },
       yAxis: { type: 'value', splitLine: { lineStyle: { type: 'dashed' } } },
       series: [{
-        type: 'line',
+        type: 'bar',
         data: values,
-        smooth: true,
-        areaStyle: { color: 'rgba(44, 82, 130, 0.2)' },
-        itemStyle: { color: this.colors.primary },
-        lineStyle: { width: 3 }
+        itemStyle: { color: this.colors.primary, borderRadius: [4, 4, 0, 0] },
+        barWidth: '50%'
       }]
     });
   },
