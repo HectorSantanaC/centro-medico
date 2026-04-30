@@ -1,12 +1,25 @@
 const AdminUsuarios = {
   apiUrl: 'api/usuarios.php',
+  rolesApiUrl: 'api/roles.php?activos=true',
   currentPage: 1,
   perPage: 10,
   totalItems: 0,
+  roles: [],
 
-  init() {
+  async init() {
+    await this.cargarRoles();
     this.cargarUsuarios();
     this.bindEvents();
+  },
+
+  async cargarRoles() {
+    try {
+      const response = await fetch(this.rolesApiUrl, { credentials: 'same-origin' });
+      const result = await response.json();
+      this.roles = result.data || [];
+    } catch (error) {
+      console.error('Error cargando roles:', error);
+    }
   },
 
   getFiltros() {
@@ -149,6 +162,18 @@ const AdminUsuarios = {
     document.getElementById('password').value = '';
     document.getElementById('password').required = true;
     document.getElementById('password-help').style.display = 'block';
+    document.getElementById('roles-editar-group').style.display = 'none';
+    
+    const select = document.getElementById('rol-select');
+    select.innerHTML = '<option value="">Seleccionar rol...</option>';
+    this.roles.forEach(rol => {
+      const option = document.createElement('option');
+      option.value = rol.id;
+      option.textContent = rol.nombre.charAt(0).toUpperCase() + rol.nombre.slice(1);
+      select.appendChild(option);
+    });
+    document.getElementById('rol-select').parentElement.style.display = 'block';
+    
     document.getElementById('modal').style.display = 'block';
   },
 
@@ -169,17 +194,24 @@ const AdminUsuarios = {
       document.getElementById('password').value = '';
       document.getElementById('password').required = false;
       
-      // Mostrar roles en el display
-      const rolesDisplay = document.getElementById('roles-display');
-      if (usuario.roles && Array.isArray(usuario.roles) && usuario.roles.length > 0) {
-        rolesDisplay.innerHTML = usuario.roles.map(r => 
-          `<span class="rol-badge rol-${r.rol_nombre}">${r.rol_nombre} (${r.departamento_nombre || 'Sin depto'})</span>`
-        ).join(' ');
-      } else {
-        rolesDisplay.textContent = 'Sin roles asignados';
-      }
-      
       document.getElementById('password-help').textContent = 'Dejar vacío para mantener la actual';
+      
+      document.getElementById('rol-select').parentElement.style.display = 'none';
+      document.getElementById('roles-editar-group').style.display = 'block';
+      
+      const checkboxesContainer = document.getElementById('roles-checkboxes');
+      const usuarioRoles = usuario.roles ? usuario.roles.map(r => r.rol_id) : [];
+      
+      checkboxesContainer.innerHTML = this.roles.map(rol => {
+        const checked = usuarioRoles.includes(rol.id) ? 'checked' : '';
+        return `
+          <label style="display: block; margin-bottom: 8px;">
+            <input type="checkbox" name="roles" value="${rol.id}" ${checked}>
+            ${rol.nombre.charAt(0).toUpperCase() + rol.nombre.slice(1)}
+          </label>
+        `;
+      }).join('');
+      
       document.getElementById('modal').style.display = 'block';
     } catch (error) {
       this.mostrarToast('Error al cargar usuario', 'error');
@@ -203,6 +235,18 @@ const AdminUsuarios = {
     if (!id && datos.password.length < 6) {
       this.mostrarToast('La contraseña debe tener al menos 6 caracteres', 'error');
       return;
+    }
+
+    if (!id) {
+      const rolId = document.getElementById('rol-select').value;
+      if (!rolId) {
+        this.mostrarToast('Debe seleccionar un rol', 'error');
+        return;
+      }
+      datos.rol_id = parseInt(rolId);
+    } else {
+      const checkboxes = document.querySelectorAll('#roles-checkboxes input[name="roles"]:checked');
+      datos.roles = Array.from(checkboxes).map(cb => ({ rol_id: parseInt(cb.value) }));
     }
 
     try {

@@ -99,11 +99,16 @@
         </div>
 
         <div class="form-group">
+          <label>Rol</label>
+          <select id="rol-select" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            <option value="">Seleccionar rol...</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="roles-editar-group" style="display: none;">
           <label>Roles</label>
-          <div id="roles-display" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; min-height: 40px; background: #f9f9f9;">
-            Cargando roles...
+          <div id="roles-checkboxes" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; max-height: 150px; overflow-y: auto;">
           </div>
-          <small class="help-text">Los roles se gestionan mediante la API</small>
         </div>
 
         <div class="form-actions">
