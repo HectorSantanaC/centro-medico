@@ -27,8 +27,6 @@
           <label>Rol</label>
           <select id="filtro-rol">
             <option value="">Todos</option>
-            <option value="paciente">Paciente</option>
-            <option value="admin">Admin</option>
           </select>
         </div>
       </div>

@@ -17,9 +17,20 @@ const AdminUsuarios = {
       const response = await fetch(this.rolesApiUrl, { credentials: 'same-origin' });
       const result = await response.json();
       this.roles = result.data || [];
+      this.llenarFiltroRoles();
     } catch (error) {
       console.error('Error cargando roles:', error);
     }
+  },
+
+  llenarFiltroRoles() {
+    const select = document.getElementById('filtro-rol');
+    this.roles.forEach(rol => {
+      const option = document.createElement('option');
+      option.value = rol.nombre;
+      option.textContent = rol.nombre.charAt(0).toUpperCase() + rol.nombre.slice(1);
+      select.appendChild(option);
+    });
   },
 
   getFiltros() {
