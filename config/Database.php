@@ -78,8 +78,12 @@ define('SUPABASE_URL', getenv('SUPABASE_URL'));
 define('SUPABASE_KEY', getenv('SUPABASE_KEY'));
 
 function usarSupabaseStorage(): bool {
-  $dbUrl = getenv('DATABASE_URL') ?: '';
-  return strpos($dbUrl, 'supabase.co') !== false;
+  $force = getenv('USE_SUPABASE_STORAGE');
+  if ($force !== null && $force !== false) {
+    return strtolower($force) === 'true';
+  }
+  
+  return !empty(SUPABASE_URL) && !empty(SUPABASE_KEY);
 }
 
 if (session_status() === PHP_SESSION_NONE) {
