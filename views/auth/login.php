@@ -1,6 +1,6 @@
 <?php require_once __DIR__ . '/../layout/header.php'; ?>
 
-<section class="section" style="max-width: 400px; margin: 50px auto;">
+<section class="section" style="max-width: 430px; margin: 50px auto;">
   <h1 style="text-align: center; margin-bottom: 30px;">Accede a tu cuenta</h1>
   
   <?php if (isset($registro_ok) && $registro_ok === 'ok'): ?>
