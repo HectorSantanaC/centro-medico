@@ -52,7 +52,7 @@ $active = $active ?? '';
       </a>
     <?php endif; ?>
 
-    <?php if (!$es_administracion): ?>
+    <?php if ($es_admin || $es_gestor): ?>
 
     <a href="admin-especialidades.php" class="<?= $active === 'especialidades' ? 'active' : '' ?>">
       <span class="icon">🏥</span> Especialidades
