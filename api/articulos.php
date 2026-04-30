@@ -2,6 +2,7 @@
 
 session_start();
 require_once __DIR__ . '/../helpers/api_auth.php';
+require_once __DIR__ . '/../helpers/supabase_storage.php';
 require_once __DIR__ . '/../models/Articulo.php';
 require_once __DIR__ . '/../models/Topico.php';
 
@@ -12,93 +13,6 @@ header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
-
-define('MAX_IMAGE_SIZE', 5 * 1024 * 1024);
-
-function procesarImagenUpload(?string &$imagen): ?string
-{
-  if (!isset($_FILES['imagen']) || $_FILES['imagen']['error'] !== UPLOAD_ERR_OK) {
-    return null;
-  }
-
-  $file = $_FILES['imagen'];
-  
-  if ($file['size'] > MAX_IMAGE_SIZE) {
-    return 'La imagen excede el tamaño máximo de 5MB';
-  }
-
-  $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-  $finfo = new finfo(FILEINFO_MIME_TYPE);
-  $mimeReal = $finfo->file($file['tmp_name']);
-  
-  if (!in_array($mimeReal, $allowedMimes)) {
-    return 'Tipo de archivo no permitido';
-  }
-
-  $uploadDir = __DIR__ . '/../assets/img/articulos/';
-  if (!is_dir($uploadDir)) {
-    if (!mkdir($uploadDir, 0755, true)) {
-      return 'No se pudo crear el directorio de uploads';
-    }
-  }
-
-  $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-  $filename = uniqid('articulo_') . '.' . $extension;
-  $ruta = $uploadDir . $filename;
-
-  if (!move_uploaded_file($file['tmp_name'], $ruta)) {
-    return 'No se pudo guardar la imagen';
-  }
-
-  $imagen = 'assets/img/articulos/' . $filename;
-  return null;
-}
-
-function procesarImagenBase64(?string &$imagen): ?string
-{
-  if (empty($imagen) || strpos($imagen, 'data:image/') !== 0) {
-    return null;
-  }
-
-  $matches = [];
-  if (!preg_match('/^data:image\/(\w+);base64,(.+)$/', $imagen, $matches)) {
-    return 'Formato de imagen inválido';
-  }
-
-  $extension = $matches[1];
-  $datosBase64 = $matches[2];
-  $contenido = base64_decode($datosBase64);
-
-  if ($contenido === false || strlen($contenido) < 100) {
-    return 'No se pudo decodificar la imagen';
-  }
-
-  if (strlen($contenido) > MAX_IMAGE_SIZE) {
-    return 'La imagen excede el tamaño máximo de 5MB';
-  }
-
-  $allowedExt = ['jpeg', 'jpg', 'png', 'gif', 'webp'];
-  if (!in_array($extension, $allowedExt)) {
-    return 'Extensión de imagen no permitida';
-  }
-
-  $uploadDir = __DIR__ . '/../assets/img/articulos/';
-  if (!is_dir($uploadDir)) {
-    if (!mkdir($uploadDir, 0755, true)) {
-      return 'No se pudo crear el directorio de uploads';
-    }
-  }
-
-  $filename = uniqid('articulo_') . '.' . $extension;
-  $ruta = $uploadDir . $filename;
-
-  if (file_put_contents($ruta, $contenido) === false) {
-    return 'No se pudo guardar la imagen';
-  }
-
-  $imagen = 'assets/img/articulos/' . $filename;
-  return null;
-}
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -207,15 +121,8 @@ try {
       $data['titulo'] = htmlspecialchars(trim($data['titulo']), ENT_QUOTES, 'UTF-8');
 
       $imagen = '';
-      if ($isJson) {
-        $errorImagen = procesarImagenBase64($imagen);
-      } else {
-        $errorImagen = procesarImagenUpload($imagen);
-      }
-      if ($errorImagen) {
-        http_response_code(400);
-        echo json_encode(['error' => $errorImagen]);
-        exit;
+      if ($isJson && !empty($data['imagen'])) {
+        $imagen = procesarImagen($data['imagen'], 'articulos');
       }
       if ($imagen) {
         $data['imagen'] = $imagen;
@@ -281,15 +188,10 @@ try {
 
       $data['titulo'] = htmlspecialchars(trim($data['titulo']), ENT_QUOTES, 'UTF-8');
 
-      $imagen = '';
-      if (!empty($data['imagen'])) {
-        if (strpos($data['imagen'], 'data:image/') === 0) {
-          $errorImagen = procesarImagenBase64($data['imagen']);
-          if ($errorImagen) {
-            http_response_code(400);
-            echo json_encode(['error' => $errorImagen]);
-            exit;
-          }
+      if (!empty($data['imagen']) && strpos($data['imagen'], 'data:image/') === 0) {
+        $imagen = procesarImagen($data['imagen'], 'articulos');
+        if ($imagen) {
+          $data['imagen'] = $imagen;
         }
       }
 

@@ -74,6 +74,14 @@ class Database
 define('APP_URL', '/');
 define('APP_NOMBRE', 'Centro Médico TAC7');
 
+define('SUPABASE_URL', getenv('SUPABASE_URL'));
+define('SUPABASE_KEY', getenv('SUPABASE_KEY'));
+
+function usarSupabaseStorage(): bool {
+  $dbUrl = getenv('DATABASE_URL') ?: '';
+  return strpos($dbUrl, 'supabase.co') !== false;
+}
+
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
