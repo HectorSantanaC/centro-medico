@@ -32,7 +32,14 @@ class Cita
 
   public function find(int $id): ?array
   {
-    $stmt = $this->pdo->prepare("SELECT * FROM citas WHERE id = ?");
+    $stmt = $this->pdo->prepare("
+      SELECT c.*, 
+        u.nombre as paciente_nombre, 
+        u.apellidos as paciente_apellidos 
+      FROM citas c 
+      LEFT JOIN usuarios u ON c.paciente_id = u.id 
+      WHERE c.id = ?
+    ");
     $stmt->execute([$id]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     return $result ?: null;

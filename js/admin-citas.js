@@ -302,6 +302,9 @@ const AdminCitas = {
     document.getElementById('modal-titulo').textContent = 'Nueva Cita';
     document.getElementById('cita-id').value = '';
     document.getElementById('paciente_id').value = '';
+    document.getElementById('paciente-select-group').style.display = 'block';
+    document.getElementById('paciente-display-group').style.display = 'none';
+    document.getElementById('paciente_id').required = true;
     document.getElementById('especialidad_id').value = '';
     document.getElementById('medico_id').innerHTML = '<option value="">Seleccionar medico</option>';
     document.getElementById('fecha').value = '';
@@ -323,7 +326,15 @@ const AdminCitas = {
       const c = await response.json();
       document.getElementById('modal-titulo').textContent = 'Editar Cita';
       document.getElementById('cita-id').value = c.id;
-      document.getElementById('paciente_id').value = c.paciente_id;
+      
+      document.getElementById('paciente-select-group').style.display = 'none';
+      document.getElementById('paciente-display-group').style.display = 'block';
+      document.getElementById('paciente_id').required = false;
+      const nombrePaciente = c.paciente_nombre && c.paciente_apellidos 
+        ? `${c.paciente_nombre} ${c.paciente_apellidos}` 
+        : 'Paciente desconocido';
+      document.getElementById('paciente-display').value = nombrePaciente;
+      
       document.getElementById('especialidad_id').value = c.especialidad_id;
       await this.cargarMedicosPorEspecialidad(c.especialidad_id);
       document.getElementById('medico_id').value = c.medico_id;
@@ -342,7 +353,6 @@ const AdminCitas = {
   async guardarCita() {
     const id = document.getElementById('cita-id').value;
     const datos = {
-      paciente_id: parseInt(document.getElementById('paciente_id').value),
       medico_id: parseInt(document.getElementById('medico_id').value),
       especialidad_id: parseInt(document.getElementById('especialidad_id').value),
       fecha: document.getElementById('fecha').value,
@@ -350,6 +360,12 @@ const AdminCitas = {
       estado: document.getElementById('estado').value,
       notas: document.getElementById('notas').value
     };
+
+    if (id) {
+      datos.id = parseInt(id);
+    } else {
+      datos.paciente_id = parseInt(document.getElementById('paciente_id').value);
+    }
 
     if (!datos.paciente_id || !datos.medico_id || !datos.especialidad_id || !datos.fecha || !datos.hora) {
       this.mostrarToast('Todos los campos son obligatorios', 'error');

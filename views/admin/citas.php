@@ -96,11 +96,16 @@
       <form id="formcita">
         <input type="hidden" id="cita-id">
 
-        <div class="form-group">
+        <div class="form-group" id="paciente-select-group">
           <label for="paciente_id">Paciente *</label>
           <select id="paciente_id" required>
             <option value="">Seleccionar paciente</option>
           </select>
+        </div>
+
+        <div class="form-group" id="paciente-display-group" style="display: none;">
+          <label for="paciente-display">Paciente</label>
+          <input type="text" id="paciente-display" readonly style="background: #f5f5f5; border: 1px solid #ddd; padding: 8px; width: 100%;">
         </div>
 
         <div class="form-group">
