@@ -60,7 +60,7 @@ function guardarLocal(string $contenido, string $extension, string $carpeta): ?s
 function subirASupabase(string $contenido, string $extension, string $carpeta): ?string {
   $filename = $carpeta . '/' . uniqid($carpeta . '_') . '.' . $extension;
   
-  $url = SUPABASE_URL . '/storage/v1/object/' . $filename;
+  $url = SUPABASE_URL . '/storage/v1/object/media/' . $filename;
   
   $mimeTypes = [
     'jpg' => 'image/jpeg',
@@ -81,6 +81,8 @@ function subirASupabase(string $contenido, string $extension, string $carpeta): 
     'Content-Type: ' . $mimeType
   ]);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
   
   $response = curl_exec($ch);
   $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -91,6 +93,6 @@ function subirASupabase(string $contenido, string $extension, string $carpeta): 
     return SUPABASE_URL . '/storage/v1/object/public/media/' . $filename;
   }
 
-  error_log('Supabase Storage error: ' . $error . ' - HTTP ' . $httpCode . ' - Response: ' . $response);
+  error_log('Supabase Storage error - URL: ' . $url . ' | Error: ' . $error . ' | HTTP: ' . $httpCode . ' | Response: ' . $response);
   return null;
 }
