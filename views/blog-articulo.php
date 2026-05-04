@@ -5,12 +5,21 @@
   <a href="blog.php" class="articulo-volver">← Volver al blog</a>
 
   <article class="articulo-container">
-    <?php if (!empty($articulo['imagen'])): ?>
-      <img src="<?= htmlspecialchars($articulo['imagen']) ?>" 
-        alt="<?= htmlspecialchars($articulo['titulo']) ?>" 
-        class="articulo-imagen">
-    <?php elseif (!empty($articulo['imagen_url'])): ?>
-      <img src="<?= htmlspecialchars($articulo['imagen_url']) ?>" 
+    <?php 
+    $imagenSrc = '';
+    if (!empty($articulo['imagen'])) {
+      $img = $articulo['imagen'];
+      if (strpos($img, 'http://') === 0 || strpos($img, 'https://') === 0) {
+        $imagenSrc = htmlspecialchars($img);
+      } else {
+        $imagenSrc = './' . htmlspecialchars($img);
+      }
+    } elseif (!empty($articulo['imagen_url'])) {
+      $imagenSrc = htmlspecialchars($articulo['imagen_url']);
+    }
+    ?>
+    <?php if ($imagenSrc): ?>
+      <img src="<?= $imagenSrc ?>" 
         alt="<?= htmlspecialchars($articulo['titulo']) ?>" 
         class="articulo-imagen">
     <?php endif; ?>
