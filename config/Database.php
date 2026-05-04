@@ -78,11 +78,11 @@ $GLOBALS['SUPABASE_URL'] = getenv('SUPABASE_URL') ?: '';
 $GLOBALS['SUPABASE_KEY'] = getenv('SUPABASE_KEY') ?: '';
 
 function getSupabaseUrl(): string {
-  return $GLOBALS['SUPABASE_URL'];
+  return getenv('SUPABASE_URL') ?: '';
 }
 
 function getSupabaseKey(): string {
-  return $GLOBALS['SUPABASE_KEY'];
+  return getenv('SUPABASE_KEY') ?: '';
 }
 
 function usarSupabaseStorage(): bool {
@@ -91,7 +91,10 @@ function usarSupabaseStorage(): bool {
     return strtolower($force) === 'true';
   }
   
-  return !empty($GLOBALS['SUPABASE_URL']) && !empty($GLOBALS['SUPABASE_KEY']);
+  $supabaseUrl = getenv('SUPABASE_URL');
+  $supabaseKey = getenv('SUPABASE_KEY');
+  
+  return !empty($supabaseUrl) && !empty($supabaseKey);
 }
 
 if (session_status() === PHP_SESSION_NONE) {
