@@ -31,7 +31,7 @@ function procesarImagen(string $imagenData, string $carpeta): ?string {
     return 'Extensión de imagen no permitida';
   }
 
-  if (usarSupabaseStorage() && SUPABASE_URL && SUPABASE_KEY) {
+  if (usarSupabaseStorage() && getSupabaseUrl() && getSupabaseKey()) {
     return subirASupabase($contenido, $extension, $carpeta);
   }
 
@@ -58,9 +58,12 @@ function guardarLocal(string $contenido, string $extension, string $carpeta): ?s
 }
 
 function subirASupabase(string $contenido, string $extension, string $carpeta): ?string {
+  $supabaseUrl = getSupabaseUrl();
+  $supabaseKey = getSupabaseKey();
+  
   $filename = $carpeta . '/' . uniqid($carpeta . '_') . '.' . $extension;
   
-  $url = SUPABASE_URL . '/storage/v1/object/media/' . $filename;
+  $url = $supabaseUrl . '/storage/v1/object/media/' . $filename;
   
   $mimeTypes = [
     'jpg' => 'image/jpeg',
@@ -77,7 +80,7 @@ function subirASupabase(string $contenido, string $extension, string $carpeta): 
   curl_setopt($ch, CURLOPT_POST, true);
   curl_setopt($ch, CURLOPT_POSTFIELDS, $contenido);
   curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    'Authorization: Bearer ' . SUPABASE_KEY,
+    'Authorization: Bearer ' . $supabaseKey,
     'Content-Type: ' . $mimeType
   ]);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -90,7 +93,7 @@ function subirASupabase(string $contenido, string $extension, string $carpeta): 
   curl_close($ch);
 
   if ($httpCode >= 200 && $httpCode < 300) {
-    return SUPABASE_URL . '/storage/v1/object/public/media/' . $filename;
+    return $supabaseUrl . '/storage/v1/object/public/media/' . $filename;
   }
 
   error_log('Supabase Storage error - URL: ' . $url . ' | Error: ' . $error . ' | HTTP: ' . $httpCode . ' | Response: ' . $response);

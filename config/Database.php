@@ -74,8 +74,16 @@ class Database
 define('APP_URL', '/');
 define('APP_NOMBRE', 'Centro Médico TAC7');
 
-define('SUPABASE_URL', getenv('SUPABASE_URL'));
-define('SUPABASE_KEY', getenv('SUPABASE_KEY'));
+$GLOBALS['SUPABASE_URL'] = getenv('SUPABASE_URL') ?: '';
+$GLOBALS['SUPABASE_KEY'] = getenv('SUPABASE_KEY') ?: '';
+
+function getSupabaseUrl(): string {
+  return $GLOBALS['SUPABASE_URL'];
+}
+
+function getSupabaseKey(): string {
+  return $GLOBALS['SUPABASE_KEY'];
+}
 
 function usarSupabaseStorage(): bool {
   $force = getenv('USE_SUPABASE_STORAGE');
@@ -83,7 +91,7 @@ function usarSupabaseStorage(): bool {
     return strtolower($force) === 'true';
   }
   
-  return !empty(SUPABASE_URL) && !empty(SUPABASE_KEY);
+  return !empty($GLOBALS['SUPABASE_URL']) && !empty($GLOBALS['SUPABASE_KEY']);
 }
 
 if (session_status() === PHP_SESSION_NONE) {
