@@ -17,26 +17,14 @@ const AdminUsuarios = {
       const response = await fetch(this.rolesApiUrl, { credentials: 'same-origin' });
       const result = await response.json();
       this.roles = result.data || [];
-      this.llenarFiltroRoles();
     } catch (error) {
       console.error('Error cargando roles:', error);
     }
   },
 
-  llenarFiltroRoles() {
-    const select = document.getElementById('filtro-rol');
-    this.roles.forEach(rol => {
-      const option = document.createElement('option');
-      option.value = rol.nombre;
-      option.textContent = rol.nombre.charAt(0).toUpperCase() + rol.nombre.slice(1);
-      select.appendChild(option);
-    });
-  },
-
   getFiltros() {
     return {
-      nombre: document.getElementById('filtro-nombre').value || null,
-      rol: document.getElementById('filtro-rol').value || null
+      nombre: document.getElementById('filtro-nombre').value || null
     };
   },
 
@@ -78,28 +66,36 @@ const AdminUsuarios = {
 
     document.addEventListener('click', (e) => {
       const editBtn = e.target.closest('.btn-editar');
+      const rolesBtn = e.target.closest('.btn-roles');
       const deleteBtn = e.target.closest('.btn-eliminar');
-      const closeBtn = e.target.closest('.modal-close-btn, .modal-close');
+      const closeBtn = e.target.closest('.modal-close-btn, .modal-close, .modal-close-roles');
       
       if (editBtn) {
         this.mostrarModalEditar(editBtn.dataset.id);
+      }
+      if (rolesBtn) {
+        this.mostrarModalRoles(rolesBtn.dataset.id);
       }
       if (deleteBtn) {
         this.confirmarEliminar(deleteBtn.dataset.id);
       }
       if (closeBtn) {
         this.cerrarModal();
+        this.cerrarModalRoles();
       }
     });
     document.getElementById('form-usuario').addEventListener('submit', (e) => {
       e.preventDefault();
       this.guardarUsuario();
     });
+    document.getElementById('btn-guardar-roles').addEventListener('click', () => {
+      this.guardarRoles();
+    });
   },
 
   async cargarUsuarios() {
     const tbody = document.getElementById('usuarios-body');
-    tbody.innerHTML = '<tr><td colspan="6" class="loading"><div class="spinner"></div>Cargando...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" class="loading"><div class="spinner"></div>Cargando...</td></tr>';
 
     try {
       const queryString = this.buildQueryString();
@@ -109,7 +105,7 @@ const AdminUsuarios = {
       this.totalItems = result.pagination?.total || 0;
 
       if (usuarios.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;">No hay usuarios registrados</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;">No hay usuarios registrados</td></tr>';
         this.renderPagination();
         return;
       }
@@ -119,10 +115,10 @@ const AdminUsuarios = {
           <td>${this.escapeHtml(u.nombre)}</td>
           <td>${this.escapeHtml(u.apellidos)}</td>
           <td>${this.escapeHtml(u.email)}</td>
-          <td>${this.formatRoles(u.roles)}</td>
           <td>${this.formatearFecha(u.created_at)}</td>
           <td class="actions">
             <button class="btn btn-secondary btn-sm btn-editar" data-id="${u.id}">Editar</button>
+            <button class="btn btn-success btn-sm btn-roles" data-id="${u.id}">Roles</button>
             <button class="btn btn-danger btn-sm btn-eliminar" data-id="${u.id}">Eliminar</button>
           </td>
         </tr>
@@ -130,7 +126,7 @@ const AdminUsuarios = {
       
       this.renderPagination();
     } catch (error) {
-      tbody.innerHTML = '<tr><td colspan="6" class="message error">Error al cargar usuarios</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="5" class="message error">Error al cargar usuarios</td></tr>';
       this.mostrarToast('Error al conectar con el servidor', 'error');
     }
   },
@@ -174,45 +170,6 @@ const AdminUsuarios = {
     document.getElementById('password').required = true;
     document.getElementById('password-help').style.display = 'block';
     
-    const tagsContainer = document.getElementById('roles-tags');
-    tagsContainer.innerHTML = this.roles.map(rol => `
-      <span class="rol-chip" data-rol-id="${rol.id}" style="
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 8px 14px;
-        border-radius: 20px;
-        border: 1px solid #ddd;
-        background: #f0f0f0;
-        color: #333;
-        font-size: 14px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        user-select: none;
-      ">
-        <span class="rol-icon">+</span>
-        ${rol.nombre.charAt(0).toUpperCase() + rol.nombre.slice(1)}
-      </span>
-    `).join('');
-    
-    tagsContainer.querySelectorAll('.rol-chip').forEach(chip => {
-      chip.addEventListener('click', function() {
-        const isSelected = this.style.background === 'rgb(74, 144, 217)';
-        
-        if (isSelected) {
-          this.style.background = '#f0f0f0';
-          this.style.color = '#333';
-          this.style.borderColor = '#ddd';
-          this.querySelector('.rol-icon').textContent = '+';
-        } else {
-          this.style.background = '#4a90d9';
-          this.style.color = '#fff';
-          this.style.borderColor = '#4a90d9';
-          this.querySelector('.rol-icon').textContent = '✓';
-        }
-      });
-    });
-    
     document.getElementById('modal').style.display = 'block';
   },
 
@@ -234,54 +191,6 @@ const AdminUsuarios = {
       document.getElementById('password').required = false;
       
       document.getElementById('password-help').textContent = 'Dejar vacío para mantener la actual';
-      
-      const tagsContainer = document.getElementById('roles-tags');
-      const selectedRoles = usuario.roles ? usuario.roles.map(r => r.rol_id) : [];
-      
-      tagsContainer.innerHTML = this.roles.map(rol => {
-        const isSelected = selectedRoles.includes(rol.id);
-        const bgColor = isSelected ? '#4a90d9' : '#f0f0f0';
-        const textColor = isSelected ? '#fff' : '#333';
-        const borderColor = isSelected ? '#4a90d9' : '#ddd';
-        return `
-          <span class="rol-chip" data-rol-id="${rol.id}" style="
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 14px;
-            border-radius: 20px;
-            border: 1px solid ${borderColor};
-            background: ${bgColor};
-            color: ${textColor};
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            user-select: none;
-          ">
-            <span class="rol-icon">${isSelected ? '✓' : '+'}</span>
-            ${rol.nombre.charAt(0).toUpperCase() + rol.nombre.slice(1)}
-          </span>
-        `;
-      }).join('');
-      
-      tagsContainer.querySelectorAll('.rol-chip').forEach(chip => {
-        chip.addEventListener('click', function() {
-          const rolId = parseInt(this.dataset.rolId);
-          const isSelected = this.style.background === 'rgb(74, 144, 217)';
-          
-          if (isSelected) {
-            this.style.background = '#f0f0f0';
-            this.style.color = '#333';
-            this.style.borderColor = '#ddd';
-            this.querySelector('.rol-icon').textContent = '+';
-          } else {
-            this.style.background = '#4a90d9';
-            this.style.color = '#fff';
-            this.style.borderColor = '#4a90d9';
-            this.querySelector('.rol-icon').textContent = '✓';
-          }
-        });
-      });
       
       document.getElementById('modal').style.display = 'block';
     } catch (error) {
@@ -308,18 +217,6 @@ const AdminUsuarios = {
       return;
     }
 
-    const selectedChips = document.querySelectorAll('#roles-tags .rol-chip');
-    const rolesSeleccionados = Array.from(selectedChips)
-      .filter(chip => chip.style.background === 'rgb(74, 144, 217)')
-      .map(chip => ({ rol_id: parseInt(chip.dataset.rolId) }));
-    
-    if (rolesSeleccionados.length === 0) {
-      this.mostrarToast('Debe seleccionar al menos un rol', 'error');
-      return;
-    }
-    
-    datos.roles = rolesSeleccionados;
-
     try {
       const options = {
         method: id ? 'PUT' : 'POST',
@@ -341,6 +238,110 @@ const AdminUsuarios = {
     } catch (error) {
       this.mostrarToast('Error de conexión', 'error');
     }
+  },
+
+  async mostrarModalRoles(id) {
+    try {
+      const response = await fetch(`${this.apiUrl}?id=${id}`, { credentials: 'same-origin' });
+      if (!response.ok) {
+        this.mostrarToast('Usuario no encontrado', 'error');
+        return;
+      }
+      const usuario = await response.json();
+
+      document.getElementById('roles-usuario-id').value = usuario.id;
+      document.getElementById('roles-usuario-nombre').textContent = usuario.nombre + ' ' + usuario.apellidos;
+      document.getElementById('roles-usuario-email').textContent = usuario.email;
+
+      const tagsContainer = document.getElementById('roles-tags');
+      const selectedRoles = usuario.roles ? usuario.roles.map(r => r.rol_id) : [];
+
+      tagsContainer.innerHTML = this.roles.map(rol => {
+        const isSelected = selectedRoles.includes(rol.id);
+        const bgColor = isSelected ? '#4a90d9' : '#f0f0f0';
+        const textColor = isSelected ? '#fff' : '#333';
+        const borderColor = isSelected ? '#4a90d9' : '#ddd';
+        return `
+          <span class="rol-chip" data-rol-id="${rol.id}" style="
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: 1px solid ${borderColor};
+            background: ${bgColor};
+            color: ${textColor};
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+          ">
+            <span class="rol-icon">${isSelected ? '✓' : '+'}</span>
+            ${rol.nombre.charAt(0).toUpperCase() + rol.nombre.slice(1)}
+          </span>
+        `;
+      }).join('');
+
+      tagsContainer.querySelectorAll('.rol-chip').forEach(chip => {
+        chip.addEventListener('click', function() {
+          const isSelected = this.style.background === 'rgb(74, 144, 217)';
+          
+          if (isSelected) {
+            this.style.background = '#f0f0f0';
+            this.style.color = '#333';
+            this.style.borderColor = '#ddd';
+            this.querySelector('.rol-icon').textContent = '+';
+          } else {
+            this.style.background = '#4a90d9';
+            this.style.color = '#fff';
+            this.style.borderColor = '#4a90d9';
+            this.querySelector('.rol-icon').textContent = '✓';
+          }
+        });
+      });
+
+      document.getElementById('modal-roles').style.display = 'block';
+    } catch (error) {
+      this.mostrarToast('Error al cargar usuario', 'error');
+    }
+  },
+
+  async guardarRoles() {
+    const id = document.getElementById('roles-usuario-id').value;
+    
+    const selectedChips = document.querySelectorAll('#roles-tags .rol-chip');
+    const rolesSeleccionados = Array.from(selectedChips)
+      .filter(chip => chip.style.background === 'rgb(74, 144, 217)')
+      .map(chip => ({ rol_id: parseInt(chip.dataset.rolId) }));
+    
+    if (rolesSeleccionados.length === 0) {
+      this.mostrarToast('Debe seleccionar al menos un rol', 'error');
+      return;
+    }
+
+    try {
+      const response = await fetch(this.apiUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, roles: rolesSeleccionados }),
+        credentials: 'same-origin'
+      });
+      const result = await response.json();
+
+      if (response.ok) {
+        this.cerrarModalRoles();
+        this.cargarUsuarios();
+        this.mostrarToast('Roles actualizados', 'success');
+      } else {
+        this.mostrarToast(result.error || 'Error al guardar roles', 'error');
+      }
+    } catch (error) {
+      this.mostrarToast('Error de conexión', 'error');
+    }
+  },
+
+  cerrarModalRoles() {
+    document.getElementById('modal-roles').style.display = 'none';
   },
 
   confirmarEliminar(id) {

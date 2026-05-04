@@ -101,9 +101,18 @@ try {
       requireApiAuth(['admin']);
       $data = json_decode(file_get_contents('php://input'), true);
  
-      if (!$data || empty($data['id']) || empty($data['nombre']) || empty($data['apellidos']) || empty($data['email'])) {
+      if (!$data || empty($data['id'])) {
         http_response_code(400);
-        echo json_encode(['error' => 'Faltan campos obligatorios']);
+        echo json_encode(['error' => 'ID obligatorio']);
+        exit;
+      }
+
+      $tieneDatos = !empty($data['nombre']) || !empty($data['apellidos']) || !empty($data['email']) || !empty($data['password']);
+      $tieneRoles = isset($data['roles']) && is_array($data['roles']);
+
+      if (!$tieneDatos && !$tieneRoles) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Debe proporcionar al menos un campo a actualizar']);
         exit;
       }
  

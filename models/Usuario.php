@@ -149,18 +149,34 @@ class Usuario
 
   public function update(int $id, array $data): bool
   {
-    if (isset($data['password']) && !empty($data['password'])) {
-      $passwordHash = password_hash($data['password'], PASSWORD_DEFAULT);
-      $this->db->execute(
-        "UPDATE usuarios SET nombre=?, apellidos=?, email=?, password=? WHERE id=?",
-        [$data['nombre'], $data['apellidos'], $data['email'], $passwordHash, $id]
-      );
-    } else {
-      $this->db->execute(
-        "UPDATE usuarios SET nombre=?, apellidos=?, email=? WHERE id=?",
-        [$data['nombre'], $data['apellidos'], $data['email'], $id]
-      );
+    $campos = [];
+    $valores = [];
+
+    if (isset($data['nombre']) && $data['nombre'] !== '') {
+      $campos[] = 'nombre = ?';
+      $valores[] = $data['nombre'];
     }
+    if (isset($data['apellidos']) && $data['apellidos'] !== '') {
+      $campos[] = 'apellidos = ?';
+      $valores[] = $data['apellidos'];
+    }
+    if (isset($data['email']) && $data['email'] !== '') {
+      $campos[] = 'email = ?';
+      $valores[] = $data['email'];
+    }
+    if (isset($data['password']) && !empty($data['password'])) {
+      $campos[] = 'password = ?';
+      $valores[] = password_hash($data['password'], PASSWORD_DEFAULT);
+    }
+
+    if (empty($campos)) {
+      return true;
+    }
+
+    $valores[] = $id;
+    $sql = "UPDATE usuarios SET " . implode(', ', $campos) . " WHERE id = ?";
+    $this->db->execute($sql, $valores);
+    
     return true;
   }
 

@@ -23,12 +23,7 @@
           <label>Buscar</label>
           <input type="text" id="filtro-nombre" placeholder="Nombre o email...">
         </div>
-        <div class="filtro-group">
-          <label>Rol</label>
-          <select id="filtro-rol">
-            <option value="">Todos</option>
-          </select>
-        </div>
+        
       </div>
       <div class="filtros-actions">
         <button id="btn-filtrar" class="btn btn-primary btn-sm">Buscar</button>
@@ -43,14 +38,13 @@
             <th>Nombre</th>
             <th>Apellidos</th>
             <th>Email</th>
-            <th>Rol</th>
             <th>Fecha Alta</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody id="usuarios-body">
           <tr>
-            <td colspan="6" class="loading">
+            <td colspan="5" class="loading">
               <div class="spinner"></div>
               Cargando...
             </td>
@@ -96,15 +90,38 @@
           <p id="password-help" class="help-text">Mínimo 6 caracteres</p>
         </div>
 
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Guardar</button>
+          <button type="button" class="btn btn-secondary btn-sm modal-close">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="modal-roles" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modal-roles-titulo">Editar Roles</h2>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+
+      <div id="roles-info" style="margin-bottom: 20px; padding: 15px; background: #f5f5f5; border-radius: 8px;">
+        <p style="margin: 0;"><strong>Usuario:</strong> <span id="roles-usuario-nombre"></span></p>
+        <p style="margin: 5px 0 0 0;"><strong>Email:</strong> <span id="roles-usuario-email"></span></p>
+      </div>
+
+      <form id="form-roles">
+        <input type="hidden" id="roles-usuario-id">
+
         <div class="form-group">
-          <label>Roles</label>
+          <label>Seleccionar Roles</label>
           <div id="roles-tags" style="display: flex; flex-wrap: wrap; gap: 8px;">
           </div>
         </div>
 
         <div class="form-actions">
-          <button type="submit" class="btn btn-primary">Guardar</button>
-          <button type="button" class="btn btn-secondary btn-sm modal-close">Cancelar</button>
+          <button type="button" id="btn-guardar-roles" class="btn btn-primary">Guardar Roles</button>
+          <button type="button" class="btn btn-secondary btn-sm modal-close-roles">Cancelar</button>
         </div>
       </form>
     </div>
