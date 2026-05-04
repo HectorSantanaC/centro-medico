@@ -67,7 +67,11 @@ require_once './views/layout/header.php';
       <?php 
         function getMedicoImagen($medico) {
           if (!empty($medico['imagen'])) {
-            return './' . htmlspecialchars($medico['imagen']);
+            $imagen = htmlspecialchars($medico['imagen']);
+            if (strpos($imagen, 'http') === 0) {
+              return $imagen;
+            }
+            return './' . $imagen;
           }
           if (!empty($medico['imagen_url'])) {
             return htmlspecialchars($medico['imagen_url']);
