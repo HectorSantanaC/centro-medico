@@ -135,30 +135,30 @@ $pdo->exec("INSERT INTO especialidades (nombre, descripcion) VALUES
 echo "✅ Especialidades insertadas (10)<br>";
 
 // 5. DATOS DE PRUEBA - MÉDICOS (23 total)
-$pdo->exec("INSERT INTO medicos (nombre, apellidos, especialidad_id, activo) VALUES
-    ('Juan', 'Pérez', 1, true),
-    ('María', 'García', 1, true),
-    ('Ana', 'López', 2, true),
-    ('Carlos', 'Martínez', 3, true),
-    ('Alejandro', 'Hernández', 1, true),
-    ('Carmen', 'Ruiz', 1, true),
-    ('Patricia', 'Vega', 2, true),
-    ('Roberto', 'Sanz', 2, true),
-    ('Francisco', 'Gil', 3, true),
-    ('Isabel', 'Torres', 3, true),
-    ('Lucía', 'Navarro', 4, true),
-    ('Manuel', 'Crespo', 4, true),
-    ('Elena', 'Molina', 5, true),
-    ('Jorge', 'Peña', 5, true),
-    ('Sonia', 'Ortega', 6, true),
-    ('Antonio', 'Vargas', 7, true),
-    ('María Jesús', 'Fuentes', 8, true),
-    ('Pablo', 'Reyes', 8, true),
-    ('Cristina', 'Gallardo', 9, true),
-    ('Sergio', 'Rubio', 10, true),
-    ('Beatriz', 'Adrián', 10, true),
-    ('Miguel', 'Santos', 1, false),
-    ('Laura', 'Jiménez', 2, false)
+$pdo->exec("INSERT INTO medicos (nombre, apellidos, especialidad_id, activo, imagen, imagen_url) VALUES
+    ('Juan', 'Pérez', 1, true, 'https://jrodnfbtujsxgafndmkt.supabase.co/storage/v1/object/public/media/medicos/medicos_69f90548065d1.png', ''),
+    ('María', 'García', 1, true, 'https://jrodnfbtujsxgafndmkt.supabase.co/storage/v1/object/public/media/medicos/medicos_69f9062685718.png', ''),
+    ('Ana', 'López', 2, true, 'https://jrodnfbtujsxgafndmkt.supabase.co/storage/v1/object/public/media/medicos/medicos_69f905a331ea2.png', ''),
+    ('Carlos', 'Martínez', 3, true, 'https://jrodnfbtujsxgafndmkt.supabase.co/storage/v1/object/public/media/medicos/medicos_69f90513ed4d4.png', ''),
+    ('Alejandro', 'Hernández', 1, true, 'https://jrodnfbtujsxgafndmkt.supabase.co/storage/v1/object/public/media/medicos/medicos_69f904bce60ea.png', ''),
+    ('Carmen', 'Ruiz', 1, true, 'https://jrodnfbtujsxgafndmkt.supabase.co/storage/v1/object/public/media/medicos/medicos_69f905caa4133.png', ''),
+    ('Patricia', 'Vega', 2, true, 'https://jrodnfbtujsxgafndmkt.supabase.co/storage/v1/object/public/media/medicos/medicos_69f90634d8f75.png', ''),
+    ('Roberto', 'Sanz', 2, true, 'https://jrodnfbtujsxgafndmkt.supabase.co/storage/v1/object/public/media/medicos/medicos_69f9057d35cf7.png', ''),
+    ('Francisco', 'Gil', 3, true, 'https://jrodnfbtujsxgafndmkt.supabase.co/storage/v1/object/public/media/medicos/medicos_69f9052519207.png', ''),
+    ('Isabel', 'Torres', 3, true, 'https://jrodnfbtujsxgafndmkt.supabase.co/storage/v1/object/public/media/medicos/medicos_69f906044e621.png', ''),
+    ('Lucía', 'Navarro', 4, true, 'https://jrodnfbtujsxgafndmkt.supabase.co/storage/v1/object/public/media/medicos/medicos_69f90617e7de1.png', ''),
+    ('Manuel', 'Crespo', 4, true, 'https://jrodnfbtujsxgafndmkt.supabase.co/storage/v1/object/public/media/medicos/medicos_69f9055a3982f.png', ''),
+    ('Elena', 'Molina', 5, true, 'https://jrodnfbtujsxgafndmkt.supabase.co/storage/v1/object/public/media/medicos/medicos_69f905e8cbccf.png', ''),
+    ('Jorge', 'Peña', 5, true, 'https://jrodnfbtujsxgafndmkt.supabase.co/storage/v1/object/public/media/medicos/medicos_69f90537a5da1.png', ''),
+    ('Sonia', 'Ortega', 6, true, 'https://jrodnfbtujsxgafndmkt.supabase.co/storage/v1/object/public/media/medicos/medicos_69f90647af7be.png', ''),
+    ('Antonio', 'Vargas', 7, true, 'https://jrodnfbtujsxgafndmkt.supabase.co/storage/v1/object/public/media/medicos/medicos_69f90504b7687.png', ''),
+    ('María Jesús', 'Fuentes', 8, true, 'https://jrodnfbtujsxgafndmkt.supabase.co/storage/v1/object/public/media/medicos/medicos_69f906b9636a9.png', ''),
+    ('Pablo', 'Reyes', 8, true, 'https://jrodnfbtujsxgafndmkt.supabase.co/storage/v1/object/public/media/medicos/medicos_69f9056af1149.png', ''),
+    ('Cristina', 'Gallardo', 9, true, 'https://jrodnfbtujsxgafndmkt.supabase.co/storage/v1/object/public/media/medicos/medicos_69f905d9f0c49.png', ''),
+    ('Sergio', 'Rubio', 10, true, 'https://jrodnfbtujsxgafndmkt.supabase.co/storage/v1/object/public/media/medicos/medicos_69f9058b3b866.png', ''),
+    ('Beatriz', 'Adrián', 10, true, 'https://jrodnfbtujsxgafndmkt.supabase.co/storage/v1/object/public/media/medicos/medicos_69f905bbe27a3.png', ''),
+    ('Miguel', 'Santos', 1, false, NULL, NULL),
+    ('Laura', 'Jiménez', 2, false, NULL, NULL)
     ON CONFLICT DO NOTHING");
 echo "✅ Médicos insertados (23)<br>";
 
