@@ -43,7 +43,7 @@ require_once './views/layout/header.php';
 function getMedicoImagenEspecialidad($medico) {
   if (!empty($medico['imagen'])) {
     $imagen = htmlspecialchars($medico['imagen']);
-    if (strpos($imagen, 'http://') === 0 || strpos($imagen, 'https://') === 0) {
+    if (filter_var($imagen, FILTER_VALIDATE_URL) !== false) {
       return $imagen;
     }
     return './' . $imagen;

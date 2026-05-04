@@ -65,19 +65,19 @@ require_once './views/layout/header.php';
     <div class="carousel" id="carousel-equipo">
 
       <?php 
-        function getMedicoImagen($medico) {
-          if (!empty($medico['imagen'])) {
-            $imagen = htmlspecialchars($medico['imagen']);
-            if (strpos($imagen, 'http://') === 0 || strpos($imagen, 'https://') === 0) {
-              return $imagen;
+function getMedicoImagen($medico) {
+            if (!empty($medico['imagen'])) {
+              $imagen = htmlspecialchars($medico['imagen']);
+              if (filter_var($imagen, FILTER_VALIDATE_URL) !== false) {
+                return $imagen;
+              }
+              return './' . $imagen;
             }
-            return './' . $imagen;
+            if (!empty($medico['imagen_url'])) {
+              return htmlspecialchars($medico['imagen_url']);
+            }
+            return './assets/img/medico.jpg';
           }
-          if (!empty($medico['imagen_url'])) {
-            return htmlspecialchars($medico['imagen_url']);
-          }
-          return './assets/img/medico.jpg';
-        }
       ?>
       <?php foreach ($medicos as $medico): ?>
         <div class="card-doctor">

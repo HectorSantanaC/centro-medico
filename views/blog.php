@@ -20,7 +20,7 @@
             $imagenSrc = '';
             if (!empty($articulo['imagen'])) {
               $img = $articulo['imagen'];
-              if (strpos($img, 'http://') === 0 || strpos($img, 'https://') === 0) {
+              if (filter_var($img, FILTER_VALIDATE_URL) !== false) {
                 $imagenSrc = htmlspecialchars($img);
               } else {
                 $imagenSrc = './' . htmlspecialchars($img);
