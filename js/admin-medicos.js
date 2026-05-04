@@ -221,7 +221,10 @@ const AdminMedicos = {
       
       const preview = document.getElementById('imagen-preview');
       if (med.imagen) {
-        preview.innerHTML = `<img src="./${med.imagen}" alt="Imagen actual">`;
+        const imgSrc = med.imagen.startsWith('http://') || med.imagen.startsWith('https://')
+          ? med.imagen
+          : './' + med.imagen;
+        preview.innerHTML = `<img src="${imgSrc}" alt="Imagen actual">`;
       } else if (med.imagen_url) {
         preview.innerHTML = `<img src="${med.imagen_url}" alt="Imagen actual">`;
       } else {
