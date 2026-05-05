@@ -468,7 +468,7 @@ $pdo->exec("INSERT INTO articulos (titulo, topico, contenido_reducido, contenido
     ('Dieta equilibrada', 2, 'Alimentación saludable', 'Una dieta balanceada incluye...', '2025-09-01', 'Dr. Francisco Gil', true),
     ('Manejo del estrés', 2, 'Técnicas de relajación', 'El estrés crónico afecta...', '2025-09-15', 'Dra. María Jesús Fuentes', true),
     ('Nuevos equipos de diagnóstico', 3, 'Tecnología de vanguardia', 'Hemos incorporado equipos de última generación...', '2025-10-01', 'Dirección TAC7', true),
-    ('Premio的最佳医疗中心', 3, 'Reconocimiento excelencia', 'Nuestro centro ha recibido el premio...', '2025-10-15', 'Dirección TAC7', true),
+    ('Premio', 3, 'Reconocimiento excelencia', 'Nuestro centro ha recibido el premio...', '2025-10-15', 'Dirección TAC7', true),
     ('Jornada de puertas abiertas', 4, 'Ven a conocernos', 'Te invitamos a nuestra jornada de puertas abiertas...', '2025-11-01', 'Dirección TAC7', true),
     ('Charla sobre salud cardiovascular', 4, 'Información y consejos', 'Únete a nuestra charla gratuita sobre salud cardiovascular...', '2025-11-15', 'Dr. Juan Pérez', true),
     ('Hipertensión arterial', 2, 'Control de la presión', 'La hipertensión es silenciosa...', '2025-12-01', 'Dr. Juan Pérez', true),
