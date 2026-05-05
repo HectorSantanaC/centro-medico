@@ -69,7 +69,7 @@ const AdminUsuarios = {
       const rolesBtn = e.target.closest('.btn-roles');
       const deleteBtn = e.target.closest('.btn-eliminar');
       const closeBtn = e.target.closest('.modal-close-btn, .modal-close, .modal-close-roles');
-      
+
       if (editBtn) {
         this.mostrarModalEditar(editBtn.dataset.id);
       }
@@ -117,13 +117,13 @@ const AdminUsuarios = {
           <td>${this.escapeHtml(u.email)}</td>
           <td>${this.formatearFecha(u.created_at)}</td>
           <td class="actions">
-            <button class="btn btn-secondary btn-sm btn-editar" data-id="${u.id}">Editar</button>
             <button class="btn btn-success btn-sm btn-roles" data-id="${u.id}">Roles</button>
+            <button class="btn btn-secondary btn-sm btn-editar" data-id="${u.id}">Editar</button>
             <button class="btn btn-danger btn-sm btn-eliminar" data-id="${u.id}">Eliminar</button>
           </td>
         </tr>
       `).join('');
-      
+
       this.renderPagination();
     } catch (error) {
       tbody.innerHTML = '<tr><td colspan="5" class="message error">Error al cargar usuarios</td></tr>';
@@ -135,29 +135,29 @@ const AdminUsuarios = {
     const pagination = document.getElementById('pagination-info');
     const controls = document.getElementById('pagination-controls');
     const totalPages = Math.ceil(this.totalItems / this.perPage);
-    
+
     pagination.textContent = `Página ${this.currentPage} de ${totalPages} (${this.totalItems} resultados)`;
-    
+
     let html = '';
     if (this.currentPage > 1) {
       html += `<button class="btn btn-sm btn-secondary" onclick="AdminUsuarios.goToPage(${this.currentPage - 1})">Anterior</button> `;
     }
-    
+
     let start = Math.max(1, this.currentPage - 2);
     let end = Math.min(totalPages, start + 4);
     if (end - start < 4) {
       start = Math.max(1, end - 4);
     }
-    
+
     for (let i = start; i <= end; i++) {
       const active = i === this.currentPage ? 'active' : '';
       html += `<button class="btn btn-sm ${active}" onclick="AdminUsuarios.goToPage(${i})">${i}</button> `;
     }
-    
+
     if (this.currentPage < totalPages) {
       html += `<button class="btn btn-sm btn-secondary" onclick="AdminUsuarios.goToPage(${this.currentPage + 1})">Siguiente</button>`;
     }
-    
+
     controls.innerHTML = html;
   },
 
@@ -175,7 +175,7 @@ const AdminUsuarios = {
     document.getElementById('password').value = '';
     document.getElementById('password').required = true;
     document.getElementById('password-help').style.display = 'block';
-    
+
     document.getElementById('modal').style.display = 'block';
   },
 
@@ -195,9 +195,9 @@ const AdminUsuarios = {
       document.getElementById('email').value = usuario.email;
       document.getElementById('password').value = '';
       document.getElementById('password').required = false;
-      
+
       document.getElementById('password-help').textContent = 'Dejar vacío para mantener la actual';
-      
+
       document.getElementById('modal').style.display = 'block';
     } catch (error) {
       this.mostrarToast('Error al cargar usuario', 'error');
@@ -289,9 +289,9 @@ const AdminUsuarios = {
       }).join('');
 
       tagsContainer.querySelectorAll('.rol-chip').forEach(chip => {
-        chip.addEventListener('click', function() {
+        chip.addEventListener('click', function () {
           const isSelected = this.style.background === 'rgb(74, 144, 217)';
-          
+
           if (isSelected) {
             this.style.background = '#f0f0f0';
             this.style.color = '#333';
@@ -314,12 +314,12 @@ const AdminUsuarios = {
 
   async guardarRoles() {
     const id = document.getElementById('roles-usuario-id').value;
-    
+
     const selectedChips = document.querySelectorAll('#roles-tags .rol-chip');
     const rolesSeleccionados = Array.from(selectedChips)
       .filter(chip => chip.style.background === 'rgb(74, 144, 217)')
       .map(chip => ({ rol_id: parseInt(chip.dataset.rolId) }));
-    
+
     if (rolesSeleccionados.length === 0) {
       this.mostrarToast('Debe seleccionar al menos un rol', 'error');
       return;

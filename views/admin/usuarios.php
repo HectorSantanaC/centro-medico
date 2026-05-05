@@ -121,7 +121,7 @@
 
         <div class="form-actions">
           <button type="button" id="btn-guardar-roles" class="btn btn-primary">Guardar Roles</button>
-          <button type="button" class="btn btn-secondary btn-sm modal-close-roles">Cancelar</button>
+          <button type="button" class="btn btn-secondary btn-sm modal-close">Cancelar</button>
         </div>
       </form>
     </div>
