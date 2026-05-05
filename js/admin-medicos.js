@@ -169,7 +169,13 @@ const AdminMedicos = {
       html += `<button class="btn btn-sm btn-secondary" onclick="AdminMedicos.goToPage(${this.currentPage - 1})">Anterior</button> `;
     }
     
-    for (let i = 1; i <= totalPages && i <= 5; i++) {
+    let start = Math.max(1, this.currentPage - 2);
+    let end = Math.min(totalPages, start + 4);
+    if (end - start < 4) {
+      start = Math.max(1, end - 4);
+    }
+    
+    for (let i = start; i <= end; i++) {
       const active = i === this.currentPage ? 'active' : '';
       html += `<button class="btn btn-sm ${active}" onclick="AdminMedicos.goToPage(${i})">${i}</button> `;
     }
