@@ -10,6 +10,7 @@ const AdminCitas = {
 
   init() {
     this.cargarDatosIniciales();
+    this.cargarMedicosFiltro(null);
     this.cargarFiltros();
     this.cargarCitas();
     this.bindEvents();
@@ -65,6 +66,7 @@ const AdminCitas = {
     document.getElementById('filtro-estado').value = '';
     document.getElementById('filtro-especialidad').value = '';
     document.getElementById('filtro-medico').value = '';
+    this.cargarMedicosFiltro(null);
     this.currentPage = 1;
   },
 
@@ -124,14 +126,17 @@ const AdminCitas = {
         ? `${this.apiMedicos}?especialidad_id=${especialidadId}`
         : this.apiMedicos;
       const response = await fetch(url, { credentials: 'same-origin' });
+      if (!response.ok) throw new Error('Error fetching medicos');
       const result = await response.json();
       const medicos = result.data || result;
       const select = document.getElementById('filtro-medico');
       select.innerHTML = '<option value="">Todos</option>';
-      select.innerHTML += medicos.map(m => {
-        const nombreMostrar = m.nombre_completo || `${m.nombre || ''} ${m.apellidos || ''}`.trim();
-        return `<option value="${m.id}">${this.escapeHtml(nombreMostrar)}</option>`;
-      }).join('');
+      if (medicos && medicos.length > 0) {
+        select.innerHTML += medicos.map(m => {
+          const nombreMostrar = m.nombre_completo || `${m.nombre || ''} ${m.apellidos || ''}`.trim();
+          return `<option value="${m.id}">${this.escapeHtml(nombreMostrar)}</option>`;
+        }).join('');
+      }
     } catch (error) {
       console.error('Error cargando medicos filtro:', error);
     }

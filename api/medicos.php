@@ -13,6 +13,13 @@ $method = $_SERVER['REQUEST_METHOD'];
 try {
   switch ($method) {
     case 'GET':
+      // Si no hay página explícita, devolver todos los médicos (sin paginación)
+      if (!isset($_GET['page']) && !isset($_GET['per_page'])) {
+        $medicos = $medicoModel->all();
+        http_response_code(200);
+        echo json_encode($medicos);
+        exit;
+      }
       $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
       $perPage = isset($_GET['per_page']) ? min((int)$_GET['per_page'], 100) : 10;
 
