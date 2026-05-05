@@ -14,7 +14,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 try {
   switch ($method) {
     case 'GET':
-      requireApiAuth(['admin', 'gestor']);
+      requireApiAuth(['admin', 'gestor', 'administracion']);
 
       $usuarioModel = new Usuario();
       $stats = $usuarioModel->getStats();

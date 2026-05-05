@@ -7,9 +7,11 @@ if (!isset($_SESSION['usuario_id'])) {
   exit;
 }
 $isAdmin = false;
+$isAdministracion = false;
 if (isset($_SESSION['usuario_roles'])) {
   foreach ($_SESSION['usuario_roles'] as $role) {
-    if ($role['rol_nombre'] === 'admin') { $isAdmin = true; break; }
+    if ($role['rol_nombre'] === 'admin') { $isAdmin = true; }
+    if ($role['rol_nombre'] === 'administracion') { $isAdministracion = true; }
   }
 }
 ?>
@@ -33,15 +35,17 @@ if (isset($_SESSION['usuario_roles'])) {
       <p>Gestiona los contenidos y usuarios del sistema</p>
     </div>
 
-    <?php if ($isAdmin): ?>
+    <?php if ($isAdmin || $isAdministracion): ?>
       <h2 class="section-title">Estadisticas</h2>
-      <div class="stats-grid" id="stats-grid">
+      <div class="stats-grid" id="stats-grid" data-role="<?= $isAdmin ? 'admin' : 'administracion' ?>">
         <div class="stat-card loading">
           <div class="spinner"></div>
           <div>Cargando...</div>
         </div>
       </div>
+    <?php endif; ?>
 
+    <?php if ($isAdmin || $isAdministracion): ?>
       <h2 class="section-title">Gráficos</h2>
       <div class="charts-grid">
         <div class="chart-card">
@@ -50,6 +54,7 @@ if (isset($_SESSION['usuario_roles'])) {
           </div>
           <div id="chart-estado" class="chart-container"></div>
         </div>
+        <?php if ($isAdmin): ?>
         <div class="chart-card">
           <div class="chart-header">
             <h3>Citas por Especialidad</h3>
@@ -64,9 +69,11 @@ if (isset($_SESSION['usuario_roles'])) {
           </div>
           <div id="chart-especialidad" class="chart-container"></div>
         </div>
+        <?php endif; ?>
         <div class="chart-card">
           <div class="chart-header">
             <h3>Evolución de Citas</h3>
+            <?php if ($isAdmin || $isAdministracion): ?>
             <div class="chart-filter">
               <select id="filtro-evolucion">
                 <option value="3">Últimos 3 meses</option>
@@ -74,9 +81,11 @@ if (isset($_SESSION['usuario_roles'])) {
                 <option value="12" selected>Últimos 12 meses</option>
               </select>
             </div>
+            <?php endif; ?>
           </div>
           <div id="chart-evolucion" class="chart-container"></div>
         </div>
+        <?php if ($isAdmin): ?>
         <div class="chart-card">
           <div class="chart-header">
             <h3>Top Médicos</h3>
@@ -91,6 +100,7 @@ if (isset($_SESSION['usuario_roles'])) {
           </div>
           <div id="chart-medicos" class="chart-container"></div>
         </div>
+        <?php endif; ?>
       </div>
     <?php endif; ?>
   </main>

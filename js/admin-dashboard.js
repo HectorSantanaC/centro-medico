@@ -65,6 +65,7 @@ const AdminDashboard = {
     const container = document.getElementById('stats-grid');
     if (!container) return;
 
+    const role = container.dataset.role || 'admin';
     container.innerHTML = '<div class="stat-card loading"><div class="spinner"></div><div>Cargando...</div></div>';
 
     try {
@@ -75,32 +76,45 @@ const AdminDashboard = {
       }
       const stats = await response.json();
 
-      container.innerHTML = `
-        <div class="stat-card">
-          <div class="number">${stats.patients || 0}</div>
-          <div class="label">Pacientes registrados</div>
-        </div>
-        <div class="stat-card">
-          <div class="number">${stats.citas?.total || 0}</div>
-          <div class="label">Citas totales</div>
-        </div>
-        <div class="stat-card">
-          <div class="number">${stats.citas?.citas_hoy || 0}</div>
-          <div class="label">Citas hoy</div>
-        </div>
-        <div class="stat-card">
-          <div class="number">${stats.citas?.tasa_cancelacion || 0}%</div>
-          <div class="label">Tasa cancelación</div>
-        </div>
-        <div class="stat-card">
-          <div class="number">${stats.especialidades || 0}</div>
-          <div class="label">Especialidades</div>
-        </div>
-        <div class="stat-card">
-          <div class="number">${stats.medicos || 0}</div>
-          <div class="label">Médicos</div>
-        </div>
-      `;
+      if (role === 'administracion') {
+        container.innerHTML = `
+          <div class="stat-card">
+            <div class="number">${stats.citas?.total || 0}</div>
+            <div class="label">Citas totales</div>
+          </div>
+          <div class="stat-card">
+            <div class="number">${stats.citas?.citas_hoy || 0}</div>
+            <div class="label">Citas hoy</div>
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <div class="stat-card">
+            <div class="number">${stats.patients || 0}</div>
+            <div class="label">Pacientes registrados</div>
+          </div>
+          <div class="stat-card">
+            <div class="number">${stats.citas?.total || 0}</div>
+            <div class="label">Citas totales</div>
+          </div>
+          <div class="stat-card">
+            <div class="number">${stats.citas?.citas_hoy || 0}</div>
+            <div class="label">Citas hoy</div>
+          </div>
+          <div class="stat-card">
+            <div class="number">${stats.citas?.tasa_cancelacion || 0}%</div>
+            <div class="label">Tasa cancelación</div>
+          </div>
+          <div class="stat-card">
+            <div class="number">${stats.especialidades || 0}</div>
+            <div class="label">Especialidades</div>
+          </div>
+          <div class="stat-card">
+            <div class="number">${stats.medicos || 0}</div>
+            <div class="label">Médicos</div>
+          </div>
+        `;
+      }
     } catch (error) {
       container.innerHTML = '<div class="stat-card error">Error de conexión</div>';
     }
